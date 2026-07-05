@@ -26,6 +26,9 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
 
+      - name: Prepare web assets
+        run: node copy-dist.js
+
       - name: Build Tauri App (Windows)
         uses: tauri-apps/tauri-action@v0
         env:
