@@ -150,6 +150,6 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             kv_get, kv_put, kv_delete, kv_get_all, kv_clear, kv_count, kv_atomic
         ])
-        .run(tauri::generate_context())
+        .run(tauri::generate_context!())
         .expect("حدث خطأ أثناء تشغيل التطبيق");
 }
