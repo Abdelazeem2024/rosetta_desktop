@@ -1,0 +1,13 @@
+{
+  "name": "rosetta-erp-desktop",
+  "version": "1.0.0",
+  "description": "Rosetta ERP - نسخة سطح المكتب",
+  "private": true,
+  "scripts": {
+    "build": "node copy-dist.js",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0"
+  }
+}
