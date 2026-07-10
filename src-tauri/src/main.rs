@@ -148,8 +148,30 @@ fn main() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            kv_get, kv_put, kv_delete, kv_get_all, kv_clear, kv_count, kv_atomic
+            kv_get, kv_put, kv_delete, kv_get_all, kv_clear, kv_count, kv_atomic,
+            save_file_dialog
         ])
         .run(tauri::generate_context!())
         .expect("حدث خطأ أثناء تشغيل التطبيق");
+}
+
+// ── نافذة حفظ ملف حقيقية (Windows Save As Dialog) ──────────
+#[tauri::command]
+fn save_file_dialog(filename: String, content: String) -> Result<Option<String>, String> {
+    let ext = if filename.ends_with(".json") { "json" }
+              else if filename.ends_with(".csv") { "csv" }
+              else { "txt" };
+
+    let path = rfd::FileDialog::new()
+        .set_file_name(&filename)
+        .add_filter(ext, &[ext])
+        .save_file();
+
+    match path {
+        Some(p) => {
+            std::fs::write(&p, content.as_bytes()).map_err(|e| e.to_string())?;
+            Ok(Some(p.to_string_lossy().to_string()))
+        }
+        None => Ok(None),
+    }
 }
