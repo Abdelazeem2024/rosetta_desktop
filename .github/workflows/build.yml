@@ -37,5 +37,5 @@ jobs:
           tagName: app-v__VERSION__
           releaseName: "Rosetta ERP v__VERSION__"
           releaseBody: "نسخة سطح المكتب الجاهزة"
-          releaseDraft: true
+          releaseDraft: false
           prerelease: false
