@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rosetta ERP V2</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -97,9 +98,9 @@ tbody tr:last-child td{border-bottom:none}
 .bo{background:transparent;border:1px solid var(--brd);color:var(--tm)}
 .bo:hover{border-color:var(--g);color:var(--gb)}
 .bsm{padding:5px 11px;font-size:.78rem}
-.inv-hdr{display:grid;grid-template-columns:2.5fr 90px 110px 90px 40px;gap:8px;padding:8px 10px;background:var(--bgc2);border-radius:8px 8px 0 0;border:1px solid var(--brd);border-bottom:none}
+.inv-hdr{display:grid;grid-template-columns:2fr 100px 80px 110px 80px 40px;gap:8px;padding:8px 10px;background:var(--bgc2);border-radius:8px 8px 0 0;border:1px solid var(--brd);border-bottom:none}
 .inv-hdr span{font-size:.75rem;color:var(--gb);font-weight:700}
-.inv-row{display:grid;grid-template-columns:2.5fr 90px 110px 90px 40px;gap:8px;padding:6px 10px;border:1px solid var(--brd);border-top:none;background:rgba(6,15,11,.4)}
+.inv-row{display:grid;grid-template-columns:2fr 100px 80px 110px 80px 40px;gap:8px;padding:6px 10px;border:1px solid var(--brd);border-top:none;background:rgba(6,15,11,.4)}
 .inv-row:last-child{border-radius:0 0 8px 8px}
 .inv-totals{background:var(--bgc2);border:1px solid var(--brd);border-radius:10px;padding:14px 18px;display:flex;justify-content:space-around;align-items:center;margin-top:14px;flex-wrap:wrap;gap:12px}
 .iti{text-align:center}.iti .lbl{font-size:.72rem;color:var(--tm);margin-bottom:2px}
@@ -153,7 +154,7 @@ tbody tr:last-child td{border-bottom:none}
   .fr4,.fr3,.fr2{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr}
   .main-content{padding:12px}
-  .inv-hdr,.inv-row{grid-template-columns:2fr 60px 80px 70px 32px}
+  .inv-hdr,.inv-row{grid-template-columns:1.5fr 80px 55px 80px 65px 28px}
   #globalSearch{width:110px}
   .t-date{display:none}
 }
@@ -331,7 +332,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
         </div>
         <div class="card">
           <div class="card-title">Ø£ØµÙ†Ø§Ù Ø§Ù„ÙØ§ØªÙˆØ±Ø© âœ±</div>
-          <div class="inv-hdr"><span>Ø§Ø³Ù… Ø§Ù„ØµÙ†Ù</span><span>Ø§Ù„ÙƒÙ…ÙŠØ©</span><span>Ø§Ù„Ø³Ø¹Ø±</span><span>Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ</span><span></span></div>
+          <div class="inv-hdr"><span>Ø§Ø³Ù… Ø§Ù„ØµÙ†Ù</span><span>Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù</span><span>Ø§Ù„ÙƒÙ…ÙŠØ©</span><span>Ø§Ù„Ø³Ø¹Ø±</span><span>Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ</span><span></span></div>
           <div id="invRows"></div>
           <div class="arb" onclick="addRow()">ï¼‹ Ø¥Ø¶Ø§ÙØ© ØµÙ†Ù Ø¢Ø®Ø±</div>
           <div class="inv-totals">
@@ -399,7 +400,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
 
         <div class="card">
           <div class="card-title">ðŸ“¦ Ø§Ù„Ø£ØµÙ†Ø§Ù Ø§Ù„Ù…Ø±ØªØ¬Ø¹Ø© âœ±</div>
-          <div class="inv-hdr"><span>Ø§Ø³Ù… Ø§Ù„ØµÙ†Ù</span><span>Ø§Ù„ÙƒÙ…ÙŠØ©</span><span>Ø§Ù„Ø³Ø¹Ø±</span><span>Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ</span><span></span></div>
+          <div class="inv-hdr"><span>Ø§Ø³Ù… Ø§Ù„ØµÙ†Ù</span><span>Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù</span><span>Ø§Ù„ÙƒÙ…ÙŠØ©</span><span>Ø§Ù„Ø³Ø¹Ø±</span><span>Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ</span><span></span></div>
           <div id="retRows"></div>
           <div class="arb" onclick="addRetRow()">ï¼‹ Ø¥Ø¶Ø§ÙØ© ØµÙ†Ù Ù…Ø±ØªØ¬Ø¹</div>
           <div class="inv-totals">
@@ -556,9 +557,15 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
           <div class="card-title" id="prTitle">âž• Ø¥Ø¶Ø§ÙØ© ØµÙ†Ù Ø¬Ø¯ÙŠØ¯</div>
           <div class="fr4">
             <div class="fg"><label>Ø§Ø³Ù… Ø§Ù„ØµÙ†Ù âœ±</label><input class="fc" id="prName"></div>
+            <div class="fg"><label>Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù âœ±</label>
+              <select class="fc" id="prItemType">
+                <option value="">-- Ø§Ø®ØªØ± Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù --</option>
+                <option value="Ù…ØºØ°ÙŠ">ðŸŒ¿ Ù…ØºØ°ÙŠ</option>
+                <option value="Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ">ðŸ› Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ</option>
+              </select>
+            </div>
             <div class="fg"><label>Ø§Ù„ÙˆØ­Ø¯Ø©</label><input class="fc" id="prUnit" placeholder="Ù„ØªØ± / ÙƒÙŠÙ„Ùˆ / Ø¹Ø¨ÙˆØ©"></div>
             <div class="fg"><label>Ø³Ø¹Ø± Ø§Ù„Ø¨ÙŠØ¹ Ø§Ù„Ø§ÙØªØ±Ø§Ø¶ÙŠ</label><input class="fc" type="number" id="prPrice" min="0" step="any" placeholder="0.00"></div>
-            <div class="fg"><label>Ø³Ø¹Ø± Ø§Ù„Ø´Ø±Ø§Ø¡ (Ø§Ù„ØªÙƒÙ„ÙØ©)</label><input class="fc" type="number" id="prCost" min="0" step="any" placeholder="0.00"></div>
           </div>
           <div class="fr2">
             <div class="fg"><label>Ø§Ù„Ø±ØµÙŠØ¯ / Ø§Ù„ÙƒÙ…ÙŠØ© Ø§Ù„Ù…ØªØ§Ø­Ø©</label><input class="fc" type="number" id="prStock" min="0" step="any" placeholder="0"></div>
@@ -572,12 +579,17 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
         </div>
         <div class="card">
           <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;align-items:center">
-            <input class="fc" id="prSearch" placeholder="ðŸ” Ø¨Ø­Ø« Ø¹Ù† ØµÙ†Ù..." oninput="renderProds()" style="max-width:280px">
+            <input class="fc" id="prSearch" placeholder="ðŸ” Ø¨Ø­Ø« Ø¹Ù† ØµÙ†Ù..." oninput="renderProds()" style="max-width:240px">
+            <select class="fc" id="prFilterType" onchange="renderProds()" style="width:170px;padding:7px 10px">
+              <option value="">Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ù†ÙˆØ§Ø¹</option>
+              <option value="Ù…ØºØ°ÙŠ">ðŸŒ¿ Ù…ØºØ°ÙŠ ÙÙ‚Ø·</option>
+              <option value="Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ">ðŸ› Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ ÙÙ‚Ø·</option>
+            </select>
             <span id="prCount" style="font-size:.8rem;color:var(--tm)"></span>
-            <button class="btn bo bsm" onclick="loadProdStats()">ðŸ“Š ØªØ­Ù…ÙŠÙ„ Ø¥Ø­ØµØ§Ø¦ÙŠØ§Øª Ø§Ù„Ù…Ø¨ÙŠØ¹Ø§Øª</button>
+            <button class="btn bo bsm" onclick="loadProdStats()">ðŸ“Š Ø¥Ø­ØµØ§Ø¦ÙŠØ§Øª Ø§Ù„Ù…Ø¨ÙŠØ¹Ø§Øª</button>
           </div>
           <div class="tw"><table><thead><tr>
-            <th>ÙƒÙˆØ¯</th><th>Ø§Ù„ØµÙ†Ù</th><th>Ø§Ù„ÙˆØ­Ø¯Ø©</th><th>Ø³Ø¹Ø± Ø§Ù„Ø¨ÙŠØ¹</th><th>Ø³Ø¹Ø± Ø§Ù„Ø´Ø±Ø§Ø¡</th><th>Ø§Ù„Ø±ØµÙŠØ¯/Ø§Ù„ÙƒÙ…ÙŠØ©</th><th>Ø§Ù„ÙƒÙ…ÙŠØ© Ø§Ù„Ù…Ø¨Ø§Ø¹Ø©</th><th>Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù…Ø¨ÙŠØ¹Ø§Øª</th><th>Ø¥Ø¬Ø±Ø§Ø¡</th>
+            <th>ÙƒÙˆØ¯</th><th>Ø§Ù„ØµÙ†Ù</th><th>Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù</th><th>Ø§Ù„ÙˆØ­Ø¯Ø©</th><th>Ø³Ø¹Ø± Ø§Ù„Ø¨ÙŠØ¹</th><th>Ø§Ù„Ø±ØµÙŠØ¯/Ø§Ù„ÙƒÙ…ÙŠØ©</th><th>Ø§Ù„ÙƒÙ…ÙŠØ© Ø§Ù„Ù…Ø¨Ø§Ø¹Ø©</th><th>Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù…Ø¨ÙŠØ¹Ø§Øª</th><th>Ø¥Ø¬Ø±Ø§Ø¡</th>
           </tr></thead><tbody id="prTbody"></tbody></table></div>
         </div>
       </div>
@@ -638,6 +650,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
           <div class="qb" onclick="showRep('balance')" style="padding:16px"><span class="qi">ðŸ’°</span>ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ø£Ø±ØµØ¯Ø©</div>
           <div class="qb" onclick="showRep('overdue')" style="padding:16px"><span class="qi">âš ï¸</span>Ø§Ù„ÙÙˆØ§ØªÙŠØ± Ø§Ù„Ù…ØªØ£Ø®Ø±Ø©</div>
           <div class="qb" onclick="showRep('returnsrep')" style="padding:16px"><span class="qi">â†©ï¸</span>ØªÙ‚Ø±ÙŠØ± Ø§Ù„Ù…Ø±ØªØ¬Ø¹Ø§Øª</div>
+          <div class="qb" onclick="showRep('splitrep')" style="padding:16px;border:2px solid var(--gold)"><span class="qi">ðŸ“Š</span>ÙƒØ´Ù Ø­Ø³Ø§Ø¨ Ù…Ù‚Ø³Ù…</div>
         </div>
         <div class="card rep-panel" id="rpanel-daily">
           <div class="card-title">ðŸ“… ØªÙ‚Ø±ÙŠØ± ÙŠÙˆÙ…ÙŠ</div>
@@ -721,6 +734,37 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
           </div>
           <div class="br"><button class="btn bg" onclick="genReturnsRep()">Ø¹Ø±Ø¶</button><button class="btn bgo" onclick="printReturnsRep()">ðŸ–¨ï¸ Ø·Ø¨Ø§Ø¹Ø©</button></div>
           <div id="rRetOut" style="margin-top:14px"></div>
+        </div>
+
+        <!-- â•â•â•â• ÙƒØ´Ù Ø­Ø³Ø§Ø¨ Ù…Ù‚Ø³Ù… â•â•â•â• -->
+        <div class="card rep-panel" id="rpanel-splitrep" style="border:2px solid var(--gold)">
+          <div class="card-title" style="color:var(--gol)">ðŸ“Š ÙƒØ´Ù Ø­Ø³Ø§Ø¨ Ù…Ù‚Ø³Ù… (Ù…ØºØ°ÙŠ / Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ)</div>
+          <div class="fr4">
+            <div class="fg"><label>Ø§Ù„Ù…Ù†Ø¯ÙˆØ¨ âœ±</label><select class="fc" id="rSplitDl" onchange="onSplitDlChange()"><option value="">-- Ø§Ù„ÙƒÙ„ --</option></select></div>
+            <div class="fg"><label>Ø§Ù„Ø¹Ù…ÙŠÙ„ âœ±</label>
+              <div class="ss-wrap">
+                <input class="fc" id="rSplitClSearch" placeholder="ðŸ” Ø§ÙƒØªØ¨ Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„..." oninput="filterSplitCl()" onfocus="openSplitClDrop()" onblur="closeSplitClDrop()" autocomplete="off">
+                <input type="hidden" id="rSplitClId">
+                <div class="ss-drop" id="rSplitClDrop"></div>
+              </div>
+            </div>
+            <div class="fg"><label>Ù…Ù† ØªØ§Ø±ÙŠØ®</label><input class="fc" type="date" id="rSplitFrom"></div>
+            <div class="fg"><label>Ø¥Ù„Ù‰ ØªØ§Ø±ÙŠØ®</label><input class="fc" type="date" id="rSplitTo"></div>
+          </div>
+          <div class="fr2">
+            <div class="fg">
+              <label>Ù†Ø³Ø¨Ø© Ø§Ù„Ø®ØµÙ… Ø¹Ù„Ù‰ Ø§Ù„Ù…ØºØ°ÙŠ ÙÙ‚Ø· % <span style="font-weight:400;color:var(--tm)">(Ø§Ø®ØªÙŠØ§Ø±ÙŠ â€” Ù…Ø«Ø§Ù„: 10)</span></label>
+              <input class="fc" type="number" id="rSplitDiscount" min="0" max="100" step="any" placeholder="0">
+            </div>
+            <div class="fg" style="justify-content:flex-end">
+              <label style="opacity:0">.</label>
+              <div class="br" style="margin:0">
+                <button class="btn bgo" onclick="genSplitRep()">ðŸ“Š Ø¹Ø±Ø¶ Ø§Ù„ÙƒØ´Ù</button>
+                <button class="btn bg" onclick="printSplitRep()">ðŸ–¨ï¸ Ø·Ø¨Ø§Ø¹Ø©</button>
+              </div>
+            </div>
+          </div>
+          <div id="rSplitOut" style="margin-top:14px"></div>
         </div>
       </div>
 
@@ -1211,16 +1255,62 @@ const C = {
   }
 };
 
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  Ù‚Ø§Ø¦Ù…Ø© Ø§Ù„Ø£ØµÙ†Ø§Ù Ø§Ù„Ø±Ø³Ù…ÙŠØ© Ø§Ù„Ù…Ø¹ØªÙ…Ø¯Ø© â€” Ù…Ù‚Ø³Ù…Ø© Ø­Ø³Ø¨ Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù
+//  Ù…ØºØ°ÙŠ: 38 ØµÙ†Ù | Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ: 11 ØµÙ†Ù
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 const DEFAULT_PRODUCTS = [
-  'Ø³ÙŠØªØ±Ø§ÙÙŠØ¯ Ø¨Ù„Øµ','Ø³ÙŠØªØ±Ø§ ÙÙŠØ¯','ÙØ±ÙˆØªÙ†Ø¬','Ø³ØªØ±Ø§ Ø¬Ø±Ø§Ù†Ø¯','Ø¬ÙˆÙ„Ø¯',
-  'Ø¨ÙˆØªØ§Ø³ØªØ±ÙˆÙ†Ø¬','Ø¨ÙˆØª Ø£Ø³ÙŠÙ„','Ø¥ÙƒØ³ØªØ±Ø§ ÙƒØ§Ù„Ø¨ÙˆØ±','ÙØ±Ø³Øª ÙƒØ§Ù„','Ù‡Ø§ÙŠ ÙƒØ§Ù„',
-  'Ø¨ÙˆØ± ÙƒØ§Ù„Ù…Ø§Ø¬','ÙÙ„Ø§ÙˆØ± Ø±ÙˆØ²ÙŠØªØ§','Ø±ÙˆØ³Ø§Ù„','Ø§Ù„ØªØ±Ø§Ø³Ø§Ù„','Ø£Ù†ØªÙŠ Ø³Ø§Ù„',
-  'ØªÙŠØ±Ø§Ø³ÙˆÙ„','ÙÙˆØ³ÙØ§ØªÙŠÙ†','ÙÙ„ÙˆØ±Ø§Ø³ÙŠÙˆÙ†','ÙÙˆÙƒØ³ÙŠÙ†','ÙÙ„ÙˆØ± Ø²Ù†Ùƒ',
-  'Ù…Ø§ Ø¬Ù†ÙÙŠÙƒÙˆ','Ù„Ø§Ø±Ø¬Ø³Øª','Ù†ØªØ±ÙˆÙ…Ø§Ø¬','Ø¬Ø±Ø§Ù†Ø¯ ÙƒØ§Ù„','ÙÙŠØ±Ø§ Ù…ÙƒØ³',
-  'Ø¥Ù†Ø²ÙŠÙ…Ø§Øª','Ø§Ù„Ø¬Ø§Ø¨ÙˆØ±','ÙƒØ±ÙˆØ¨Ù†Ø¬','Ø§Ù„Ø¬Ø§Ù…Ø§Ø±Ø§','Ø³ÙŠ ÙˆÙŠØ¯',
-  'Ø¬Ø§Ø³Øª Ø±ÙˆØª','Ø­Ø¯ÙŠØ¯ 6%','ÙÙŠØªØ§Ù†ÙŠÙ…','Ø¨Ø±ÙˆØªÙƒØª','Ø£Ù…ÙŠØ¯Ø§ ÙƒÙ„ÙˆØ¨Ø±Ø§ÙŠØ¯',
-  'Ø±ÙˆÙ…ÙƒØªÙŠÙ†','ÙƒÙŠÙ†','ØµØ§Ø¨ÙˆÙ† Ø²Ø±Ø§Ø¹ÙŠ','ÙƒØ§Ù„ ÙƒÙˆØ¨Ø±Ø§','ÙƒÙˆØ¨Ø±Ø§ Ø³ÙŠØ¯',
-  'Ø´ÙŠØªÙˆ ÙƒÙˆØ¨Ø±','Ø¨ÙˆØªØ§ Ø¨ÙŠÙˆØ±','Ù…ÙŠÙƒØ³ Ø¨Ø§ÙˆØ±','Ø¥ÙƒØ³ØªØ±Ø§ Ù…Ø§Ø¬'
+  // â”€â”€ Ù…ØºØ°ÙŠ (38 ØµÙ†Ù) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  {name:'Ø³ÙŠØªØ±Ø§ÙÙŠØ¯ Ø¨Ù„Ø³',    itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø³ÙŠØªØ±Ø§ÙÙŠØ¯',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'ÙØ±ÙˆØªÙ†Ø¬',          itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø³ØªØ±Ø§ Ø¬Ø±Ø§Ù†Ø¯',      itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø¬ÙˆÙ„Ø¯',            itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø¨ÙˆØªØ§Ø³ØªØ±ÙˆÙ†Ø¬',      itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø¨ÙˆØª Ø£Ø³ÙŠÙ„',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø§ÙƒØ³ØªØ±Ø§ ÙƒØ§Ù„Ø¨ÙˆØ±',   itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'ÙØ±Ø³Øª ÙƒØ§Ù„',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ù‡Ø§ÙŠ ÙƒØ§Ù„',         itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø¨ÙˆØ± ÙƒØ§Ù„Ù…Ø§Ø¬',      itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø±ÙˆØ³Ø§Ù„',           itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø§Ù„ØªØ±Ø§Ø³Ø§Ù„',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø§Ù†ØªÙŠ Ø³Ø§Ù„',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'ØªÙŠØ±Ø§Ø³ÙˆÙ„',         itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø³Ø§Ù„ÙŠÙÙˆØ±',         itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'ÙÙˆØ³ÙØ§ØªÙŠÙ†',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'ÙÙ„ÙˆØ±Ø§Ø³ÙŠÙˆÙ†',       itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'ÙÙˆÙƒØ³ÙŠÙ†',          itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'ÙÙ„ÙˆØ± Ø²Ù†Ùƒ',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ù…Ø§Ø¬Ù†ÙÙŠÙƒÙˆ',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ù„Ø§Ø±Ø¬Ø³Øª',          itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ù†ØªØ±ÙˆÙ…Ø§Ø¬',         itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø¬Ø±Ø§Ù†Ø¯ ÙƒØ§Ù„',       itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'ÙÙŠØ±Ø§ Ù…ÙƒØ³',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø§Ù†Ø²ÙŠÙ…Ø§Øª',         itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø§Ù„Ø¬Ø§Ø¨ÙˆØ±',         itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'ÙƒØ±ÙˆØ¨Ù†Ø¬',          itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø§Ù„Ø¬Ø§Ù…Ø§Ø±Ø§',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø³ÙŠ ÙˆÙŠØ¯',          itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø¬Ø§Ø³Øª Ø±ÙˆØª',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø­Ø¯ÙŠØ¯ 6%',         itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø­Ø¯ÙŠØ¯ 15%',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø²Ù†Ùƒ',             itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ù…Ù†Ø¬Ù†ÙŠØ²',          itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø§Ø¬Ø±ÙŠÙ†Ùˆ',          itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'ØªÙŠØ±Ø§ Ø¨ÙˆØ±',        itemType:'Ù…ØºØ°ÙŠ'},
+  {name:'Ø§ÙƒÙˆØ§ Ø³Ø§Ù„ÙÙˆÙ†',     itemType:'Ù…ØºØ°ÙŠ'},
+  // â”€â”€ Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ (11 ØµÙ†Ù) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  {name:'Ø§Ù…ÙŠØ¯Ø§ ÙƒÙ„ÙˆØ¨Ø±Ø§ÙŠØ¯',  itemType:'Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'},
+  {name:'Ù„Ù…Ø¨Ø§Ø¯Ø§ 5%',       itemType:'Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'},
+  {name:'ÙƒÙŠÙ†',             itemType:'Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'},
+  {name:'Ø±ÙˆÙ…ÙƒØªÙŠÙ†',         itemType:'Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'},
+  {name:'ÙÙŠØªØ§Ù†ÙŠÙ…',         itemType:'Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'},
+  {name:'Ø§Ù†ØªÙŠ Ù†ÙŠÙ…',        itemType:'Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'},
+  {name:'Ø¨Ø±ÙˆØªÙƒØª ÙÙˆØ±Ù†ÙŠÙ…',   itemType:'Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'},
+  {name:'Ù†ÙŠÙ…Ø§Ø«ÙŠÙˆÙ†',        itemType:'Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'},
+  {name:'Ø´ÙŠØªÙˆÙƒÙˆØ¨Ø±',        itemType:'Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'},
+  {name:'ÙƒÙˆØ¨Ø±Ø§ Ø³ÙŠØ¯',       itemType:'Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'},
+  {name:'ÙƒØ§Ù„ ÙƒÙˆØ¨Ø±Ø§',       itemType:'Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'},
 ];
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -1349,8 +1439,9 @@ async function boot() {
     await openIDB();
     prog(35,'ØªØ­Ù…ÙŠÙ„ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ù†Ø¸Ø§Ù…...');
     const [cls,prs,dls,settings]=await Promise.all([idbAll('clients'),idbAll('products'),idbAll('delegates'),idbGetSettings()]);
-    if (!dls.length) {
-      prog(50,'ØªÙ‡ÙŠØ¦Ø© Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø§ÙØªØ±Ø§Ø¶ÙŠØ©...');
+    // Ø§Ø³ØªØ®Ø¯Ø§Ù… Ø¹Ù„Ø§Ù…Ø© seeded Ø¨Ø¯Ù„Ø§Ù‹ Ù…Ù† ÙØ­Øµ Ø§Ù„Ù…Ù†Ø¯ÙˆØ¨ÙŠÙ† â€” Ù„Ø¶Ù…Ø§Ù† Ø¹Ø¯Ù… Ø­Ø°Ù Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù…
+    if (!settings || !settings.seeded) {
+      prog(50,'ØªÙ‡ÙŠØ¦Ø© Ø§Ù„Ø£ØµÙ†Ø§Ù Ø§Ù„Ø§ÙØªØ±Ø§Ø¶ÙŠØ©...');
       await seedDefault();
       const [c2,p2,d2]=await Promise.all([idbAll('clients'),idbAll('products'),idbAll('delegates')]);
       C.clients=c2; C.products=p2; C.delegates=d2;
@@ -1373,16 +1464,30 @@ async function boot() {
 }
 
 async function seedDefault() {
-  const delegates=[{id:1,name:'Ø£Ø­Ù…Ø¯ Ù…Ø­Ù…Ø¯',phone:'01012345678',commRate:3},{id:2,name:'Ù…Ø­Ù…ÙˆØ¯ Ø¹Ù„ÙŠ',phone:'01098765432',commRate:3}];
-  const clients=[
-    {id:1,name:'Ù…Ø²Ø±Ø¹Ø© Ø§Ù„Ù†ÙŠÙ„',    phone:'01111111111',address:'Ø§Ù„Ø¬ÙŠØ²Ø©',  delegateId:1,route:'Ø®Ø· Ø§Ù„Ø¬ÙŠØ²Ø©',  notes:''},
-    {id:2,name:'Ù…Ø²Ø±Ø¹Ø© Ø§Ù„ÙÙŠÙˆÙ…',   phone:'01222222222',address:'Ø§Ù„ÙÙŠÙˆÙ…',  delegateId:2,route:'Ø®Ø· Ø§Ù„ÙÙŠÙˆÙ…',  notes:''},
-    {id:3,name:'ØªØ¹Ø§ÙˆÙ†ÙŠØ© Ø§Ù„Ø¨Ø­ÙŠØ±Ø©',phone:'01333333333',address:'Ø§Ù„Ø¨Ø­ÙŠØ±Ø©',delegateId:1,route:'Ø®Ø· Ø§Ù„Ø¨Ø­ÙŠØ±Ø©',notes:''}
-  ];
-  const products=DEFAULT_PRODUCTS.map((name,i)=>({id:i+1,name,unit:'Ù„ØªØ±',price:0}));
-  C.settings.nextDlId=3; C.settings.nextClId=4; C.settings.nextPrId=DEFAULT_PRODUCTS.length+1; C.settings.nextRetNum=1;
-  await Promise.all([idbBulk('delegates',delegates),idbBulk('clients',clients),idbBulk('products',products),idbPutSettings(C.settings)]);
-  C.delegates=delegates; C.clients=clients; C.products=products;
+  // âœ… Ù„Ø§ ØªÙˆØ¬Ø¯ Ø¨ÙŠØ§Ù†Ø§Øª ØªØ¬Ø±ÙŠØ¨ÙŠØ© â€” ÙÙ‚Ø· Ø§Ù„Ø£ØµÙ†Ø§Ù Ø§Ù„Ø±Ø³Ù…ÙŠØ© Ø§Ù„Ù…Ø¹ØªÙ…Ø¯Ø©
+  // Ø§Ù„Ù…Ø³ØªØ®Ø¯Ù… ÙŠØ³ØªÙˆØ±Ø¯ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ù…Ù†Ø¯ÙˆØ¨ÙŠÙ† ÙˆØ§Ù„Ø¹Ù…Ù„Ø§Ø¡ Ø§Ù„Ø­Ù‚ÙŠÙ‚ÙŠØ© Ù…Ù† Ù…Ù„Ù Ø§Ù„Ù†Ø³Ø®Ø© Ø§Ù„Ø§Ø­ØªÙŠØ§Ø·ÙŠØ©
+  const products = DEFAULT_PRODUCTS.map((p,i) => ({
+    id: i+1,
+    name: p.name,
+    itemType: p.itemType,  // Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù Ø§Ù„Ø±Ø³Ù…ÙŠ
+    unit: 'Ù„ØªØ±',
+    price: 0,
+    costPrice: 0,
+    stock: 0,
+    notes: ''
+  }));
+  C.settings.nextDlId  = 1;
+  C.settings.nextClId  = 1;
+  C.settings.nextPrId  = DEFAULT_PRODUCTS.length + 1;
+  C.settings.nextRetNum = 1;
+  C.settings.seeded    = true;   // Ø¹Ù„Ø§Ù…Ø© Ø¹Ø¯Ù… ØªÙƒØ±Ø§Ø± Ø§Ù„ØªÙ‡ÙŠØ¦Ø©
+  await Promise.all([
+    idbBulk('products', products),
+    idbPutSettings(C.settings)
+  ]);
+  C.delegates = [];
+  C.clients   = [];
+  C.products  = products;
 }
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
@@ -1453,6 +1558,7 @@ function go(name,btn) {
       fillSel('rLiDl',C.delegates,'id','name','-- Ø§Ù„ÙƒÙ„ --');
       fillSel('rOverdueDl',C.delegates,'id','name','-- Ø§Ù„ÙƒÙ„ --');
       fillSel('rRetDl',C.delegates,'id','name','-- Ø§Ù„ÙƒÙ„ --');
+      fillSel('rSplitDl',C.delegates,'id','name','-- Ø§Ù„ÙƒÙ„ --');
       updateRouteSelect('rRtRoute','rRtDl'); updateRouteSelect('rLiRoute','rLiDl');
     },
     settings:  ()=>{ loadSettingsUI(); updateDbInfo(); renderHCLog(); },
@@ -1695,10 +1801,12 @@ function newInvForm() {
 }
 
 // â”€â”€ ØµÙÙˆÙ Ø§Ù„Ø£ØµÙ†Ø§Ù ÙÙŠ Ø§Ù„ÙØ§ØªÙˆØ±Ø© â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-function addRow(prodId='',prodName='',qty='',price='') {
+function addRow(prodId='',prodName='',qty='',price='',itemType='') {
   const idx=rowCnt++;
   const div=document.createElement('div');
   div.className='inv-row'; div.id='ir-'+idx;
+  const typeLabel=itemType?itemType:'â€”';
+  const typeColor=itemType==='Ù…ØºØ°ÙŠ'?'var(--gb)':itemType==='Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'?'var(--org)':'var(--td)';
   div.innerHTML=`
     <div style="position:relative">
       <input class="fc ir-pname" placeholder="ðŸ” Ø§ÙƒØªØ¨ Ø§Ø³Ù… Ø§Ù„ØµÙ†Ù..."
@@ -1707,8 +1815,10 @@ function addRow(prodId='',prodName='',qty='',price='') {
         onblur="closeInvProdDrop(${idx})"
         value="${String(prodName).replace(/"/g,'&quot;')}" autocomplete="off">
       <input type="hidden" class="ir-pid" value="${prodId}">
+      <input type="hidden" class="ir-itype" value="${itemType}">
       <div class="ss-drop" id="ir-drop-${idx}" style="z-index:400"></div>
     </div>
+    <div class="ir-typedisp" style="display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:${typeColor};border:1px solid var(--brd);border-radius:6px;background:var(--bgc2);padding:2px 4px;text-align:center">${typeLabel}</div>
     <input class="fc ir-qty"   type="number" min="0" step="any" placeholder="0"    value="${qty}"   oninput="calcTotals();saveDraft()">
     <input class="fc ir-price" type="number" min="0" step="any" placeholder="0.00" value="${price}" oninput="calcTotals();saveDraft()">
     <input class="fc ir-total" readonly placeholder="0.00">
@@ -1722,20 +1832,29 @@ function delRow(btn){ btn.closest('.inv-row').remove(); calcTotals(); saveDraft(
 function renderInvProdDrop(idx,q) {
   const drop=document.getElementById('ir-drop-'+idx); if(!drop)return;
   const filt=q.trim()?C.products.filter(p=>p.name.includes(q.trim())):C.products.slice(0,20);
-  drop.innerHTML=filt.slice(0,15).map(p=>
-    `<div class="ss-item" onmousedown="selectInvProd(${idx},${p.id},'${p.name.replace(/'/g,"\\'")}',${n2(p.price||0)})">
-      <strong>${p.name}</strong>${p.unit?`<span style="font-size:.72rem;color:var(--gol);margin-right:6px">${p.unit}</span>`:''}
-      ${p.price?`<span style="font-size:.72rem;color:var(--tm)"> â€” ${fmt(p.price)}</span>`:''}
-    </div>`
-  ).join('')||'<div class="ss-empty">Ù„Ø§ ØªÙˆØ¬Ø¯ Ù†ØªØ§Ø¦Ø¬</div>';
+  drop.innerHTML=filt.slice(0,15).map(p=>{
+    const tc=p.itemType==='Ù…ØºØ°ÙŠ'?'var(--gb)':'var(--org)';
+    return`<div class="ss-item" onmousedown="selectInvProd(${idx},${p.id},'${p.name.replace(/'/g,"\\'")}',${n2(p.price||0)},'${p.itemType||''}')">
+      <strong>${p.name}</strong>
+      <span style="font-size:.7rem;color:${tc};margin-right:6px">${p.itemType||''}</span>
+      ${p.price?`<span style="font-size:.7rem;color:var(--tm)"> â€” ${fmt(p.price)}</span>`:''}
+    </div>`;
+  }).join('')||'<div class="ss-empty">Ù„Ø§ ØªÙˆØ¬Ø¯ Ù†ØªØ§Ø¦Ø¬</div>';
 }
 function filterInvProd(input,idx){ document.getElementById('ir-'+idx)?.querySelector('.ir-pid').setAttribute('value',''); renderInvProdDrop(idx,input.value); document.getElementById('ir-drop-'+idx)?.classList.add('open'); }
 function openInvProdDrop(input,idx){ renderInvProdDrop(idx,input.value); document.getElementById('ir-drop-'+idx)?.classList.add('open'); }
 function closeInvProdDrop(idx){ setTimeout(()=>document.getElementById('ir-drop-'+idx)?.classList.remove('open'),200); }
-function selectInvProd(idx,prodId,prodName,price) {
+function selectInvProd(idx,prodId,prodName,price,itemType) {
   const row=document.getElementById('ir-'+idx); if(!row)return;
   row.querySelector('.ir-pname').value=prodName;
   row.querySelector('.ir-pid').value=prodId;
+  row.querySelector('.ir-itype').value=itemType||'';
+  // ØªØ­Ø¯ÙŠØ« Ø¹Ø±Ø¶ Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù (snapshot â€” Ù„Ø§ ÙŠØªØºÙŠØ± Ù„Ø§Ø­Ù‚Ø§Ù‹)
+  const typeDisp=row.querySelector('.ir-typedisp');
+  if(typeDisp){
+    typeDisp.textContent=itemType||'â€”';
+    typeDisp.style.color=itemType==='Ù…ØºØ°ÙŠ'?'var(--gb)':itemType==='Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'?'var(--org)':'var(--td)';
+  }
   const priceInput=row.querySelector('.ir-price');
   if(priceInput&&!priceInput.value) priceInput.value=price||'';
   document.getElementById('ir-drop-'+idx)?.classList.remove('open');
@@ -1767,6 +1886,8 @@ function getInvRows() {
   return [...document.querySelectorAll('#invRows .inv-row')].map(row=>({
     prodId:parseInt(row.querySelector('.ir-pid')?.value)||0,
     prodName:row.querySelector('.ir-pname')?.value.trim()||'',
+    // âœ… Snapshot: Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù ÙˆÙ‚Øª Ø§Ù„Ø¥Ø¯Ø®Ø§Ù„ â€” Ù„Ø§ ÙŠØªØ£Ø«Ø± Ø¨Ø£ÙŠ ØªØºÙŠÙŠØ± Ù„Ø§Ø­Ù‚ ÙÙŠ ØµÙØ­Ø© Ø§Ù„Ø£ØµÙ†Ø§Ù
+    itemType:row.querySelector('.ir-itype')?.value||'',
     qty:n2(parseFloat(row.querySelector('.ir-qty')?.value)||0),
     price:n2(parseFloat(row.querySelector('.ir-price')?.value)||0),
     total:n2((parseFloat(row.querySelector('.ir-qty')?.value)||0)*(parseFloat(row.querySelector('.ir-price')?.value)||0))
@@ -1864,7 +1985,7 @@ async function editInvoice(id) {
   document.getElementById('invClId').value=inv.clientId;
   document.getElementById('invRouteLbl').textContent=inv.route?'Ø®Ø· Ø§Ù„Ø³ÙŠØ±: '+inv.route:'';
   document.getElementById('invRows').innerHTML=''; rowCnt=0;
-  (inv.items||[]).forEach(it=>addRow(it.prodId,it.prodName,it.qty,it.price));
+  (inv.items||[]).forEach(it=>addRow(it.prodId,it.prodName,it.qty,it.price,it.itemType||''));
   calcTotals();
   document.getElementById('page-invoice').scrollTop=0;
   hideA('invAlert'); hideA('invOk');
@@ -1973,7 +2094,7 @@ function loadDraft() {
     if(d.date) document.getElementById('invDate').value=d.date;
     if(d.refNum) document.getElementById('invRefNum').value=d.refNum;
     if(d.paid) document.getElementById('invPaidIn').value=d.paid;
-    if(d.items?.length){ document.getElementById('invRows').innerHTML=''; rowCnt=0; d.items.forEach(it=>addRow(it.prodId,it.prodName,it.qty,it.price)); calcTotals(); showToast('ðŸ“‹ ØªÙ… Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ù…Ø³ÙˆØ¯Ø© Ø§Ù„ÙØ§ØªÙˆØ±Ø©'); }
+    if(d.items?.length){ document.getElementById('invRows').innerHTML=''; rowCnt=0; d.items.forEach(it=>addRow(it.prodId,it.prodName,it.qty,it.price,it.itemType||'')); calcTotals(); showToast('ðŸ“‹ ØªÙ… Ø§Ø³ØªØ¹Ø§Ø¯Ø© Ù…Ø³ÙˆØ¯Ø© Ø§Ù„ÙØ§ØªÙˆØ±Ø©'); }
   } catch(e){}
 }
 function clearDraft(){ try{ localStorage.removeItem('rosettaDraft'); }catch(e){} }
@@ -2007,10 +2128,12 @@ function newRetForm() {
 }
 
 // â”€â”€ ØµÙÙˆÙ Ø£ØµÙ†Ø§Ù Ø§Ù„Ù…Ø±ØªØ¬Ø¹ (Ø¨Ù†ÙØ³ Ø³Ù„ÙˆÙƒ Ø§Ù„ÙØ§ØªÙˆØ±Ø© ØªÙ…Ø§Ù…Ø§Ù‹) â”€â”€â”€â”€â”€â”€
-function addRetRow(prodId='',prodName='',qty='',price='') {
+function addRetRow(prodId='',prodName='',qty='',price='',itemType='') {
   const idx=retRowCnt++;
   const div=document.createElement('div');
   div.className='inv-row'; div.id='rr-'+idx;
+  const typeLabel=itemType?itemType:'â€”';
+  const typeColor=itemType==='Ù…ØºØ°ÙŠ'?'var(--gb)':itemType==='Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'?'var(--org)':'var(--td)';
   div.innerHTML=`
     <div style="position:relative">
       <input class="fc rr-pname" placeholder="ðŸ” Ø§ÙƒØªØ¨ Ø§Ø³Ù… Ø§Ù„ØµÙ†Ù Ø§Ù„Ù…Ø±ØªØ¬Ø¹..."
@@ -2018,9 +2141,11 @@ function addRetRow(prodId='',prodName='',qty='',price='') {
         onfocus="openRetProdDrop(this,${idx})"
         onblur="closeRetProdDrop(${idx})"
         value="${String(prodName).replace(/"/g,'&quot;')}" autocomplete="off">
-      <input type="hidden" class="rr-pid" value="${prodId}">
+      <input type="hidden" class="rr-pid"   value="${prodId}">
+      <input type="hidden" class="rr-itype" value="${itemType}">
       <div class="ss-drop" id="rr-drop-${idx}" style="z-index:400"></div>
     </div>
+    <div class="rr-typedisp" style="display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;color:${typeColor};border:1px solid var(--brd);border-radius:6px;background:var(--bgc2);padding:2px 4px;text-align:center">${typeLabel}</div>
     <input class="fc rr-qty"   type="number" min="0" step="any" placeholder="0"    value="${qty}"   oninput="calcRetTotals()">
     <input class="fc rr-price" type="number" min="0" step="any" placeholder="0.00" value="${price}" oninput="calcRetTotals()">
     <input class="fc rr-total" readonly placeholder="0.00">
@@ -2030,24 +2155,32 @@ function addRetRow(prodId='',prodName='',qty='',price='') {
 }
 function delRetRow(btn){ btn.closest('.inv-row').remove(); calcRetTotals(); }
 
-// â”€â”€ Ø¨Ø­Ø« Ø§Ù„Ø£ØµÙ†Ø§Ù ÙÙŠ ØµÙÙˆÙ Ø§Ù„Ù…Ø±ØªØ¬Ø¹ â€” Ù†ÙØ³ Ø³Ù„ÙˆÙƒ Ø§Ù„ÙØ§ØªÙˆØ±Ø© â”€â”€â”€â”€
+// â”€â”€ Ø¨Ø­Ø« Ø§Ù„Ø£ØµÙ†Ø§Ù ÙÙŠ ØµÙÙˆÙ Ø§Ù„Ù…Ø±ØªØ¬Ø¹ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderRetProdDrop(idx,q) {
   const drop=document.getElementById('rr-drop-'+idx); if(!drop)return;
   const filt=q.trim()?C.products.filter(p=>p.name.includes(q.trim())):C.products.slice(0,20);
-  drop.innerHTML=filt.slice(0,15).map(p=>
-    `<div class="ss-item" onmousedown="selectRetProd(${idx},${p.id},'${p.name.replace(/'/g,"\\'")}',${n2(p.price||0)})">
-      <strong>${p.name}</strong>${p.unit?`<span style="font-size:.72rem;color:var(--gol);margin-right:6px">${p.unit}</span>`:''}
-      ${p.price?`<span style="font-size:.72rem;color:var(--tm)"> â€” ${fmt(p.price)}</span>`:''}
-    </div>`
-  ).join('')||'<div class="ss-empty">Ù„Ø§ ØªÙˆØ¬Ø¯ Ù†ØªØ§Ø¦Ø¬</div>';
+  drop.innerHTML=filt.slice(0,15).map(p=>{
+    const tc=p.itemType==='Ù…ØºØ°ÙŠ'?'var(--gb)':'var(--org)';
+    return`<div class="ss-item" onmousedown="selectRetProd(${idx},${p.id},'${p.name.replace(/'/g,"\\'")}',${n2(p.price||0)},'${p.itemType||''}')">
+      <strong>${p.name}</strong>
+      <span style="font-size:.7rem;color:${tc};margin-right:6px">${p.itemType||''}</span>
+      ${p.price?`<span style="font-size:.7rem;color:var(--tm)"> â€” ${fmt(p.price)}</span>`:''}
+    </div>`;
+  }).join('')||'<div class="ss-empty">Ù„Ø§ ØªÙˆØ¬Ø¯ Ù†ØªØ§Ø¦Ø¬</div>';
 }
 function filterRetProd(input,idx){ document.getElementById('rr-'+idx)?.querySelector('.rr-pid')?.setAttribute('value',''); renderRetProdDrop(idx,input.value); document.getElementById('rr-drop-'+idx)?.classList.add('open'); }
 function openRetProdDrop(input,idx){ renderRetProdDrop(idx,input.value); document.getElementById('rr-drop-'+idx)?.classList.add('open'); }
 function closeRetProdDrop(idx){ setTimeout(()=>document.getElementById('rr-drop-'+idx)?.classList.remove('open'),200); }
-function selectRetProd(idx,prodId,prodName,price) {
+function selectRetProd(idx,prodId,prodName,price,itemType) {
   const row=document.getElementById('rr-'+idx); if(!row)return;
   row.querySelector('.rr-pname').value=prodName;
   row.querySelector('.rr-pid').value=prodId;
+  row.querySelector('.rr-itype').value=itemType||'';
+  const typeDisp=row.querySelector('.rr-typedisp');
+  if(typeDisp){
+    typeDisp.textContent=itemType||'â€”';
+    typeDisp.style.color=itemType==='Ù…ØºØ°ÙŠ'?'var(--gb)':itemType==='Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ'?'var(--org)':'var(--td)';
+  }
   const priceInput=row.querySelector('.rr-price');
   if(priceInput&&!priceInput.value) priceInput.value=price||'';
   document.getElementById('rr-drop-'+idx)?.classList.remove('open');
@@ -2089,6 +2222,7 @@ function getRetRows() {
   return [...document.querySelectorAll('#retRows .inv-row')].map(row=>({
     prodId:parseInt(row.querySelector('.rr-pid')?.value)||0,
     prodName:row.querySelector('.rr-pname')?.value.trim()||'',
+    itemType:row.querySelector('.rr-itype')?.value||'',  // snapshot Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù
     qty:n2(parseFloat(row.querySelector('.rr-qty')?.value)||0),
     price:n2(parseFloat(row.querySelector('.rr-price')?.value)||0),
     total:n2((parseFloat(row.querySelector('.rr-qty')?.value)||0)*(parseFloat(row.querySelector('.rr-price')?.value)||0))
@@ -2166,7 +2300,7 @@ async function editReturn(id) {
   document.getElementById('retRouteLbl').textContent=ret.route?'Ø®Ø· Ø§Ù„Ø³ÙŠØ±: '+ret.route:'';
   document.getElementById('retReason').value=ret.reason||'';
   document.getElementById('retRows').innerHTML=''; retRowCnt=0;
-  (ret.items||[]).forEach(it=>addRetRow(it.prodId,it.prodName,it.qty,it.price));
+  (ret.items||[]).forEach(it=>addRetRow(it.prodId,it.prodName,it.qty,it.price,it.itemType||''));
   calcRetTotals();
   document.getElementById('retTitle').textContent='âœï¸ ØªØ¹Ø¯ÙŠÙ„ Ù…Ø±ØªØ¬Ø¹ RET-'+ret.num;
   const btn=document.getElementById('btnSaveRet');
@@ -2546,14 +2680,18 @@ function printClients(){
 //  PRODUCTS â€” Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø£ØµÙ†Ø§Ù
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 async function saveProd(){
-  const name=document.getElementById('prName').value.trim(); if(!name)return showToast('âŒ Ø§Ø³Ù… Ø§Ù„ØµÙ†Ù Ù…Ø·Ù„ÙˆØ¨');
+  const name=document.getElementById('prName').value.trim();
+  if(!name) return showToast('âŒ Ø§Ø³Ù… Ø§Ù„ØµÙ†Ù Ù…Ø·Ù„ÙˆØ¨');
+  const itemType=document.getElementById('prItemType').value;
+  if(!itemType) return showToast('âŒ ÙŠØ¬Ø¨ Ø§Ø®ØªÙŠØ§Ø± Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù (Ù…ØºØ°ÙŠ / Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ)');
   const editId=parseInt(document.getElementById('prEditId').value)||0;
   const pr={
     id:editId||(C.settings.nextPrId++),
     name,
+    itemType,   // Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù â€” Ø­Ù‚Ù„ Ø¥Ù„Ø²Ø§Ù…ÙŠ
     unit:document.getElementById('prUnit').value.trim(),
     price:n2(parseFloat(document.getElementById('prPrice').value)||0),
-    costPrice:n2(parseFloat(document.getElementById('prCost').value)||0),
+    costPrice:0,
     stock:n2(parseFloat(document.getElementById('prStock').value)||0),
     notes:document.getElementById('prNotes').value.trim()
   };
@@ -2564,15 +2702,17 @@ async function saveProd(){
   showToast(editId?'âœ… ØªÙ… ØªØ­Ø¯ÙŠØ« Ø§Ù„ØµÙ†Ù':'âœ… ØªÙ… Ø¥Ø¶Ø§ÙØ© Ø§Ù„ØµÙ†Ù'); clearPr(); renderProds();
 }
 function clearPr(){
-  ['prName','prUnit','prPrice','prCost','prStock','prNotes'].forEach(id=>{ const el=document.getElementById(id);if(el)el.value=''; });
-  document.getElementById('prEditId').value=''; document.getElementById('prTitle').textContent='âž• Ø¥Ø¶Ø§ÙØ© ØµÙ†Ù Ø¬Ø¯ÙŠØ¯';
+  ['prName','prUnit','prPrice','prStock','prNotes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('prItemType').value='';
+  document.getElementById('prEditId').value='';
+  document.getElementById('prTitle').textContent='âž• Ø¥Ø¶Ø§ÙØ© ØµÙ†Ù Ø¬Ø¯ÙŠØ¯';
 }
 function editProd(id){
   const pr=C.products.find(p=>p.id===id);if(!pr)return;
   document.getElementById('prName').value=pr.name;
+  document.getElementById('prItemType').value=pr.itemType||'';
   document.getElementById('prUnit').value=pr.unit||'';
   document.getElementById('prPrice').value=pr.price||'';
-  document.getElementById('prCost').value=pr.costPrice||'';
   document.getElementById('prStock').value=pr.stock||'';
   document.getElementById('prNotes').value=pr.notes||'';
   document.getElementById('prEditId').value=id;
@@ -2582,27 +2722,41 @@ function editProd(id){
 async function deleteProduct(id){ await idbDel('products',id); C.products=C.products.filter(p=>p.id!==id); showToast('âœ… ØªÙ… Ø­Ø°Ù Ø§Ù„ØµÙ†Ù'); renderProds(); }
 async function renderProds(){
   const q=(document.getElementById('prSearch')?.value||'').trim().toLowerCase();
-  // Ø¹Ø±Ø¶ Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø£ØµÙ†Ø§Ù ØªÙ„Ù‚Ø§Ø¦ÙŠØ§Ù‹ Ø¹Ù†Ø¯ ÙØªØ­ Ø§Ù„ØµÙØ­Ø©
-  let list=C.products.filter(p=>!q||(p.name||'').toLowerCase().includes(q));
-  list.sort((a,b)=>a.name.localeCompare(b.name));
-  const cnt=document.getElementById('prCount');if(cnt)cnt.textContent=`${list.length} ØµÙ†Ù`;
+  const filterType=document.getElementById('prFilterType')?.value||'';
+  let list=C.products.filter(p=>{
+    if(filterType && p.itemType!==filterType) return false;
+    if(q && !(p.name||'').toLowerCase().includes(q)) return false;
+    return true;
+  });
+  list.sort((a,b)=>{
+    // ØªØ±ØªÙŠØ¨: Ù…ØºØ°ÙŠ Ø£ÙˆÙ„Ø§Ù‹ Ø«Ù… Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠØŒ ÙˆØ¯Ø§Ø®Ù„ ÙƒÙ„ Ù†ÙˆØ¹ Ø£Ø¨Ø¬Ø¯ÙŠØ§Ù‹
+    if((a.itemType||'') !== (b.itemType||'')) return (a.itemType==='Ù…ØºØ°ÙŠ')?-1:1;
+    return a.name.localeCompare(b.name);
+  });
+  const cnt=document.getElementById('prCount');
+  if(cnt){
+    const mgCount=list.filter(p=>p.itemType==='Ù…ØºØ°ÙŠ').length;
+    const hsCount=list.filter(p=>p.itemType==='Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ').length;
+    cnt.textContent=`${list.length} ØµÙ†Ù (Ù…ØºØ°ÙŠ: ${mgCount} | Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ: ${hsCount})`;
+  }
   const tbody=document.getElementById('prTbody');if(!tbody)return;
   tbody.innerHTML=list.map(p=>{
-    const stockColor=p.stock>0?'var(--gb)':p.stock===0?'var(--org)':'var(--red)';
+    const typeColor=p.itemType==='Ù…ØºØ°ÙŠ'?'var(--gb)':'var(--org)';
+    const typeBg=p.itemType==='Ù…ØºØ°ÙŠ'?'rgba(45,216,133,.12)':'rgba(232,145,58,.12)';
     return`<tr>
       <td style="color:var(--td);font-size:.78rem">${p.id}</td>
       <td><b>${p.name}</b>${p.notes?`<br><small style="color:var(--tm)">${p.notes}</small>`:''}</td>
+      <td><span style="background:${typeBg};color:${typeColor};padding:2px 8px;border-radius:12px;font-size:.78rem;font-weight:700">${p.itemType||'ØºÙŠØ± Ù…Ø­Ø¯Ø¯'}</span></td>
       <td>${p.unit||'â€”'}</td>
       <td style="font-weight:700;color:var(--gb)">${fmt(p.price)}</td>
-      <td style="color:var(--gol)">${p.costPrice?fmt(p.costPrice):'â€”'}</td>
-      <td style="font-weight:700;color:${stockColor}">${p.stock!==undefined?p.stock.toLocaleString('ar-EG'):'â€”'}</td>
+      <td style="font-weight:700">${p.stock!==undefined?p.stock.toLocaleString('ar-EG'):'â€”'}</td>
       <td id="prs-${p.id}" style="color:var(--td)">â€”</td>
       <td id="prt-${p.id}" style="color:var(--td)">â€”</td>
       <td style="display:flex;gap:6px">
         <button class="btn bb bsm" onclick="editProd(${p.id})">âœï¸</button>
         <button class="btn br2 bsm" onclick="promptDelete('product',${p.id},'Ø­Ø°Ù ØµÙ†Ù ${p.name}ØŸ')">ðŸ—‘ï¸</button>
       </td></tr>`;
-  }).join('')||'<tr><td colspan="9" style="text-align:center;color:var(--td);padding:20px">Ù„Ø§ ØªÙˆØ¬Ø¯ Ø£ØµÙ†Ø§Ù â€” Ø£Ø¶Ù ØµÙ†ÙØ§Ù‹ Ø¬Ø¯ÙŠØ¯Ø§Ù‹</td></tr>';
+  }).join('')||'<tr><td colspan="9" style="text-align:center;color:var(--td);padding:20px">Ù„Ø§ ØªÙˆØ¬Ø¯ Ø£ØµÙ†Ø§Ù</td></tr>';
 }
 async function loadProdStats(){
   const invs=await idbAll('invoices');
@@ -3018,6 +3172,152 @@ async function genReturnsRep(){
     <tfoot><tr style="font-weight:700"><td colspan="5">Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ (${filt.length} Ù…Ø±ØªØ¬Ø¹)</td><td style="color:var(--red);font-size:13pt">${fmt(total)}</td><td colspan="2"></td></tr></tfoot></table>`;
 }
 function printReturnsRep(){ openPrintWin(document.getElementById('rRetOut').innerHTML); }
+
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+//  ðŸ“Š ÙƒØ´Ù Ø­Ø³Ø§Ø¨ Ù…Ù‚Ø³Ù… â€” Ù…ØºØ°ÙŠ / Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ
+//  Ø§Ù„Ù‚Ø§Ø¹Ø¯Ø© Ø§Ù„Ù…Ø­Ø§Ø³Ø¨ÙŠØ©:
+//    â€¢ Ø§Ù„Ø®ØµÙ… ÙŠÙØ·Ø¨ÙŽÙ‘Ù‚ Ø¹Ù„Ù‰ Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù…ØºØ°ÙŠ ÙÙ‚Ø·
+//    â€¢ Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ: Ø¨Ø¯ÙˆÙ† Ø£ÙŠ Ø®ØµÙ… Ø£ÙŠØ§Ù‹ ÙƒØ§Ù†Øª Ø§Ù„Ù†Ø³Ø¨Ø©
+//    â€¢ Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù†Ù‡Ø§Ø¦ÙŠ = (Ù…ØºØ°ÙŠ Ø¨Ø¹Ø¯ Ø§Ù„Ø®ØµÙ…) + Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ
+//  Backward Compatibility:
+//    â€¢ Ø¨Ù†ÙˆØ¯ Ø§Ù„ÙÙˆØ§ØªÙŠØ± Ø§Ù„Ù‚Ø¯ÙŠÙ…Ø© Ø§Ù„ØªÙŠ itemType ÙØ§Ø±Øº â†’ ØªÙØ¹Ø¯Ù‘ "Ù…ØºØ°ÙŠ" ØªÙ„Ù‚Ø§Ø¦ÙŠØ§Ù‹ ÙÙŠ Ø§Ù„Ø¹Ø±Ø¶ ÙÙ‚Ø·
+//    â€¢ Ù„Ø§ ÙŠÙØ¹Ø¯ÙŽÙ‘Ù„ Ø£ÙŠ Ø³Ø¬Ù„ Ù‚Ø¯ÙŠÙ… ÙÙŠ Ù‚Ø§Ø¹Ø¯Ø© Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª
+// â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+// â”€â”€ Ø¨Ø­Ø« Ø¹Ù…ÙŠÙ„ ÙƒØ´Ù Ø­Ø³Ø§Ø¨ Ù…Ù‚Ø³Ù… â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function renderSplitClDrop(q){ ssRender('rSplitClDrop',()=>parseInt(document.getElementById('rSplitDl').value)||null,'selectSplitCl',q); }
+function selectSplitCl(id,name){ document.getElementById('rSplitClSearch').value=name; document.getElementById('rSplitClId').value=id; document.getElementById('rSplitClDrop').classList.remove('open'); }
+function filterSplitCl(){ document.getElementById('rSplitClId').value=''; renderSplitClDrop(document.getElementById('rSplitClSearch').value); document.getElementById('rSplitClDrop').classList.add('open'); }
+function openSplitClDrop(){ renderSplitClDrop(document.getElementById('rSplitClSearch').value); document.getElementById('rSplitClDrop').classList.add('open'); }
+function closeSplitClDrop(){ setTimeout(()=>document.getElementById('rSplitClDrop').classList.remove('open'),200); }
+function onSplitDlChange(){ document.getElementById('rSplitClSearch').value=''; document.getElementById('rSplitClId').value=''; renderSplitClDrop(''); fillSel('rSplitDl',C.delegates,'id','name','-- Ø§Ù„ÙƒÙ„ --'); }
+
+async function genSplitRep() {
+  const dlId   = parseInt(document.getElementById('rSplitDl').value)||null;
+  const clId   = parseInt(document.getElementById('rSplitClId').value)||null;
+  const from   = document.getElementById('rSplitFrom').value;
+  const to     = document.getElementById('rSplitTo').value;
+  const discPct= n2(parseFloat(document.getElementById('rSplitDiscount').value)||0);
+  if(!clId) return showToast('âŒ ÙŠØ¬Ø¨ Ø§Ø®ØªÙŠØ§Ø± Ø§Ù„Ø¹Ù…ÙŠÙ„');
+  const cl=C.clients.find(c=>c.id===clId);
+  const dl=C.delegates.find(d=>d.id===(dlId||cl?.delegateId));
+  // Ø¬Ù„Ø¨ Ø§Ù„ÙÙˆØ§ØªÙŠØ± Ø§Ù„Ù…ØµÙÙ‘Ø§Ø©
+  let invs=await idbInvByClient(clId);
+  if(dlId) invs=invs.filter(i=>i.delegateId===dlId);
+  if(from) invs=invs.filter(i=>i.date>=from);
+  if(to)   invs=invs.filter(i=>i.date<=to);
+  invs.sort((a,b)=>a.date.localeCompare(b.date)||a.num-b.num);
+  if(!invs.length){ document.getElementById('rSplitOut').innerHTML='<div style="text-align:center;color:var(--td);padding:20px">Ù„Ø§ ØªÙˆØ¬Ø¯ ÙÙˆØ§ØªÙŠØ± ÙÙŠ Ù‡Ø°Ù‡ Ø§Ù„ÙØªØ±Ø©</div>'; return; }
+  const prefix=C.settings.invPrefix||'INV';
+  // ØªØ¬Ù…ÙŠØ¹ Ø§Ù„Ø¨Ù†ÙˆØ¯ Ø­Ø³Ø¨ Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù
+  const mgRows=[], hsRows=[];  // Ù…ØºØ°ÙŠØŒ Ø­Ø´Ø±ÙŠ ÙˆÙØ·Ø±ÙŠ
+  invs.forEach(inv=>{
+    (inv.items||[]).forEach(it=>{
+      // âœ… Backward compat: itemType ÙØ§Ø±Øº = Ù…ØºØ°ÙŠ ÙÙŠ Ø§Ù„Ø¹Ø±Ø¶ ÙÙ‚Ø·
+      const itype=it.itemType||'Ù…ØºØ°ÙŠ';
+      const row={ date:inv.date, invNum:prefix+'-'+inv.num, refNum:inv.refNum||'', name:it.prodName, type:itype, qty:it.qty, price:it.price, total:it.total };
+      if(itype==='Ù…ØºØ°ÙŠ') mgRows.push(row); else hsRows.push(row);
+    });
+  });
+  // Ø­Ø³Ø§Ø¨ Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠØ§Øª
+  const mgTotal=n2(mgRows.reduce((s,r)=>s+n2(r.total),0));
+  const hsTotal=n2(hsRows.reduce((s,r)=>s+n2(r.total),0));
+  const discVal=n2(mgTotal*discPct/100);
+  const mgAfterDisc=n2(mgTotal-discVal);
+  const grandTotal=n2(mgAfterDisc+hsTotal);
+  // Ø¯Ø§Ù„Ø© Ù…Ø³Ø§Ø¹Ø¯Ø© Ù„Ø¨Ù†Ø§Ø¡ Ø¬Ø¯ÙˆÙ„ Ø§Ù„Ø¨Ù†ÙˆØ¯
+  const buildTable=(rows)=>{
+    if(!rows.length) return '<div style="color:var(--td);font-size:.82rem;text-align:center;padding:8px">Ù„Ø§ ØªÙˆØ¬Ø¯ Ø¨Ù†ÙˆØ¯</div>';
+    return`<table><thead><tr><th>Ø§Ù„ØªØ§Ø±ÙŠØ®</th><th>Ø±Ù‚Ù… Ø§Ù„ÙØ§ØªÙˆØ±Ø©</th><th>Ø§Ù„Ù…Ø±Ø¬Ø¹</th><th>Ø§Ø³Ù… Ø§Ù„ØµÙ†Ù</th><th>Ù†ÙˆØ¹ Ø§Ù„ØµÙ†Ù</th><th>Ø§Ù„Ø¹Ø¯Ø¯</th><th>Ø§Ù„Ø³Ø¹Ø±</th><th>Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ</th></tr></thead>
+    <tbody>${rows.map(r=>`<tr>
+      <td>${r.date}</td>
+      <td style="font-weight:700;color:#0a3d2e">${r.invNum}</td>
+      <td style="color:#666">${r.refNum||'â€”'}</td>
+      <td>${r.name}</td>
+      <td style="color:${r.type==='Ù…ØºØ°ÙŠ'?'#1a7a50':'#b86000'};font-weight:700">${r.type}</td>
+      <td style="text-align:center">${r.qty}</td>
+      <td>${fmt(r.price)}</td>
+      <td style="font-weight:700">${fmt(r.total)}</td>
+    </tr>`).join('')}</tbody></table>`;
+  };
+  const co=C.settings;
+  const html=`<div id="splitRepPrint">
+    <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #1a7a50">
+      <div style="font-size:1.1rem;font-weight:900;color:#0a3d2e">${co.company||'Ø±ÙˆØ²ÙŠØªØ§ Ø§Ù„Ù…ØªØ­Ø¯Ø© Ù„Ù„Ù…Ø¨ÙŠØ¯Ø§Øª Ø§Ù„Ø²Ø±Ø§Ø¹ÙŠØ©'}</div>
+      ${co.address?`<div style="font-size:.8rem;color:#555">${co.address}</div>`:''}
+      <div style="font-size:1rem;font-weight:700;margin-top:6px">ðŸ“Š ÙƒØ´Ù Ø­Ø³Ø§Ø¨ Ù…Ù‚Ø³Ù…</div>
+      <div style="font-size:.82rem;color:var(--tm);margin-top:4px">
+        <b>Ø§Ù„Ø¹Ù…ÙŠÙ„:</b> ${cl?.name||'â€”'} |
+        <b>Ø§Ù„Ù…Ù†Ø¯ÙˆØ¨:</b> ${dl?.name||'â€”'} |
+        <b>Ø§Ù„ÙØªØ±Ø©:</b> ${from||'â€”'} Ø¥Ù„Ù‰ ${to||'â€”'}
+        ${discPct>0?`| <b>Ù†Ø³Ø¨Ø© Ø§Ù„Ø®ØµÙ… Ø¹Ù„Ù‰ Ø§Ù„Ù…ØºØ°ÙŠ:</b> ${discPct}%`:''}
+      </div>
+    </div>
+
+    <!-- â•â•â• Ù‚Ø³Ù… Ø§Ù„Ù…ØºØ°ÙŠ â•â•â• -->
+    <div style="margin-bottom:18px">
+      <div style="background:#eaf7ef;border:2px solid #1a7a50;border-radius:8px 8px 0 0;padding:8px 14px;font-weight:900;color:#0a3d2e;font-size:.95rem">
+        ðŸŒ¿ Ø£ØµÙ†Ø§Ù Ø§Ù„Ù…ØºØ°ÙŠ
+      </div>
+      ${buildTable(mgRows)}
+      <div style="background:#d4f0e0;border:2px solid #1a7a50;border-top:none;border-radius:0 0 8px 8px;padding:10px 14px">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span style="font-weight:700;color:#0a3d2e">Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ù‚Ø³Ù… Ø§Ù„Ù…ØºØ°ÙŠ Ù‚Ø¨Ù„ Ø§Ù„Ø®ØµÙ…:</span>
+          <span style="font-weight:900;color:#0a3d2e;font-size:1.05rem">${fmt(mgTotal)} Ø¬Ù†ÙŠÙ‡</span>
+        </div>
+        ${discPct>0?`
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:6px;color:#b00020">
+          <span style="font-weight:700">Ø®ØµÙ… Ø§Ù„Ù…ØºØ°ÙŠ (${discPct}%):</span>
+          <span style="font-weight:900;font-size:1.05rem">(${fmt(discVal)}) Ø¬Ù†ÙŠÙ‡</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:6px;border-top:1px solid #1a7a50;padding-top:6px">
+          <span style="font-weight:700;color:#0a3d2e">Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù…ØºØ°ÙŠ Ø¨Ø¹Ø¯ Ø§Ù„Ø®ØµÙ…:</span>
+          <span style="font-weight:900;color:#0a3d2e;font-size:1.1rem">${fmt(mgAfterDisc)} Ø¬Ù†ÙŠÙ‡</span>
+        </div>`:''}
+      </div>
+    </div>
+
+    <!-- â•â•â• Ù‚Ø³Ù… Ø§Ù„Ø­Ø´Ø±ÙŠ ÙˆØ§Ù„ÙØ·Ø±ÙŠ â•â•â• -->
+    <div style="margin-bottom:18px">
+      <div style="background:#fff5ec;border:2px solid #b86000;border-radius:8px 8px 0 0;padding:8px 14px;font-weight:900;color:#b86000;font-size:.95rem">
+        ðŸ› Ø£ØµÙ†Ø§Ù Ø§Ù„Ø­Ø´Ø±ÙŠ ÙˆØ§Ù„ÙØ·Ø±ÙŠ
+      </div>
+      ${buildTable(hsRows)}
+      <div style="background:#fde8cc;border:2px solid #b86000;border-top:none;border-radius:0 0 8px 8px;padding:10px 14px">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span style="font-weight:700;color:#b86000">Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ù‚Ø³Ù… Ø§Ù„Ø­Ø´Ø±ÙŠ ÙˆØ§Ù„ÙØ·Ø±ÙŠ (Ø¨Ø¯ÙˆÙ† Ø®ØµÙ…):</span>
+          <span style="font-weight:900;color:#b86000;font-size:1.05rem">${fmt(hsTotal)} Ø¬Ù†ÙŠÙ‡</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- â•â•â• Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù†Ù‡Ø§Ø¦ÙŠ â•â•â• -->
+    <div style="background:linear-gradient(135deg,#0a3d2e,#1a7a50);border-radius:10px;padding:16px 20px;color:#fff;text-align:center">
+      <div style="font-size:.85rem;margin-bottom:8px;opacity:.85">
+        Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù†Ù‡Ø§Ø¦ÙŠ = Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù…ØºØ°ÙŠ Ø¨Ø¹Ø¯ Ø§Ù„Ø®ØµÙ… + Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ø­Ø´Ø±ÙŠ ÙˆØ§Ù„ÙØ·Ø±ÙŠ
+      </div>
+      <div style="font-size:1.6rem;font-weight:900">${fmt(grandTotal)} Ø¬Ù†ÙŠÙ‡</div>
+      ${discPct>0?`<div style="font-size:.78rem;margin-top:6px;opacity:.8">ÙˆÙÙ‘Ø±Øª ${fmt(discVal)} Ø¬Ù†ÙŠÙ‡ Ø®ØµÙ… Ø¹Ù„Ù‰ Ù‚Ø³Ù… Ø§Ù„Ù…ØºØ°ÙŠ</div>`:''}
+    </div>
+  </div>`;
+  document.getElementById('rSplitOut').innerHTML=html;
+}
+
+function printSplitRep(){
+  const el=document.getElementById('splitRepPrint');
+  if(!el){ showToast('âŒ Ø§Ø¹Ø±Ø¶ Ø§Ù„ÙƒØ´Ù Ø£ÙˆÙ„Ø§Ù‹ Ù‚Ø¨Ù„ Ø§Ù„Ø·Ø¨Ø§Ø¹Ø©'); return; }
+  // Ø·Ø¨Ø§Ø¹Ø© Ø¨Ø®Ù„ÙÙŠØ© ÙØ§ØªØ­Ø© ÙˆØ£Ù„ÙˆØ§Ù† Ù…Ù†Ø§Ø³Ø¨Ø©
+  openPrintWin(`
+    <style>
+      body{font-family:'Cairo',sans-serif;color:#1a1a2e;background:#fff;font-size:10pt}
+      table{width:100%;border-collapse:collapse;margin-bottom:0}
+      th{background:#0a3d2e;color:#fff;padding:6px 8px;text-align:right;font-size:9pt}
+      td{padding:5px 8px;border:1px solid #ccc;text-align:right;font-size:9pt}
+      tr:nth-child(even) td{background:#f9f9f9}
+    </style>
+    ${el.innerHTML}
+  `);
+}
 
 // â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
 //  CALCULATOR â€” Ø­Ø§Ø³Ø¨Ø© Ø§Ù„ØªØ±ÙƒÙŠØ¨Ø§Øª (Ù…ÙØµÙ„Ø­: Ø§Ù„Ù†Ø³Ø¨Ø© % Ø¨Ø¯ÙˆÙ† ØªÙ†Ø³ÙŠÙ‚)
