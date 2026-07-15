@@ -20,10 +20,7 @@
       }
     ],
     "security": {
-      "csp": null,
-      "headers": {
-        "Content-Type": "text/html; charset=utf-8"
-      }
+      "csp": null
     }
   },
   "bundle": {
