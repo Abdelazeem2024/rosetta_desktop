@@ -3450,16 +3450,21 @@ async function importData(event){
   } catch(e){ showToast('❌ خطأ في الاستيراد: '+e.message); }
   event.target.value='';
 }
-function confirmClear(){
+async function confirmClear(){
   if(!confirm('⚠️ هل تريد مسح جميع البيانات نهائياً؟ لا يمكن التراجع!'))return;
   if(!confirm('تأكيد أخير: سيتم حذف كل الفواتير والمرتجعات والعملاء وكل البيانات. هل أنت متأكد؟'))return;
-  idbBulk('invoices',[]); idbBulk('clients',[]); idbBulk('products',[]); idbBulk('delegates',[]); idbBulk('returns',[]);
+  await Promise.all([idbBulk('invoices',[]), idbBulk('clients',[]), idbBulk('products',[]), idbBulk('delegates',[]), idbBulk('returns',[])]);
   C.clients=[]; C.products=[]; C.delegates=[]; BAL.clear();
   C.settings.nextInvNum=1001; C.settings.nextRetNum=1; C.settings.nextClId=1; C.settings.nextPrId=1; C.settings.nextDlId=1;
-  idbPutSettings(C.settings);
-  showToast('⚠️ تم مسح جميع البيانات'); refreshAllDDs(); refreshDash();
+  // ✅ إعادة ضبط اسم الشركة والعنوان لتفادي بقاء أي قيمة قديمة تالفة الترميز
+  C.settings.company='روزيتا المتحدة للمبيدات الزراعية';
+  C.settings.address='';
+  // ✅ إعادة تلقيم الأصناف الـ49 الرسمية تلقائياً وفوراً بعد المسح (بدل تركها فارغة)
+  C.settings.seeded=false;
+  await seedDefault();
+  loadSettingsUI();
+  showToast('⚠️ تم مسح جميع البيانات وإعادة تحميل الأصناف الرسمية تلقائياً'); refreshAllDDs(); refreshDash();
 }
-
 // ═══════════════════════════════════════════════════════════
 //  GLOBAL SEARCH
 //  ✅ عند اختيار عميل: الانتقال مباشرة لآخر فاتورة له مع كل التفاصيل
