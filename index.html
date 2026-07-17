@@ -251,6 +251,8 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
       <button class="sidebar-btn" id="sb-invoice" onclick="go('invoice',this)"><span class="sidebar-icon">🧾</span><span>فاتورة جديدة</span></button>
       <button class="sidebar-btn" id="sb-returns" onclick="go('returns',this)"><span class="sidebar-icon">↩️</span><span>مرتجع عميل</span></button>
       <button class="sidebar-btn" id="sb-statement" onclick="go('statement',this)"><span class="sidebar-icon">📋</span><span>كشف الحساب</span></button>
+      <button class="sidebar-btn" id="sb-adjustment" onclick="go('adjustment',this)"><span class="sidebar-icon">💸</span><span>تسوية عميل</span></button>
+      <button class="sidebar-btn" id="sb-blacklist" onclick="go('blacklist',this)"><span class="sidebar-icon">🚫</span><span>القائمة السوداء</span></button>
       <button class="sidebar-btn" id="sb-lastinv" onclick="go('lastinv',this)"><span class="sidebar-icon">🔍</span><span>آخر فاتورة للعميل</span></button>
       <div class="sidebar-section">الإدارة</div>
       <button class="sidebar-btn" id="sb-clients" onclick="go('clients',this)"><span class="sidebar-icon">👥</span><span>العملاء</span></button>
@@ -278,7 +280,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
           <div class="sc cb"><div class="si">🧾</div><div class="sl">فواتير اليوم</div><div class="sv" id="s3">0<span> فاتورة</span></div></div>
           <div class="sc co"><div class="si">↩️</div><div class="sl">مرتجعات اليوم</div><div class="sv" id="s7">0<span> جنيه</span></div></div>
           <div class="sc cg"><div class="si">👥</div><div class="sl">إجمالي العملاء</div><div class="sv" id="s5">0<span> عميل</span></div></div>
-          <div class="sc cgo"><div class="si">💰</div><div class="sl">إجمالي المديونيات</div><div class="sv" id="s6">0<span> جنيه</span></div></div>
+          <div class="sc cgo"><div class="si">💰</div><div class="sl">إجمالي المديونيات</div><div class="sv" id="s6">0<span> جنيه</span></div><div id="s6note" style="font-size:.68rem;color:var(--red);margin-top:2px"></div></div>
         </div>
         <div class="dg2">
           <div class="dc"><div class="dc-t">📊 مبيعات آخر 7 أيام</div><div class="chart-bars" id="salesChart"></div></div>
@@ -479,6 +481,73 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
         <div class="card" id="stmResult" style="display:none"><div id="stmContent"></div></div>
       </div>
 
+      <!-- ════ ADJUSTMENT — تسوية عميل ═══════════════════════ -->
+      <div class="page" id="page-adjustment">
+        <div class="page-title">💸 تسوية عميل</div>
+        <div class="card">
+          <div class="fr3">
+            <div class="fg"><label>المندوب</label><select class="fc" id="adjDl" onchange="onAdjDlChange()"><option value="">-- الكل --</option></select></div>
+            <div class="fg"><label>العميل ✱</label>
+              <div class="ss-wrap">
+                <input class="fc" id="adjClSearch" placeholder="🔍 اكتب اسم العميل..." oninput="filterAdjCl()" onfocus="openAdjClDrop()" onblur="closeAdjClDrop()" autocomplete="off">
+                <input type="hidden" id="adjClId">
+                <div class="ss-drop" id="adjClDrop"></div>
+              </div>
+            </div>
+            <div class="fg"><label>التاريخ</label><input class="fc" type="date" id="adjDate"></div>
+          </div>
+          <div class="fr3" id="adjBalanceRow" style="display:none">
+            <div class="fg"><label>الرصيد الحالي</label><input class="fc" id="adjCurrentBal" readonly style="font-weight:900;color:var(--red)"></div>
+            <div class="fg"><label>قيمة الخصم / التسوية ✱</label><input class="fc" type="number" id="adjAmount" min="0" step="0.01" placeholder="0.00" oninput="calcAdjAfter()"></div>
+            <div class="fg"><label>الرصيد بعد التسوية</label><input class="fc" id="adjAfterBal" readonly style="font-weight:900;color:var(--gb)"></div>
+          </div>
+          <div class="fg" id="adjReasonRow" style="display:none">
+            <label>سبب الخصم (اختياري)</label>
+            <input class="fc" id="adjReason" placeholder="مثال: خصم تسوية نهاية السنة">
+          </div>
+          <div class="br">
+            <button class="btn bg" onclick="saveAdjustment()">💾 حفظ التسوية</button>
+            <button class="btn br2" onclick="clearAdjForm()">🗑️ إلغاء / مسح</button>
+          </div>
+        </div>
+        <div class="card" id="adjHistoryCard" style="display:none">
+          <div class="card-title">📜 آخر تسويات هذا العميل</div>
+          <table><thead><tr><th>التاريخ</th><th>القيمة</th><th>السبب</th><th></th></tr></thead>
+          <tbody id="adjHistoryTbody"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ════ BLACKLIST — القائمة السوداء ═══════════════════ -->
+      <div class="page" id="page-blacklist">
+        <div class="page-title">🚫 القائمة السوداء (ديون معدومة)</div>
+        <div class="card" style="border:1px solid rgba(176,0,32,.3);background:rgba(176,0,32,.04)">
+          <div style="font-size:.82rem;color:var(--tm);margin-bottom:12px">
+            إضافة عميل هنا تستبعد رصيده من إجمالي المديونيات ولوحة التحكم والتقارير العامة فقط — بياناته وفواتيره وكشف حسابه يبقى محفوظاً بالكامل بدون أي تغيير، وتقدر تخرجه من القائمة في أي وقت فترجع أرصدته تُحسب زي ما كانت تماماً. طالما العميل هنا، ممنوع تسجيل أي فاتورة أو مرتجع أو تحصيل أو تسوية له.
+          </div>
+          <div class="fr3">
+            <div class="fg"><label>المندوب</label><select class="fc" id="blDl" onchange="onBlDlChange()"><option value="">-- الكل --</option></select></div>
+            <div class="fg"><label>العميل ✱</label>
+              <div class="ss-wrap">
+                <input class="fc" id="blClSearch" placeholder="🔍 اكتب اسم العميل..." oninput="filterBlCl()" onfocus="openBlClDrop()" onblur="closeBlClDrop()" autocomplete="off">
+                <input type="hidden" id="blClId">
+                <div class="ss-drop" id="blClDrop"></div>
+              </div>
+            </div>
+            <div class="fg"><label>سبب الإدراج (اختياري)</label><input class="fc" id="blReason" placeholder="مثال: عدم استجابة نهائياً / تعثر مالي"></div>
+          </div>
+          <div class="br">
+            <button class="btn" style="background:#b00020;color:#fff" onclick="addToBlacklist()">🚫 إضافة للقائمة السوداء</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📋 العملاء الحاليون بالقائمة السوداء (<span id="blCount">0</span>)</div>
+          <div class="tw"><table><thead><tr>
+            <th>العميل</th><th>المندوب</th><th>السبب</th><th>تاريخ الإدراج</th><th>الرصيد المجمّد</th><th>كشف حساب</th><th>إخراج</th>
+          </tr></thead><tbody id="blTbody"></tbody></table></div>
+        </div>
+      </div>
+
       <!-- ════ LAST INVOICE ═════════════════════════════════ -->
       <div class="page" id="page-lastinv">
         <div class="page-title">🔍 سجل العميل</div>
@@ -650,7 +719,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
           <div class="qb" onclick="showRep('balance')" style="padding:16px"><span class="qi">💰</span>تقرير الأرصدة</div>
           <div class="qb" onclick="showRep('overdue')" style="padding:16px"><span class="qi">⚠️</span>الفواتير المتأخرة</div>
           <div class="qb" onclick="showRep('returnsrep')" style="padding:16px"><span class="qi">↩️</span>تقرير المرتجعات</div>
-          <div class="qb" onclick="showRep('splitrep')" style="padding:16px;border:2px solid var(--gold)"><span class="qi">📊</span>كشف حساب مقسم</div>
+          <div class="qb" onclick="showRep('splitrep')" style="padding:16px;border:2px solid var(--gold)"><span class="qi">📊</span>كشف حساب بالأصناف</div>
         </div>
         <div class="card rep-panel" id="rpanel-daily">
           <div class="card-title">📅 تقرير يومي</div>
@@ -736,9 +805,9 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
           <div id="rRetOut" style="margin-top:14px"></div>
         </div>
 
-        <!-- ════ كشف حساب مقسم ════ -->
+        <!-- ════ كشف حساب بالأصناف ════ -->
         <div class="card rep-panel" id="rpanel-splitrep" style="border:2px solid var(--gold)">
-          <div class="card-title" style="color:var(--gol)">📊 كشف حساب مقسم (مغذي / حشري وفطري)</div>
+          <div class="card-title" style="color:var(--gol)">📊 كشف حساب بالأصناف (مغذي / حشري وفطري)</div>
           <div class="fr4">
             <div class="fg"><label>المندوب ✱</label><select class="fc" id="rSplitDl" onchange="onSplitDlChange()"><option value="">-- الكل --</option></select></div>
             <div class="fg"><label>العميل ✱</label>
@@ -1042,19 +1111,20 @@ function _unlockSave() { _saving = false; }
 //  ████  BALANCE SYSTEM  ████
 //
 //  ⚠️  القاعدة الذهبية:
-//      BAL[cid].sales   = Σ(inv.net)  ← مجموع صافي الفواتير
-//      BAL[cid].paid    = Σ(inv.paid) ← مجموع المدفوع على الفواتير
-//      BAL[cid].returns = Σ(ret.total)← مجموع قيم المرتجعات
-//      remain = sales − paid − returns
+//      BAL[cid].sales       = Σ(inv.net)     ← مجموع صافي الفواتير
+//      BAL[cid].paid        = Σ(inv.paid)    ← مجموع المدفوع على الفواتير
+//      BAL[cid].returns     = Σ(ret.total)   ← مجموع قيم المرتجعات
+//      BAL[cid].adjustments = Σ(adj.amount)  ← مجموع تسويات/خصومات العميل اليدوية
+//      remain = sales − paid − returns − adjustments
 // ═══════════════════════════════════════════════════════════
-const BAL = new Map(); // Map<clientId, {sales, paid, returns}>
+const BAL = new Map(); // Map<clientId, {sales, paid, returns, adjustments}>
 
 async function rebuildAllBalances() {
   BAL.clear();
   // 1. تجميع من الفواتير
   const allInvs = await idbAll('invoices');
   allInvs.forEach(({ clientId, net, paid }) => {
-    if (!BAL.has(clientId)) BAL.set(clientId, { sales:0, paid:0, returns:0 });
+    if (!BAL.has(clientId)) BAL.set(clientId, { sales:0, paid:0, returns:0, adjustments:0 });
     const b = BAL.get(clientId);
     b.sales = n2(b.sales + n2(net));
     b.paid  = n2(b.paid  + n2(paid));
@@ -1062,38 +1132,63 @@ async function rebuildAllBalances() {
   // 2. تجميع من المرتجعات
   const allRets = await idbAll('returns');
   allRets.forEach(({ clientId, total }) => {
-    if (!BAL.has(clientId)) BAL.set(clientId, { sales:0, paid:0, returns:0 });
+    if (!BAL.has(clientId)) BAL.set(clientId, { sales:0, paid:0, returns:0, adjustments:0 });
     const b = BAL.get(clientId);
     if (b.returns === undefined) b.returns = 0;
     b.returns = n2(b.returns + n2(total));
   });
+  // 3. تجميع من تسويات/خصومات العملاء (مستقلة تماماً عن الفواتير والتحصيلات)
+  const allAdjs = idb.objectStoreNames.contains('adjustments') ? await idbAll('adjustments') : [];
+  allAdjs.forEach(({ clientId, amount }) => {
+    if (!BAL.has(clientId)) BAL.set(clientId, { sales:0, paid:0, returns:0, adjustments:0 });
+    const b = BAL.get(clientId);
+    if (b.adjustments === undefined) b.adjustments = 0;
+    b.adjustments = n2(b.adjustments + n2(amount));
+  });
 }
 
 function ensureBAL(cid) {
-  if (!BAL.has(cid)) BAL.set(cid, { sales:0, paid:0, returns:0 });
+  if (!BAL.has(cid)) BAL.set(cid, { sales:0, paid:0, returns:0, adjustments:0 });
   const b = BAL.get(cid);
   if (b.returns === undefined) b.returns = 0;
+  if (b.adjustments === undefined) b.adjustments = 0;
   return b;
 }
 
-function updateBAL(cid, salesDelta, paidDelta, returnsDelta=0) {
+function updateBAL(cid, salesDelta, paidDelta, returnsDelta=0, adjustmentsDelta=0) {
   const b = ensureBAL(cid);
-  b.sales   = n2(b.sales   + salesDelta);
-  b.paid    = n2(b.paid    + paidDelta);
-  b.returns = n2(b.returns + returnsDelta);
+  b.sales       = n2(b.sales       + salesDelta);
+  b.paid        = n2(b.paid        + paidDelta);
+  b.returns     = n2(b.returns     + returnsDelta);
+  b.adjustments = n2(b.adjustments + adjustmentsDelta);
 }
 
 // رصيد العميل المتبقي — O(1)
 function clRemain(cid) {
   const b = BAL.get(cid);
   if (!b) return 0;
-  return n2(b.sales - b.paid - (b.returns||0));
+  return n2(b.sales - b.paid - (b.returns||0) - (b.adjustments||0));
 }
 
 // إجمالي المديونيات
 function totalDebt() {
   let d = 0;
-  BAL.forEach(b => { const r = n2(b.sales - b.paid - (b.returns||0)); if (r > 0) d = n2(d + r); });
+  BAL.forEach((b,cid) => {
+    const cl = C.clients.find(c=>c.id===cid);
+    if (cl?.blacklisted) return; // ✅ مستبعد من الإجمالي — رصيده محفوظ بدقة لكن غير محسوب ضمن المديونيات المتوقع تحصيلها
+    const r = n2(b.sales - b.paid - (b.returns||0) - (b.adjustments||0)); if (r > 0) d = n2(d + r);
+  });
+  return d;
+}
+
+// إجمالي الديون المجمّدة (عملاء القائمة السوداء) — منفصل تماماً عن totalDebt للشفافية
+function totalFrozenDebt() {
+  let d = 0;
+  BAL.forEach((b,cid) => {
+    const cl = C.clients.find(c=>c.id===cid);
+    if (!cl?.blacklisted) return;
+    const r = n2(b.sales - b.paid - (b.returns||0) - (b.adjustments||0)); if (r > 0) d = n2(d + r);
+  });
   return d;
 }
 
@@ -1103,14 +1198,22 @@ function clReturns(cid) {
   return b ? n2(b.returns||0) : 0;
 }
 
+// إجمالي تسويات/خصومات عميل
+function clAdjustments(cid) {
+  const b = BAL.get(cid);
+  return b ? n2(b.adjustments||0) : 0;
+}
+
 // إعادة بناء رصيد عميل واحد من DB
 async function rebuildClientBAL(cid) {
   const invs = await idbInvByClient(cid);
   const rets = await idbRetByClient(cid);
-  const sales   = n2(invs.reduce((s,i) => s + n2(i.net),   0));
-  const paid    = n2(invs.reduce((s,i) => s + n2(i.paid),  0));
-  const returns = n2(rets.reduce((s,r) => s + n2(r.total), 0));
-  BAL.set(cid, { sales, paid, returns });
+  const adjs = idb.objectStoreNames.contains('adjustments') ? (await idbAll('adjustments')).filter(a=>a.clientId===cid) : [];
+  const sales       = n2(invs.reduce((s,i) => s + n2(i.net),   0));
+  const paid        = n2(invs.reduce((s,i) => s + n2(i.paid),  0));
+  const returns     = n2(rets.reduce((s,r) => s + n2(r.total), 0));
+  const adjustments = n2(adjs.reduce((s,a) => s + n2(a.amount), 0));
+  BAL.set(cid, { sales, paid, returns, adjustments });
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -1250,7 +1353,7 @@ const C = {
     address:'', phone:'', commRate:3,
     adminUser:'admin', adminPass:'1234',
     lastBackup:null, invPrefix:'INV',
-    nextInvNum:1001, nextRetNum:1,
+    nextInvNum:1001, nextRetNum:1, nextAdjId:1,
     nextClId:1, nextPrId:1, nextDlId:1
   }
 };
@@ -1548,6 +1651,8 @@ function go(name,btn) {
     invoice:   ()=>{ renderInvoices(); refreshInvDDs(); },
     returns:   ()=>{ renderReturns(); fillSel('retDl',C.delegates,'id','name','-- اختر مندوب --'); fillSel('retFilterDl',C.delegates,'id','name','جميع المندوبين'); renderRetClDrop(''); },
     statement: ()=>{ fillSel('stmDl',C.delegates,'id','name','-- الكل --'); renderStmClDrop(''); },
+    adjustment:()=>{ fillSel('adjDl',C.delegates,'id','name','-- الكل --'); renderAdjClDrop(''); clearAdjForm(); },
+    blacklist: ()=>{ fillSel('blDl',C.delegates,'id','name','-- الكل --'); renderBlClDrop(''); clearBlForm(); renderBlacklist(); },
     lastinv:   ()=>{ fillSel('liDl',C.delegates,'id','name','-- الكل --'); renderLiDrop(''); },
     clients:   ()=>{ renderClients(); fillSel('clDl',C.delegates,'id','name','-- بدون مندوب --'); fillSel('clFilterDl',C.delegates,'id','name','جميع المندوبين'); },
     products:  renderProds,
@@ -1601,8 +1706,8 @@ function ssRender(dropId,getDidFn,onFnStr,q) {
   const filt=(q&&q.trim())?pool.filter(c=>c.name.includes(q.trim())):pool;
   const dd=document.getElementById(dropId); if(!dd)return;
   dd.innerHTML=filt.slice(0,15).map(c=>
-    `<div class="ss-item" onmousedown="${onFnStr}(${c.id},'${c.name.replace(/'/g,"\\'")}','${(c.route||'').replace(/'/g,"\\'")}')">
-      <strong>${c.name}</strong>${c.route?`<span style="font-size:.72rem;color:var(--gol);margin-right:6px">${c.route}</span>`:''}
+    `<div class="ss-item" onmousedown="${onFnStr}(${c.id},'${c.name.replace(/'/g,"\\'")}','${(c.route||'').replace(/'/g,"\\'")}')" style="${c.blacklisted?'opacity:.7':''}">
+      <strong>${c.blacklisted?'🚫 ':''}${c.name}</strong>${c.route?`<span style="font-size:.72rem;color:var(--gol);margin-right:6px">${c.route}</span>`:''}${c.blacklisted?`<span style="font-size:.68rem;color:var(--red);margin-right:6px">(قائمة سوداء)</span>`:''}
     </div>`
   ).join('')||'<div class="ss-empty">لا توجد نتائج</div>';
 }
@@ -1630,6 +1735,180 @@ function filterStmCl(){ document.getElementById('stmClId').value=''; renderStmCl
 function openStmClDrop(){ renderStmClDrop(document.getElementById('stmClSearch').value); document.getElementById('stmClDrop').classList.add('open'); }
 function closeStmClDrop(){ setTimeout(()=>document.getElementById('stmClDrop').classList.remove('open'),200); }
 function onStmDlChange(){ document.getElementById('stmClSearch').value=''; document.getElementById('stmClId').value=''; renderStmClDrop(''); }
+
+// ═══════════════════════════════════════════════════════════
+//  ADJUSTMENT — تسوية عميل (خصم/تسوية يدوية مستقلة عن الفواتير والتحصيلات)
+//  القاعدة: remain = sales − paid − returns − adjustments
+//  كل تسوية تُحفظ كسجل مستقل في store منفصل 'adjustments' ولا تلمس
+//  أي فاتورة أو تحصيل قديم إطلاقاً.
+// ═══════════════════════════════════════════════════════════
+function renderAdjClDrop(q){ ssRender('adjClDrop',()=>parseInt(document.getElementById('adjDl').value)||null,'selectAdjCl',q); }
+function selectAdjCl(id,name){
+  document.getElementById('adjClSearch').value=name;
+  document.getElementById('adjClId').value=id;
+  document.getElementById('adjClDrop').classList.remove('open');
+  onAdjClientChosen(parseInt(id));
+}
+function filterAdjCl(){ document.getElementById('adjClId').value=''; document.getElementById('adjBalanceRow').style.display='none'; document.getElementById('adjReasonRow').style.display='none'; document.getElementById('adjHistoryCard').style.display='none'; renderAdjClDrop(document.getElementById('adjClSearch').value); document.getElementById('adjClDrop').classList.add('open'); }
+function openAdjClDrop(){ renderAdjClDrop(document.getElementById('adjClSearch').value); document.getElementById('adjClDrop').classList.add('open'); }
+function closeAdjClDrop(){ setTimeout(()=>document.getElementById('adjClDrop').classList.remove('open'),200); }
+function onAdjDlChange(){ document.getElementById('adjClSearch').value=''; document.getElementById('adjClId').value=''; document.getElementById('adjBalanceRow').style.display='none'; document.getElementById('adjReasonRow').style.display='none'; document.getElementById('adjHistoryCard').style.display='none'; renderAdjClDrop(''); }
+
+async function onAdjClientChosen(clId){
+  if(!clId) return;
+  document.getElementById('adjCurrentBal').value = fmt(clRemain(clId));
+  document.getElementById('adjAmount').value = '';
+  document.getElementById('adjAfterBal').value = fmt(clRemain(clId));
+  document.getElementById('adjReason').value = '';
+  document.getElementById('adjBalanceRow').style.display='';
+  document.getElementById('adjReasonRow').style.display='';
+  if(!document.getElementById('adjDate').value) document.getElementById('adjDate').value = td();
+  await renderAdjHistory(clId);
+}
+
+function calcAdjAfter(){
+  const clId = parseInt(document.getElementById('adjClId').value)||0;
+  if(!clId) return;
+  const amt = n2(parseFloat(document.getElementById('adjAmount').value)||0);
+  const current = clRemain(clId);
+  document.getElementById('adjAfterBal').value = fmt(n2(current - amt));
+}
+
+async function renderAdjHistory(clId){
+  const all = idb.objectStoreNames.contains('adjustments') ? await idbAll('adjustments') : [];
+  const list = all.filter(a=>a.clientId===clId).sort((a,b)=>b.date.localeCompare(a.date)||(b.createdAt-a.createdAt)).slice(0,10);
+  const tbody = document.getElementById('adjHistoryTbody');
+  const card  = document.getElementById('adjHistoryCard');
+  if(!list.length){ card.style.display='none'; return; }
+  card.style.display='';
+  tbody.innerHTML = list.map(a=>`<tr>
+    <td>${a.date}</td>
+    <td style="font-weight:700;color:var(--red)">${fmt(a.amount)}</td>
+    <td style="font-size:.78rem;color:var(--tm)">${a.reason||'—'}</td>
+    <td><button class="btn br2 bsm" onclick="deleteAdjustment('${a.id}')">🗑️</button></td>
+  </tr>`).join('');
+}
+
+async function saveAdjustment(){
+  const clId = parseInt(document.getElementById('adjClId').value)||0;
+  if(!clId) return showToast('❌ يجب اختيار العميل أولاً');
+  const clCheck=C.clients.find(c=>c.id===clId);
+  if(clCheck?.blacklisted) return showToast('🚫 هذا العميل داخل القائمة السوداء — يجب إخراجه من القائمة أولاً قبل تسجيل أي تسوية له');
+  const dlId = parseInt(document.getElementById('adjDl').value)||null;
+  const date = document.getElementById('adjDate').value || td();
+  const amount = n2(parseFloat(document.getElementById('adjAmount').value)||0);
+  const reason = document.getElementById('adjReason').value.trim();
+  if(amount<=0) return showToast('❌ يجب إدخال قيمة خصم أكبر من صفر');
+  const current = clRemain(clId);
+  if(amount>current){
+    if(!confirm(`⚠️ قيمة الخصم (${fmt(amount)}) أكبر من رصيد العميل الحالي (${fmt(current)}).\nهل تريد المتابعة والحفظ رغم ذلك؟`)) return;
+  }
+  if(!_lockSave()) return;
+  try{
+    const rec = {
+      id: uid(),
+      num: C.settings.nextAdjId||1,
+      clientId: clId,
+      delegateId: dlId || C.clients.find(c=>c.id===clId)?.delegateId || null,
+      date, amount, reason,
+      balanceBefore: current,
+      balanceAfter: n2(current-amount),
+      createdAt: Date.now()
+    };
+    await idbPut('adjustments', rec);
+    C.settings.nextAdjId = (C.settings.nextAdjId||1)+1;
+    await idbPutSettings(C.settings);
+    updateBAL(clId, 0, 0, 0, amount); // adjustmentsDelta = +amount ⇒ يخصم مباشرة من الرصيد
+    showToast('✅ تم حفظ التسوية | الرصيد الجديد: '+fmt(clRemain(clId))+' جنيه');
+    await onAdjClientChosen(clId);
+    refreshDash();
+  } finally { _unlockSave(); }
+}
+
+async function deleteAdjustment(id){
+  if(!confirm('⚠️ هل تريد حذف هذه التسوية؟ سيعود المبلغ إلى رصيد العميل مرة أخرى.'))return;
+  const all = await idbAll('adjustments');
+  const rec = all.find(a=>a.id===id);
+  if(!rec) return;
+  await idbDel('adjustments', id);
+  updateBAL(rec.clientId, 0, 0, 0, -rec.amount); // التراجع عن الخصم
+  showToast('✅ تم حذف التسوية | الرصيد الجديد: '+fmt(clRemain(rec.clientId))+' جنيه');
+  await onAdjClientChosen(rec.clientId);
+  refreshDash();
+}
+
+function clearAdjForm(){
+  document.getElementById('adjClSearch').value='';
+  document.getElementById('adjClId').value='';
+  document.getElementById('adjAmount').value='';
+  document.getElementById('adjReason').value='';
+  document.getElementById('adjDate').value=td();
+  document.getElementById('adjBalanceRow').style.display='none';
+  document.getElementById('adjReasonRow').style.display='none';
+  document.getElementById('adjHistoryCard').style.display='none';
+}
+
+// ═══════════════════════════════════════════════════════════
+//  BLACKLIST — القائمة السوداء (ديون معدومة)
+//  ⚠️ مبدأ التنفيذ: علامة (flag) فقط على بيانات العميل — لا حذف
+//     ولا تسوية تلقائية ولا أي تعديل على أي رقم مالي حقيقي.
+//     الاستبعاد يحدث فقط عند تجميع الإجماليات في التقارير العامة
+//     (totalDebt / تحليل الأعمار / كشف جميع العملاء / الفواتير المتأخرة)
+//     أما صفحة العميل نفسه وكشف حسابه فيبقى دقيقاً 100% دائماً.
+// ═══════════════════════════════════════════════════════════
+function renderBlClDrop(q){ ssRender('blClDrop',()=>parseInt(document.getElementById('blDl').value)||null,'selectBlCl',q); }
+function selectBlCl(id,name){ document.getElementById('blClSearch').value=name; document.getElementById('blClId').value=id; document.getElementById('blClDrop').classList.remove('open'); }
+function filterBlCl(){ document.getElementById('blClId').value=''; renderBlClDrop(document.getElementById('blClSearch').value); document.getElementById('blClDrop').classList.add('open'); }
+function openBlClDrop(){ renderBlClDrop(document.getElementById('blClSearch').value); document.getElementById('blClDrop').classList.add('open'); }
+function closeBlClDrop(){ setTimeout(()=>document.getElementById('blClDrop').classList.remove('open'),200); }
+function onBlDlChange(){ document.getElementById('blClSearch').value=''; document.getElementById('blClId').value=''; renderBlClDrop(''); }
+function clearBlForm(){ document.getElementById('blClSearch').value=''; document.getElementById('blClId').value=''; document.getElementById('blReason').value=''; }
+
+async function addToBlacklist(){
+  const clId=parseInt(document.getElementById('blClId').value)||0;
+  if(!clId) return showToast('❌ يجب اختيار العميل أولاً');
+  const cl=C.clients.find(c=>c.id===clId);
+  if(!cl) return showToast('❌ العميل غير موجود');
+  if(cl.blacklisted) return showToast('⚠️ هذا العميل موجود بالقائمة السوداء بالفعل');
+  const reason=document.getElementById('blReason').value.trim();
+  cl.blacklisted=true; cl.blacklistedReason=reason; cl.blacklistedAt=td();
+  await idbPut('clients',cl);
+  showToast('🚫 تم إضافة '+cl.name+' للقائمة السوداء — رصيده مستبعد الآن من الإجماليات والتقارير العامة');
+  clearBlForm(); renderBlacklist(); refreshDash(); refreshAllDDs();
+}
+
+async function removeFromBlacklist(id){
+  const cl=C.clients.find(c=>c.id===id); if(!cl)return;
+  if(!confirm(`⚠️ هل تريد إخراج "${cl.name}" من القائمة السوداء؟\nسيرجع رصيده الحقيقي (${fmt(clRemain(id))} جنيه) للحساب ضمن الإجماليات والتقارير فوراً — دون أي تغيير في أرقامه.`))return;
+  cl.blacklisted=false; cl.blacklistedReason=''; cl.blacklistedAt=null;
+  await idbPut('clients',cl);
+  showToast('✅ تم إخراج '+cl.name+' من القائمة السوداء');
+  renderBlacklist(); refreshDash(); refreshAllDDs();
+}
+
+function viewBlClStatement(id,name){
+  go('statement',document.getElementById('sb-statement'));
+  setTimeout(()=>{ selectStmCl(id,name); showStatement(); },150);
+}
+
+function renderBlacklist(){
+  const list=C.clients.filter(c=>c.blacklisted);
+  document.getElementById('blCount').textContent=list.length;
+  const tbody=document.getElementById('blTbody'); if(!tbody)return;
+  tbody.innerHTML=list.map(cl=>{
+    const dl=C.delegates.find(d=>d.id===cl.delegateId);
+    const rem=clRemain(cl.id);
+    return`<tr>
+      <td><b>${cl.name}</b></td>
+      <td>${dl?.name||'—'}</td>
+      <td style="font-size:.78rem;color:var(--tm)">${cl.blacklistedReason||'—'}</td>
+      <td>${cl.blacklistedAt||'—'}</td>
+      <td style="font-weight:700;color:var(--red)">${fmt(rem)}</td>
+      <td><button class="btn bb bsm" onclick="viewBlClStatement(${cl.id},'${cl.name.replace(/'/g,"\\'")}')">📋 كشف حساب</button></td>
+      <td><button class="btn bg bsm" onclick="removeFromBlacklist(${cl.id})">↩️ إخراج</button></td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="7" style="text-align:center;color:var(--td);padding:20px">لا يوجد عملاء بالقائمة السوداء حالياً</td></tr>';
+}
 
 // Last invoice client search
 function renderLiDrop(q){ ssRender('liClDrop',()=>parseInt(document.getElementById('liDl').value)||null,'selectLiCl',q); }
@@ -1663,6 +1942,7 @@ async function refreshDash() {
   document.getElementById('s7').innerHTML=fmt(todayRet)+'<span> جنيه</span>';
   document.getElementById('s5').innerHTML=C.clients.length+'<span> عميل</span>';
   document.getElementById('s6').innerHTML=fmt(totalDebt())+'<span> جنيه</span>';
+  { const fd=totalFrozenDebt(); const s6n=document.getElementById('s6note'); if(s6n) s6n.textContent = fd>0 ? ('🚫 '+fmt(fd)+' ج مجمّدة (قائمة سوداء)') : ''; }
 
   // Chart — آخر 7 أيام
   const chart=document.getElementById('salesChart'); chart.innerHTML='';
@@ -1729,13 +2009,15 @@ async function refreshDash() {
     const now=new Date();
     const bk=[{net:0,paid:0},{net:0,paid:0},{net:0,paid:0},{net:0,paid:0}];
     await idbCursorAggregate('invoices',(inv,_)=>{
+      const cl=C.clients.find(c=>c.id===inv.clientId);
+      if(cl?.blacklisted) return _; // ✅ مستبعد — دين مجمّد وليس ضمن الديون المتوقع تحصيلها
       const days=Math.floor((now-new Date(inv.date+'T00:00:00'))/86400000);
       const bi=days<=30?0:days<=60?1:days<=90?2:3;
       bk[bi].net=n2(bk[bi].net+n2(inv.net)); bk[bi].paid=n2(bk[bi].paid+n2(inv.paid));
       return _;
     },null);
     // احتساب المرتجعات في تحليل العمر (توزيع نسبي)
-    const totalRet=n2([...BAL.values()].reduce((s,b)=>s+(b.returns||0),0));
+    const totalRet=n2([...BAL.entries()].filter(([cid])=>!C.clients.find(c=>c.id===cid)?.blacklisted).reduce((s,[,b])=>s+(b.returns||0),0));
     const totalSales=n2(bk.reduce((s,b)=>s+b.net,0));
     const aging=[
       {label:'0-30 يوم', val:n2(Math.max(0,bk[0].net-bk[0].paid-(totalSales>0?(bk[0].net/totalSales)*totalRet:0))),color:'var(--gb)'},
@@ -1899,6 +2181,8 @@ function saveInvoice() {
   const clId=parseInt(document.getElementById('invClId').value);
   const clName=document.getElementById('invClSearch').value.trim();
   if(!clId||!clName) return showAlert('invAlert','ae','❌ يجب اختيار العميل');
+  const clCheck=C.clients.find(c=>c.id===clId);
+  if(clCheck?.blacklisted) return showAlert('invAlert','ae','🚫 هذا العميل داخل القائمة السوداء — يجب إخراجه من القائمة أولاً قبل إدخال أي فاتورة له');
   const date=document.getElementById('invDate').value;
   if(!date) return showAlert('invAlert','ae','❌ يجب تحديد التاريخ');
   const items=getInvRows();
@@ -2234,6 +2518,8 @@ async function saveReturn() {
   const clId=parseInt(document.getElementById('retClId').value);
   const clName=document.getElementById('retClSearch').value.trim();
   if(!clId||!clName) return showAlert('retAlert','ae','❌ يجب اختيار العميل');
+  const clCheck=C.clients.find(c=>c.id===clId);
+  if(clCheck?.blacklisted) return showAlert('retAlert','ae','🚫 هذا العميل داخل القائمة السوداء — يجب إخراجه من القائمة أولاً قبل تسجيل أي مرتجع له');
   const date=document.getElementById('retDate').value;
   if(!date) return showAlert('retAlert','ae','❌ يجب تحديد التاريخ');
   const items=getRetRows();
@@ -2400,22 +2686,26 @@ async function showStatement() {
 
   // ── كشف جميع العملاء ──────────────────────────────────
   if(type==='all'){
-    let rows='', totalSales=0, totalRet=0, totalPaid=0;
+    let rows='', totalSales=0, totalRet=0, totalPaid=0, totalAdj=0, frozenDebt=0;
     C.clients.forEach(cl=>{
-      const b=BAL.get(cl.id)||{sales:0,paid:0,returns:0};
+      const b=BAL.get(cl.id)||{sales:0,paid:0,returns:0,adjustments:0};
       const net=n2(b.sales-(b.returns||0));
-      const rem=n2(net-b.paid);
+      const rem=n2(net-b.paid-(b.adjustments||0));
       const dl=C.delegates.find(d=>d.id===cl.delegateId);
-      totalSales=n2(totalSales+b.sales); totalRet=n2(totalRet+(b.returns||0)); totalPaid=n2(totalPaid+b.paid);
-      rows+=`<tr><td>${cl.name}</td><td>${cl.route||'—'}</td><td>${dl?.name||'—'}</td><td>${fmt(b.sales)}</td><td class="stm-dr">(${fmt(b.returns||0)})</td><td>${fmt(net)}</td><td class="stm-cr">${fmt(b.paid)}</td><td class="${rem>0?'stm-bal-pos':'stm-bal-neg'}">${fmt(rem)}</td></tr>`;
+      const bl=!!cl.blacklisted;
+      // ✅ عميل القائمة السوداء: يظهر في الصف فردياً للشفافية الكاملة، لكن يُستبعد من كل الإجماليات أسفل الجدول
+      if(bl){ if(rem>0) frozenDebt=n2(frozenDebt+rem); }
+      else { totalSales=n2(totalSales+b.sales); totalRet=n2(totalRet+(b.returns||0)); totalPaid=n2(totalPaid+b.paid); totalAdj=n2(totalAdj+(b.adjustments||0)); }
+      rows+=`<tr${bl?' style="opacity:.65;background:rgba(176,0,32,.06)"':''}><td>${bl?'🚫 ':''}${cl.name}</td><td>${cl.route||'—'}</td><td>${dl?.name||'—'}</td><td>${fmt(b.sales)}</td><td class="stm-dr">(${fmt(b.returns||0)})</td><td>${fmt(net)}</td><td class="stm-cr">${fmt(b.paid)}</td><td class="stm-cr">${fmt(b.adjustments||0)}</td><td class="${rem>0?'stm-bal-pos':'stm-bal-neg'}">${fmt(rem)}${bl?' <span style="font-size:.7rem">(مجمّد)</span>':''}</td></tr>`;
     });
     const totalNet=n2(totalSales-totalRet);
-    const totalRem=n2(totalNet-totalPaid);
+    const totalRem=n2(totalNet-totalPaid-totalAdj);
     const html=`<div class="lightbox">${stmHead}
-      <table><thead><tr><th>العميل</th><th>خط السير</th><th>المندوب</th><th>إجمالي المبيعات</th><th>المرتجعات</th><th>صافي المبيعات</th><th>التحصيلات</th><th>الرصيد</th></tr></thead>
-      <tbody>${rows||'<tr><td colspan="8" style="text-align:center">لا توجد بيانات</td></tr>'}</tbody>
-      <tfoot><tr><td colspan="3">الإجمالي</td><td>${fmt(totalSales)}</td><td>(${fmt(totalRet)})</td><td>${fmt(totalNet)}</td><td>${fmt(totalPaid)}</td><td>${fmt(totalRem)}</td></tr></tfoot></table>
-      <div class="stm-final">الرصيد القائم الإجمالي لجميع العملاء: ${fmt(totalRem)} جنيه</div>
+      <table><thead><tr><th>العميل</th><th>خط السير</th><th>المندوب</th><th>إجمالي المبيعات</th><th>المرتجعات</th><th>صافي المبيعات</th><th>التحصيلات</th><th>التسويات</th><th>الرصيد</th></tr></thead>
+      <tbody>${rows||'<tr><td colspan="9" style="text-align:center">لا توجد بيانات</td></tr>'}</tbody>
+      <tfoot><tr><td colspan="3">الإجمالي (بدون القائمة السوداء)</td><td>${fmt(totalSales)}</td><td>(${fmt(totalRet)})</td><td>${fmt(totalNet)}</td><td>${fmt(totalPaid)}</td><td>${fmt(totalAdj)}</td><td>${fmt(totalRem)}</td></tr></tfoot></table>
+      <div class="stm-final">الرصيد القائم الإجمالي لجميع العملاء (باستثناء القائمة السوداء): ${fmt(totalRem)} جنيه</div>
+      ${frozenDebt>0?`<div style="margin-top:8px;font-size:.8rem;color:var(--tm)">🚫 ديون مجمّدة (قائمة سوداء، غير محسوبة أعلاه): ${fmt(frozenDebt)} جنيه</div>`:''}
     </div>`;
     document.getElementById('stmContent').innerHTML=html;
     document.getElementById('stmResult').style.display='';
@@ -2436,23 +2726,28 @@ async function showStatement() {
   if(type==='summary'){
     const invs=await idbInvByClient(clId);
     const rets=await idbRetByClient(clId);
+    const adjsAll=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
     const filtInvs=invs.filter(i=>(!from||i.date>=from)&&(!to||i.date<=to));
     const filtRets=rets.filter(r=>(!from||r.date>=from)&&(!to||r.date<=to));
+    const filtAdjs=adjsAll.filter(a=>a.clientId===clId&&(!from||a.date>=from)&&(!to||a.date<=to));
     const totalSales = n2(filtInvs.reduce((s,i)=>s+n2(i.net),0));
     const totalPaid  = n2(filtInvs.reduce((s,i)=>s+n2(i.paid),0));
     const totalRet   = n2(filtRets.reduce((s,r)=>s+n2(r.total),0));
-    const netSales    = n2(totalSales-totalRet);   // صافي المبيعات = مبيعات − مرتجعات
-    const balance     = n2(netSales-totalPaid);    // الرصيد = صافي − تحصيلات
+    const totalAdj   = n2(filtAdjs.reduce((s,a)=>s+n2(a.amount),0));
+    const netSales    = n2(totalSales-totalRet);           // صافي المبيعات = مبيعات − مرتجعات
+    const balance     = n2(netSales-totalPaid-totalAdj);   // الرصيد = صافي − تحصيلات − تسويات
     const html=`<div class="lightbox">${stmHead}${clientInfo}
       <table><thead><tr><th>البيان</th><th>القيمة (جنيه)</th></tr></thead><tbody>
         <tr><td>إجمالي المبيعات</td><td><b>${fmt(totalSales)}</b></td></tr>
         <tr class="stm-ret"><td>إجمالي المرتجعات</td><td class="stm-dr">(${fmt(totalRet)})</td></tr>
         <tr><td><b>صافي المبيعات</b> (مبيعات − مرتجعات)</td><td><b>${fmt(netSales)}</b></td></tr>
         <tr class="stm-pay"><td>إجمالي التحصيلات الفعلية</td><td class="stm-cr">${fmt(totalPaid)}</td></tr>
+        <tr style="background:#fff3d6"><td>إجمالي تسويات/خصومات العميل</td><td class="stm-cr">${fmt(totalAdj)}</td></tr>
         <tr><td>عدد الفواتير</td><td>${filtInvs.length}</td></tr>
         <tr><td>عدد المرتجعات</td><td>${filtRets.length}</td></tr>
+        <tr><td>عدد التسويات</td><td>${filtAdjs.length}</td></tr>
       </tbody></table>
-      <div class="stm-final">الرصيد القائم (صافي المبيعات − التحصيلات): <span class="${balance>0?'stm-bal-pos':'stm-bal-neg'}">${fmt(balance)} جنيه</span></div>
+      <div class="stm-final">الرصيد القائم (صافي المبيعات − التحصيلات − التسويات): <span class="${balance>0?'stm-bal-pos':'stm-bal-neg'}">${fmt(balance)} جنيه</span></div>
     </div>`;
     document.getElementById('stmContent').innerHTML=html;
     document.getElementById('stmResult').style.display='';
@@ -2462,18 +2757,21 @@ async function showStatement() {
   // ── كشف تفصيلي بالحركات وكل الأصناف ───────────────────
   const invs=await idbInvByClient(clId);
   const rets=await idbRetByClient(clId);
+  const adjsAll=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
   const filtInvs=invs.filter(i=>(!from||i.date>=from)&&(!to||i.date<=to)).sort((a,b)=>a.date.localeCompare(b.date)||a.num-b.num);
   const filtRets=rets.filter(r=>(!from||r.date>=from)&&(!to||r.date<=to)).sort((a,b)=>a.date.localeCompare(b.date)||a.num-b.num);
+  const filtAdjs=adjsAll.filter(a=>a.clientId===clId&&(!from||a.date>=from)&&(!to||a.date<=to));
 
-  // ✅ دمج الفواتير والمرتجعات — كل حركة تبقى مستقلة تماماً ببياناتها الخاصة
+  // ✅ دمج الفواتير والمرتجعات والتسويات — كل حركة تبقى مستقلة تماماً ببياناتها الخاصة
   //    الترتيب: حسب تاريخ الإدخال الفعلي، ثم حسب تسلسل الإدخال الحقيقي (وقت الحفظ الفعلي)
   //    بدون أي دمج أو ترحيل للقيم بين الفواتير
   const txs=[
     ...filtInvs.map(i=>({type:'invoice',date:i.date,num:i.num,refNum:i.refNum,items:i.items||[],net:i.net,paid:i.paid,createdAt:i.createdAt||0})),
-    ...filtRets.map(r=>({type:'return',date:r.date,num:r.num,items:r.items||[],total:r.total,reason:r.reason,createdAt:r.createdAt||0}))
-  ].sort((a,b)=>a.date.localeCompare(b.date)||(a.createdAt-b.createdAt)||(a.type==='invoice'?-1:1)||a.num-b.num);
+    ...filtRets.map(r=>({type:'return',date:r.date,num:r.num,items:r.items||[],total:r.total,reason:r.reason,createdAt:r.createdAt||0})),
+    ...filtAdjs.map(a=>({type:'adjustment',date:a.date,num:a.num,amount:a.amount,reason:a.reason,createdAt:a.createdAt||0}))
+  ].sort((a,b)=>a.date.localeCompare(b.date)||(a.createdAt-b.createdAt)||(a.type==='invoice'?-1:1)||(a.num-b.num));
 
-  let balance=0, totalDr=0, totalCrPay=0, totalCrRet=0;
+  let balance=0, totalDr=0, totalCrPay=0, totalCrRet=0, totalCrAdj=0;
   let rows='';
   txs.forEach(tx=>{
     if(tx.type==='invoice'){
@@ -2506,7 +2804,7 @@ async function showStatement() {
           <td class="${balance>0?'stm-bal-pos':'stm-bal-neg'}">${fmt(balance)}</td>
         </tr>`;
       }
-    } else {
+    } else if(tx.type==='return'){
       const retNo='RET-'+tx.num;
       if(tx.items.length){
         tx.items.forEach((it,idx)=>{
@@ -2525,10 +2823,21 @@ async function showStatement() {
           </tr>`;
         });
       }
+    } else if(tx.type==='adjustment'){
+      // ✅ سطر تسوية/خصم مستقل تماماً — لا يندمج مع أي فاتورة ولا يرحّل لها
+      balance=n2(balance-n2(tx.amount)); totalCrAdj=n2(totalCrAdj+n2(tx.amount));
+      rows+=`<tr class="stm-pay" style="background:#fff3d6">
+        <td>${tx.date}</td>
+        <td><b>ADJ-${tx.num}</b></td>
+        <td>💸 تسوية/خصم عميل${tx.reason?' — '+tx.reason:''}</td>
+        <td>—</td><td>—</td><td>—</td><td>—</td>
+        <td>—</td><td class="stm-cr">${fmt(tx.amount)}</td>
+        <td class="${balance>0?'stm-bal-pos':'stm-bal-neg'}">${fmt(balance)}</td>
+      </tr>`;
     }
   });
 
-  const totalCr=n2(totalCrPay+totalCrRet);
+  const totalCr=n2(totalCrPay+totalCrRet+totalCrAdj);
   const totalItemsSum=n2(totalDr+totalCrRet);
   const html=`<div class="lightbox">${stmHead}${clientInfo}
     <table><thead><tr>
@@ -2536,7 +2845,7 @@ async function showStatement() {
     </tr></thead>
     <tbody>${rows||'<tr><td colspan="10" style="text-align:center">لا توجد حركات في هذه الفترة</td></tr>'}</tbody>
     <tfoot><tr>
-      <td colspan="6">الإجماليات (تحصيل: ${fmt(totalCrPay)} + مرتجع: ${fmt(totalCrRet)})</td>
+      <td colspan="6">الإجماليات (تحصيل: ${fmt(totalCrPay)} + مرتجع: ${fmt(totalCrRet)} + تسويات: ${fmt(totalCrAdj)})</td>
       <td>${fmt(totalItemsSum)}</td>
       <td>${fmt(totalDr)}</td>
       <td>${fmt(totalCr)}</td>
@@ -2664,7 +2973,7 @@ function renderClients(){
     const b=BAL.get(cl.id)||{sales:0,paid:0,returns:0};
     const rem=clRemain(cl.id);
     const dl=C.delegates.find(d=>d.id===cl.delegateId);
-    return`<tr><td style="color:var(--td);font-size:.78rem">${cl.id}</td><td><b>${cl.name}</b></td><td>${cl.phone||'—'}</td><td>${cl.address||'—'}</td><td style="color:var(--gol)">${cl.route||'—'}</td><td>${dl?.name||'—'}</td><td>${fmt(b.sales)}</td><td style="color:var(--org)">${fmt(b.returns||0)}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td><td style="display:flex;gap:6px;flex-wrap:wrap">
+    return`<tr${cl.blacklisted?' style="opacity:.6"':''}><td style="color:var(--td);font-size:.78rem">${cl.id}</td><td><b>${cl.blacklisted?'🚫 ':''}${cl.name}</b></td><td>${cl.phone||'—'}</td><td>${cl.address||'—'}</td><td style="color:var(--gol)">${cl.route||'—'}</td><td>${dl?.name||'—'}</td><td>${fmt(b.sales)}</td><td style="color:var(--org)">${fmt(b.returns||0)}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td><td style="display:flex;gap:6px;flex-wrap:wrap">
       <button class="btn bb bsm" onclick="editClient(${cl.id})">✏️</button>
       <button class="btn br2 bsm" onclick="promptDelete('client',${cl.id},'حذف العميل ${cl.name}؟')">🗑️</button>
     </td></tr>`;
@@ -2840,7 +3149,9 @@ async function calcComm(){
   const netSales     = n2(totalSales - totalRets);
   // ✅ المعادلة الصحيحة: التحصيلات الفعلية فقط (inv.paid)
   const totalCollect = n2(filtInvs.reduce((s,i)=>s+n2(i.paid),0));
-  const rate=dl?.commRate||C.settings.commRate||3;
+  // ✅ تصحيح: نسبة عمولة المندوب المسجلة فعلياً فقط — بدون أي استبدال تلقائي بنسبة افتراضية عامة
+  //    (كانت المشكلة: dl?.commRate||C.settings.commRate||3 يستبدل الصفر بنسبة افتراضية خطأً)
+  const rate=dl?.commRate||0;
   // ✅ العمولة = التحصيلات × النسبة (ليس المبيعات)
   const comm=n2(totalCollect*rate/100);
   const outstanding=n2(netSales-totalCollect);
@@ -3118,6 +3429,8 @@ async function genOverdue(){
   const filt=invs.filter(i=>{
     if(n2(i.remain)<=0)return false;
     if(did&&i.delegateId!==did)return false;
+    const cl=C.clients.find(c=>c.id===i.clientId);
+    if(cl?.blacklisted)return false; // ✅ دين مجمّد بالقائمة السوداء — مستبعد من متابعة التحصيل
     return Math.floor((now-new Date(i.date+'T00:00:00'))/86400000)>days;
   }).sort((a,b)=>a.date.localeCompare(b.date));
   const total=n2(filt.reduce((s,i)=>s+n2(i.remain),0));
@@ -3174,7 +3487,7 @@ async function genReturnsRep(){
 function printReturnsRep(){ openPrintWin(document.getElementById('rRetOut').innerHTML); }
 
 // ═══════════════════════════════════════════════════════════
-//  📊 كشف حساب مقسم — مغذي / حشري وفطري
+//  📊 كشف حساب بالأصناف — مغذي / حشري وفطري
 //  القاعدة المحاسبية:
 //    • الخصم يُطبَّق على إجمالي المغذي فقط
 //    • حشري وفطري: بدون أي خصم أياً كانت النسبة
@@ -3184,7 +3497,7 @@ function printReturnsRep(){ openPrintWin(document.getElementById('rRetOut').inne
 //    • لا يُعدَّل أي سجل قديم في قاعدة البيانات
 // ═══════════════════════════════════════════════════════════
 
-// ── بحث عميل كشف حساب مقسم ─────────────────────────────
+// ── بحث عميل كشف حساب بالأصناف ─────────────────────────────
 function renderSplitClDrop(q){ ssRender('rSplitClDrop',()=>parseInt(document.getElementById('rSplitDl').value)||null,'selectSplitCl',q); }
 function selectSplitCl(id,name){ document.getElementById('rSplitClSearch').value=name; document.getElementById('rSplitClId').value=id; document.getElementById('rSplitClDrop').classList.remove('open'); }
 function filterSplitCl(){ document.getElementById('rSplitClId').value=''; renderSplitClDrop(document.getElementById('rSplitClSearch').value); document.getElementById('rSplitClDrop').classList.add('open'); }
@@ -3224,7 +3537,14 @@ async function genSplitRep() {
   const hsTotal=n2(hsRows.reduce((s,r)=>s+n2(r.total),0));
   const discVal=n2(mgTotal*discPct/100);
   const mgAfterDisc=n2(mgTotal-discVal);
-  const grandTotal=n2(mgAfterDisc+hsTotal);
+  // ✅ تسويات/خصومات العميل اليدوية بنفس فلاتر العميل والمندوب والفترة — تُخصم من الإجمالي النهائي فقط (لا تدخل تقسيم مغذي/حشري)
+  let adjs=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
+  adjs=adjs.filter(a=>a.clientId===clId);
+  if(dlId) adjs=adjs.filter(a=>a.delegateId===dlId);
+  if(from) adjs=adjs.filter(a=>a.date>=from);
+  if(to)   adjs=adjs.filter(a=>a.date<=to);
+  const adjTotal=n2(adjs.reduce((s,a)=>s+n2(a.amount),0));
+  const grandTotal=n2(mgAfterDisc+hsTotal-adjTotal);
   // دالة مساعدة لبناء جدول البنود
   const buildTable=(rows)=>{
     if(!rows.length) return '<div style="color:var(--td);font-size:.82rem;text-align:center;padding:8px">لا توجد بنود</div>';
@@ -3245,7 +3565,7 @@ async function genSplitRep() {
     <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #1a7a50">
       <div style="font-size:1.1rem;font-weight:900;color:#0a3d2e">${co.company||'روزيتا المتحدة للمبيدات الزراعية'}</div>
       ${co.address?`<div style="font-size:.8rem;color:#555">${co.address}</div>`:''}
-      <div style="font-size:1rem;font-weight:700;margin-top:6px">📊 كشف حساب مقسم</div>
+      <div style="font-size:1rem;font-weight:700;margin-top:6px">📊 كشف حساب بالأصناف</div>
       <div style="font-size:.82rem;color:var(--tm);margin-top:4px">
         <b>العميل:</b> ${cl?.name||'—'} |
         <b>المندوب:</b> ${dl?.name||'—'} |
@@ -3291,13 +3611,30 @@ async function genSplitRep() {
       </div>
     </div>
 
+    ${adjs.length?`
+    <!-- ═══ قسم التسويات/الخصومات اليدوية ═══ -->
+    <div style="margin-bottom:18px">
+      <div style="background:#fff3d6;border:2px solid #c9a227;border-radius:8px 8px 0 0;padding:8px 14px;font-weight:900;color:#8a6d10;font-size:.95rem">
+        💸 تسويات/خصومات العميل
+      </div>
+      <table><thead><tr><th>التاريخ</th><th>القيمة</th><th>السبب</th></tr></thead>
+      <tbody>${adjs.map(a=>`<tr><td>${a.date}</td><td style="font-weight:700;color:#b00020">${fmt(a.amount)}</td><td>${a.reason||'—'}</td></tr>`).join('')}</tbody></table>
+      <div style="background:#fbe9b0;border:2px solid #c9a227;border-top:none;border-radius:0 0 8px 8px;padding:10px 14px">
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
+          <span style="font-weight:700;color:#8a6d10">إجمالي التسويات/الخصومات:</span>
+          <span style="font-weight:900;color:#8a6d10;font-size:1.05rem">${fmt(adjTotal)} جنيه</span>
+        </div>
+      </div>
+    </div>`:''}
+
     <!-- ═══ الإجمالي النهائي ═══ -->
     <div style="background:linear-gradient(135deg,#0a3d2e,#1a7a50);border-radius:10px;padding:16px 20px;color:#fff;text-align:center">
       <div style="font-size:.85rem;margin-bottom:8px;opacity:.85">
-        الإجمالي النهائي = إجمالي المغذي بعد الخصم + إجمالي الحشري والفطري
+        الإجمالي النهائي = إجمالي المغذي بعد الخصم + إجمالي الحشري والفطري − التسويات/الخصومات
       </div>
       <div style="font-size:1.6rem;font-weight:900">${fmt(grandTotal)} جنيه</div>
       ${discPct>0?`<div style="font-size:.78rem;margin-top:6px;opacity:.8">وفّرت ${fmt(discVal)} جنيه خصم على قسم المغذي</div>`:''}
+      ${adjTotal>0?`<div style="font-size:.78rem;margin-top:4px;opacity:.8">مخصوم أيضاً ${fmt(adjTotal)} جنيه تسويات/خصومات يدوية</div>`:''}
     </div>
   </div>`;
   document.getElementById('rSplitOut').innerHTML=html;
@@ -3417,8 +3754,8 @@ async function saveSettings(){
 //  EXPORT / IMPORT
 // ═══════════════════════════════════════════════════════════
 async function exportData(){
-  const [invs,rets,cls,prs,dls]=await Promise.all([idbAll('invoices'),idbAll('returns'),idbAll('clients'),idbAll('products'),idbAll('delegates')]);
-  const data={version:5,exportDate:new Date().toISOString(),settings:C.settings,clients:cls,products:prs,delegates:dls,invoices:invs,returns:rets};
+  const [invs,rets,cls,prs,dls,adjs]=await Promise.all([idbAll('invoices'),idbAll('returns'),idbAll('clients'),idbAll('products'),idbAll('delegates'),idb.objectStoreNames.contains('adjustments')?idbAll('adjustments'):Promise.resolve([])]);
+  const data={version:6,exportDate:new Date().toISOString(),settings:C.settings,clients:cls,products:prs,delegates:dls,invoices:invs,returns:rets,adjustments:adjs};
   const filename='rosetta_backup_'+td()+'.json';
   const content=JSON.stringify(data,null,2);
   try {
@@ -3436,26 +3773,27 @@ async function importData(event){
   try {
     const text=await file.text(); const data=JSON.parse(text);
     if(!data.clients&&!data.invoices) throw new Error('ملف غير صالح');
-    if(data.settings){ Object.assign(C.settings,data.settings); if(!C.settings.nextRetNum)C.settings.nextRetNum=1; }
+    if(data.settings){ Object.assign(C.settings,data.settings); if(!C.settings.nextRetNum)C.settings.nextRetNum=1; if(!C.settings.nextAdjId)C.settings.nextAdjId=1; }
     const ops=[];
     if(data.clients) { await idbBulk('clients',data.clients); C.clients=data.clients; }
     if(data.products){ await idbBulk('products',data.products); C.products=data.products; }
     if(data.delegates){ await idbBulk('delegates',data.delegates); C.delegates=data.delegates; }
     if(data.invoices) await idbBulk('invoices',data.invoices);
     if(data.returns&&data.returns.length) await idbBulk('returns',data.returns);
+    if(data.adjustments&&data.adjustments.length) await idbBulk('adjustments',data.adjustments);
     await idbPutSettings(C.settings);
     await rebuildAllBalances();
     refreshAllDDs(); loadSettingsUI(); updateDbInfo();
-    showToast('✅ تم استيراد البيانات بنجاح ('+data.invoices?.length+' فاتورة, '+(data.returns?.length||0)+' مرتجع)');
+    showToast('✅ تم استيراد البيانات بنجاح ('+data.invoices?.length+' فاتورة, '+(data.returns?.length||0)+' مرتجع, '+(data.adjustments?.length||0)+' تسوية)');
   } catch(e){ showToast('❌ خطأ في الاستيراد: '+e.message); }
   event.target.value='';
 }
 async function confirmClear(){
   if(!confirm('⚠️ هل تريد مسح جميع البيانات نهائياً؟ لا يمكن التراجع!'))return;
   if(!confirm('تأكيد أخير: سيتم حذف كل الفواتير والمرتجعات والعملاء وكل البيانات. هل أنت متأكد؟'))return;
-  await Promise.all([idbBulk('invoices',[]), idbBulk('clients',[]), idbBulk('products',[]), idbBulk('delegates',[]), idbBulk('returns',[])]);
+  await Promise.all([idbBulk('invoices',[]), idbBulk('clients',[]), idbBulk('products',[]), idbBulk('delegates',[]), idbBulk('returns',[]), idbBulk('adjustments',[])]);
   C.clients=[]; C.products=[]; C.delegates=[]; BAL.clear();
-  C.settings.nextInvNum=1001; C.settings.nextRetNum=1; C.settings.nextClId=1; C.settings.nextPrId=1; C.settings.nextDlId=1;
+  C.settings.nextInvNum=1001; C.settings.nextRetNum=1; C.settings.nextClId=1; C.settings.nextPrId=1; C.settings.nextDlId=1; C.settings.nextAdjId=1;
   // ✅ إعادة ضبط اسم الشركة والعنوان لتفادي بقاء أي قيمة قديمة تالفة الترميز
   C.settings.company='روزيتا المتحدة للمبيدات الزراعية';
   C.settings.address='';
@@ -3465,6 +3803,7 @@ async function confirmClear(){
   loadSettingsUI();
   showToast('⚠️ تم مسح جميع البيانات وإعادة تحميل الأصناف الرسمية تلقائياً'); refreshAllDDs(); refreshDash();
 }
+
 // ═══════════════════════════════════════════════════════════
 //  GLOBAL SEARCH
 //  ✅ عند اختيار عميل: الانتقال مباشرة لآخر فاتورة له مع كل التفاصيل
