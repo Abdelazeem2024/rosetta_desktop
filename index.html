@@ -368,7 +368,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
           </div>
           <div class="tw"><table><thead><tr>
             <th>رقم</th><th>المرجع</th><th>التاريخ</th><th>العميل</th><th>خط السير</th>
-            <th>المندوب</th><th>الإجمالي</th><th>المدفوع</th><th>المتبقي</th><th>الحالة</th><th>تعديل</th><th>حذف</th>
+            <th>المندوب</th><th>الإجمالي</th><th>المدفوع</th><th title="رصيد العميل التراكمي الحالي، وليس متبقي هذه الفاتورة فقط">متبقي العميل (تراكمي)</th><th>الحالة</th><th>تعديل</th><th>حذف</th>
           </tr></thead><tbody id="invTbody"></tbody></table></div>
           <div id="invPager" style="margin-top:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"></div>
         </div>
@@ -1237,23 +1237,32 @@ async function runLightCheck() {
     if (maxNum >= C.settings.nextInvNum) { C.settings.nextInvNum = maxNum+1; await idbPutSettings(C.settings); }
     const freshBAL = new Map();
     await idbCursorAggregate('invoices', (inv,_) => {
-      if (!freshBAL.has(inv.clientId)) freshBAL.set(inv.clientId,{sales:0,paid:0,returns:0});
+      if (!freshBAL.has(inv.clientId)) freshBAL.set(inv.clientId,{sales:0,paid:0,returns:0,adjustments:0});
       const b = freshBAL.get(inv.clientId);
       b.sales = n2(b.sales + n2(inv.net)); b.paid = n2(b.paid + n2(inv.paid)); return _;
     }, null);
     if (idb.objectStoreNames.contains('returns')) {
       await idbCursorAggregate('returns', (ret,_) => {
-        if (!freshBAL.has(ret.clientId)) freshBAL.set(ret.clientId,{sales:0,paid:0,returns:0});
+        if (!freshBAL.has(ret.clientId)) freshBAL.set(ret.clientId,{sales:0,paid:0,returns:0,adjustments:0});
         const b = freshBAL.get(ret.clientId);
         if (b.returns===undefined) b.returns=0;
         b.returns = n2(b.returns + n2(ret.total)); return _;
       }, null);
     }
+    // ✅ تصحيح جوهري: تضمين التسويات ضمن إعادة البناء — كانت مفقودة تماماً وبيمسحها الفحص كل 30 دقيقة
+    if (idb.objectStoreNames.contains('adjustments')) {
+      await idbCursorAggregate('adjustments', (adj,_) => {
+        if (!freshBAL.has(adj.clientId)) freshBAL.set(adj.clientId,{sales:0,paid:0,returns:0,adjustments:0});
+        const b = freshBAL.get(adj.clientId);
+        if (b.adjustments===undefined) b.adjustments=0;
+        b.adjustments = n2(b.adjustments + n2(adj.amount)); return _;
+      }, null);
+    }
     let fixed = 0;
     freshBAL.forEach((fb,cid) => {
-      const cb = BAL.get(cid)||{sales:0,paid:0,returns:0};
-      if (Math.abs(fb.sales-cb.sales)>0.01||Math.abs(fb.paid-cb.paid)>0.01||Math.abs((fb.returns||0)-(cb.returns||0))>0.01) {
-        BAL.set(cid,{sales:fb.sales,paid:fb.paid,returns:fb.returns||0}); fixed++;
+      const cb = BAL.get(cid)||{sales:0,paid:0,returns:0,adjustments:0};
+      if (Math.abs(fb.sales-cb.sales)>0.01||Math.abs(fb.paid-cb.paid)>0.01||Math.abs((fb.returns||0)-(cb.returns||0))>0.01||Math.abs((fb.adjustments||0)-(cb.adjustments||0))>0.01) {
+        BAL.set(cid,{sales:fb.sales,paid:fb.paid,returns:fb.returns||0,adjustments:fb.adjustments||0}); fixed++;
       }
     });
     if (fixed>0) console.log(`[LightCheck] تصحيح ${fixed} رصيد`);
@@ -1268,10 +1277,10 @@ async function runHealthCheck(silent=false) {
     const cids = new Set(C.clients.map(c=>c.id));
     const freshBAL = new Map();
     const mathErrNums = []; const seenNums = new Map();
-    let orphI=0, invCount=0, maxI=0, retCount=0;
+    let orphI=0, invCount=0, maxI=0, retCount=0, adjCount=0;
     await idbCursorAggregate('invoices', (inv,_) => {
       invCount++; maxI = Math.max(maxI, inv.num);
-      if (!freshBAL.has(inv.clientId)) freshBAL.set(inv.clientId,{sales:0,paid:0,returns:0});
+      if (!freshBAL.has(inv.clientId)) freshBAL.set(inv.clientId,{sales:0,paid:0,returns:0,adjustments:0});
       const b = freshBAL.get(inv.clientId);
       b.sales = n2(b.sales+n2(inv.net)); b.paid = n2(b.paid+n2(inv.paid));
       const calcNet = n2((inv.items||[]).reduce((s,it)=>s+n2(it.total),0));
@@ -1283,22 +1292,33 @@ async function runHealthCheck(silent=false) {
     if (idb.objectStoreNames.contains('returns')) {
       await idbCursorAggregate('returns', (ret,_) => {
         retCount++;
-        if (!freshBAL.has(ret.clientId)) freshBAL.set(ret.clientId,{sales:0,paid:0,returns:0});
+        if (!freshBAL.has(ret.clientId)) freshBAL.set(ret.clientId,{sales:0,paid:0,returns:0,adjustments:0});
         const b = freshBAL.get(ret.clientId);
         b.returns = n2((b.returns||0) + n2(ret.total));
         return _;
       }, null);
     }
-    info.push(`فواتير: ${invCount} | مرتجعات: ${retCount} | عملاء: ${C.clients.length}`);
+    // ✅ تصحيح جوهري: تضمين التسويات ضمن إعادة بناء الأرصدة — كانت مفقودة تماماً ويمسحها الفحص كل مرة يشتغل
+    if (idb.objectStoreNames.contains('adjustments')) {
+      await idbCursorAggregate('adjustments', (adj,_) => {
+        adjCount++;
+        if (!freshBAL.has(adj.clientId)) freshBAL.set(adj.clientId,{sales:0,paid:0,returns:0,adjustments:0});
+        const b = freshBAL.get(adj.clientId);
+        b.adjustments = n2((b.adjustments||0) + n2(adj.amount));
+        return _;
+      }, null);
+    }
+    info.push(`فواتير: ${invCount} | مرتجعات: ${retCount} | تسويات: ${adjCount} | عملاء: ${C.clients.length}`);
     let balFixed=0;
     freshBAL.forEach((fb,cid) => {
-      const cb = BAL.get(cid)||{sales:0,paid:0,returns:0};
-      if (Math.abs(fb.sales-cb.sales)>0.01||Math.abs(fb.paid-cb.paid)>0.01||Math.abs((fb.returns||0)-(cb.returns||0))>0.01) {
-        BAL.set(cid,{sales:fb.sales,paid:fb.paid,returns:fb.returns||0}); balFixed++;
+      const cb = BAL.get(cid)||{sales:0,paid:0,returns:0,adjustments:0};
+      if (Math.abs(fb.sales-cb.sales)>0.01||Math.abs(fb.paid-cb.paid)>0.01||Math.abs((fb.returns||0)-(cb.returns||0))>0.01||Math.abs((fb.adjustments||0)-(cb.adjustments||0))>0.01) {
+        BAL.set(cid,{sales:fb.sales,paid:fb.paid,returns:fb.returns||0,adjustments:fb.adjustments||0}); balFixed++;
       }
     });
-    BAL.forEach((_,cid)=>{if(!freshBAL.has(cid)){BAL.set(cid,{sales:0,paid:0,returns:0});balFixed++;}});
-    if (balFixed>0) fixes.push(`✅ تصحيح أرصدة ${balFixed} عميل (شامل المرتجعات)`);
+    // ✅ تصحيح: عميل رصيده الوحيد تسوية (بدون فواتير/مرتجعات) لا يُصفَّر — كان الخطأ الأساسي
+    BAL.forEach((cb,cid)=>{if(!freshBAL.has(cid)&&(n2(cb.sales)!==0||n2(cb.paid)!==0||n2(cb.returns||0)!==0||n2(cb.adjustments||0)!==0)){BAL.set(cid,{sales:0,paid:0,returns:0,adjustments:cb.adjustments||0});balFixed++;}});
+    if (balFixed>0) fixes.push(`✅ تصحيح أرصدة ${balFixed} عميل (شامل المرتجعات والتسويات)`);
     if (mathErrNums.length) issues.push(`❌ ${mathErrNums.length} فاتورة بفرق حسابي`);
     if (orphI) issues.push(`❌ ${orphI} فاتورة بدون عميل صالح`);
     const dups=[...seenNums.entries()].filter(([,c])=>c>1);
@@ -1957,9 +1977,10 @@ async function refreshDash() {
     chart.innerHTML+=`<div class="cbw"><div class="cbar" style="height:${h}px" title="${fmt(vals[i])} جنيه"></div><div class="cbl">${lbl}</div></div>`;
   });
 
-  // Top Debtors — تأثير المرتجعات على الترتيب
+  // Top Debtors — تأثير المرتجعات والتسويات على الترتيب، مع استبعاد القائمة السوداء
   const topDeb=[...BAL.entries()]
-    .map(([cid,b])=>({cid,rem:n2(b.sales-b.paid-(b.returns||0))}))
+    .filter(([cid])=>!C.clients.find(c=>c.id===cid)?.blacklisted)
+    .map(([cid,b])=>({cid,rem:n2(b.sales-b.paid-(b.returns||0)-(b.adjustments||0))}))
     .filter(x=>x.rem>0).sort((a,b)=>b.rem-a.rem).slice(0,7);
   const tdEl=document.getElementById('topDebtors');
   if(tdEl){
@@ -2325,7 +2346,8 @@ async function renderInvoices() {
     tbody.innerHTML=records.map(i=>{
       const cl=C.clients.find(c=>c.id===i.clientId), dl=C.delegates.find(d=>d.id===i.delegateId);
       const st=i.remain<=0?'<span class="badge bgg">مسدد</span>':i.paid>0?'<span class="badge bggo">جزئي</span>':'<span class="badge bgr">آجل</span>';
-      return`<tr><td style="font-weight:700;color:var(--gb)">${prefix}-${i.num}</td><td style="font-size:.78rem;color:var(--tm)">${i.refNum||'—'}</td><td>${i.date}</td><td>${cl?.name||'—'}</td><td style="font-size:.78rem;color:var(--gol)">${i.route||'—'}</td><td>${dl?.name||'—'}</td><td style="font-weight:700">${fmt(i.net)}</td><td style="color:var(--gb)">${fmt(i.paid)}</td><td style="color:${i.remain>0?'var(--red)':'var(--gb)'}">${fmt(i.remain)}</td><td>${st}</td><td><button class="btn bb bsm" onclick="go('invoice',document.getElementById('sb-invoice'));setTimeout(()=>editInvoice('${i.id}'),100)">✏️</button></td><td><button class="btn br2 bsm" onclick="promptDelete('invoice','${i.id}','حذف فاتورة ${prefix}-${i.num}؟')">🗑️</button></td></tr>`;
+      const clBal=clRemain(i.clientId); // ✅ رصيد العميل التراكمي (وليس متبقي هذه الفاتورة فقط) — يتأثر بكل فواتير/مرتجعات/تسويات العميل
+      return`<tr><td style="font-weight:700;color:var(--gb)">${prefix}-${i.num}</td><td style="font-size:.78rem;color:var(--tm)">${i.refNum||'—'}</td><td>${i.date}</td><td>${cl?.name||'—'}</td><td style="font-size:.78rem;color:var(--gol)">${i.route||'—'}</td><td>${dl?.name||'—'}</td><td style="font-weight:700">${fmt(i.net)}</td><td style="color:var(--gb)">${fmt(i.paid)}</td><td style="color:${clBal>0?'var(--red)':'var(--gb)'}" title="الرصيد التراكمي الحالي لهذا العميل (وليس متبقي هذه الفاتورة فقط)">${fmt(clBal)}</td><td>${st}</td><td><button class="btn bb bsm" onclick="go('invoice',document.getElementById('sb-invoice'));setTimeout(()=>editInvoice('${i.id}'),100)">✏️</button></td><td><button class="btn br2 bsm" onclick="promptDelete('invoice','${i.id}','حذف فاتورة ${prefix}-${i.num}؟')">🗑️</button></td></tr>`;
     }).join('');
   }
   const totalPages=Math.ceil(total/_INV_PP);
@@ -3152,9 +3174,12 @@ async function calcComm(){
   // ✅ تصحيح: نسبة عمولة المندوب المسجلة فعلياً فقط — بدون أي استبدال تلقائي بنسبة افتراضية عامة
   //    (كانت المشكلة: dl?.commRate||C.settings.commRate||3 يستبدل الصفر بنسبة افتراضية خطأً)
   const rate=dl?.commRate||0;
-  // ✅ العمولة = التحصيلات × النسبة (ليس المبيعات)
+  // ✅ العمولة = التحصيلات × النسبة (ليس المبيعات) — لا تتأثر بالتسويات إطلاقاً كما هو مطلوب
   const comm=n2(totalCollect*rate/100);
-  const outstanding=n2(netSales-totalCollect);
+  // ✅ الرصيد القائم (معلومة إضافية فقط) يشمل التسويات — بدون أي تأثير على العمولة أعلاه
+  const adjsAll=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
+  const totalAdjD=n2(adjsAll.filter(a=>a.delegateId===dlId&&(!from||a.date>=from)&&(!to||a.date<=to)).reduce((s,a)=>s+n2(a.amount),0));
+  const outstanding=n2(netSales-totalCollect-totalAdjD);
   const html=`<div id="commPrint">
     <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid var(--g)">
       <div style="font-size:1.2rem;font-weight:900;color:var(--gb)">كشف عمولة المندوب</div>
@@ -3191,13 +3216,16 @@ async function genDaily(){
   const date=document.getElementById('rDailyDate').value; if(!date)return showToast('❌ حدد التاريخ');
   const invs=await idbInvByDate(date,date);
   const rets=await idbRetByDate(date,date);
+  const adjsAll=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
+  const adjs=adjsAll.filter(a=>a.date===date);
   const totalSales  = n2(invs.reduce((s,i)=>s+n2(i.net),0));
   const totalCollect= n2(invs.reduce((s,i)=>s+n2(i.paid),0));
   const totalRet    = n2(rets.reduce((s,r)=>s+n2(r.total),0));
-  const netSales    = n2(totalSales - totalRet);          // صافي المبيعات
-  const outstanding = n2(netSales   - totalCollect);      // الرصيد القائم
+  const totalAdj    = n2(adjs.reduce((s,a)=>s+n2(a.amount),0));
+  const netSales    = n2(totalSales - totalRet);                 // صافي المبيعات
+  const outstanding = n2(netSales   - totalCollect - totalAdj);  // الرصيد القائم = صافي − تحصيلات − تسويات
   let html=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px;font-size:1rem">📅 تقرير يوم ${date}</div>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px">
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px">
       <div style="background:var(--bgc2);border:1px solid var(--brd);border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:.72rem;color:var(--tm);margin-bottom:4px">إجمالي المبيعات</div>
         <div style="font-size:1.15rem;font-weight:900">${fmt(totalSales)}</div>
@@ -3212,6 +3240,11 @@ async function genDaily(){
         <div style="font-size:.72rem;color:var(--gb);margin-bottom:4px">التحصيلات الفعلية</div>
         <div style="font-size:1.15rem;font-weight:900;color:var(--gb)">${fmt(totalCollect)}</div>
       </div>
+      <div style="background:#fff3d6;border:1px solid #c9a227;border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:.72rem;color:#8a6d10;margin-bottom:4px">التسويات/الخصومات</div>
+        <div style="font-size:1.15rem;font-weight:900;color:#8a6d10">${fmt(totalAdj)}</div>
+        <div style="font-size:.68rem;color:var(--td)">${adjs.length} تسوية</div>
+      </div>
       <div style="background:var(--bgc2);border:2px solid var(--g);border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:.72rem;color:var(--gb);margin-bottom:4px">صافي المبيعات</div>
         <div style="font-size:1.15rem;font-weight:900;color:var(--gb)">${fmt(netSales)}</div>
@@ -3220,7 +3253,7 @@ async function genDaily(){
       <div style="background:${outstanding>0?'rgba(224,82,82,.08)':'rgba(45,216,133,.08)'};border:2px solid ${outstanding>0?'var(--red)':'var(--gb)'};border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:.72rem;color:${outstanding>0?'var(--red)':'var(--gb)'};margin-bottom:4px">الرصيد القائم</div>
         <div style="font-size:1.15rem;font-weight:900;color:${outstanding>0?'var(--red)':'var(--gb)'}">${fmt(outstanding)}</div>
-        <div style="font-size:.65rem;color:var(--td)">صافي − تحصيلات</div>
+        <div style="font-size:.65rem;color:var(--td)">صافي − تحصيلات − تسويات</div>
       </div>
     </div>`;
   if(invs.length){
@@ -3249,14 +3282,17 @@ async function genMonthly(){
   const from=mFrom+'-01', to=mTo+'-31';
   const invs=await idbInvByDate(from,to);
   const rets=await idbRetByDate(from,to);
+  const adjsAll=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
+  const adjs=adjsAll.filter(a=>a.date>=from&&a.date<=to);
   const type=document.getElementById('rMonthType').value;
   const totalSales  = n2(invs.reduce((s,i)=>s+n2(i.net),0));
   const totalCollect= n2(invs.reduce((s,i)=>s+n2(i.paid),0));
   const totalRet    = n2(rets.reduce((s,r)=>s+n2(r.total),0));
-  const netSales    = n2(totalSales - totalRet);       // صافي المبيعات = مبيعات − مرتجعات
-  const outstanding = n2(netSales   - totalCollect);   // الرصيد القائم = صافي − تحصيلات
+  const totalAdj    = n2(adjs.reduce((s,a)=>s+n2(a.amount),0));
+  const netSales    = n2(totalSales - totalRet);              // صافي المبيعات = مبيعات − مرتجعات
+  const outstanding = n2(netSales   - totalCollect - totalAdj); // الرصيد القائم = صافي − تحصيلات − تسويات
   let html=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">📆 تقرير ${mFrom} إلى ${mTo}</div>
-    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px">
+    <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px">
       <div style="background:var(--bgc2);border:1px solid var(--brd);border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:.72rem;color:var(--tm);margin-bottom:4px">إجمالي المبيعات</div>
         <div style="font-size:1.15rem;font-weight:900">${fmt(totalSales)}</div>
@@ -3271,6 +3307,11 @@ async function genMonthly(){
         <div style="font-size:.72rem;color:var(--gb);margin-bottom:4px">التحصيلات الفعلية</div>
         <div style="font-size:1.15rem;font-weight:900;color:var(--gb)">${fmt(totalCollect)}</div>
       </div>
+      <div style="background:#fff3d6;border:1px solid #c9a227;border-radius:8px;padding:12px;text-align:center">
+        <div style="font-size:.72rem;color:#8a6d10;margin-bottom:4px">التسويات/الخصومات</div>
+        <div style="font-size:1.15rem;font-weight:900;color:#8a6d10">${fmt(totalAdj)}</div>
+        <div style="font-size:.68rem;color:var(--td)">${adjs.length} تسوية</div>
+      </div>
       <div style="background:var(--bgc2);border:2px solid var(--g);border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:.72rem;color:var(--gb);margin-bottom:4px">صافي المبيعات</div>
         <div style="font-size:1.15rem;font-weight:900;color:var(--gb)">${fmt(netSales)}</div>
@@ -3279,7 +3320,7 @@ async function genMonthly(){
       <div style="background:${outstanding>0?'rgba(224,82,82,.08)':'rgba(45,216,133,.08)'};border:2px solid ${outstanding>0?'var(--red)':'var(--gb)'};border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:.72rem;color:${outstanding>0?'var(--red)':'var(--gb)'};margin-bottom:4px">الرصيد القائم</div>
         <div style="font-size:1.15rem;font-weight:900;color:${outstanding>0?'var(--red)':'var(--gb)'}">${fmt(outstanding)}</div>
-        <div style="font-size:.65rem;color:var(--td)">صافي − تحصيلات</div>
+        <div style="font-size:.65rem;color:var(--td)">صافي − تحصيلات − تسويات</div>
       </div>
     </div>`;
   if(type==='detail'){
@@ -3302,19 +3343,22 @@ async function genClRep(){
   const from=document.getElementById('rClFrom').value, to=document.getElementById('rClTo').value;
   const invs=from&&to?await idbInvByDate(from,to):await idbAll('invoices');
   const rets=idb.objectStoreNames.contains('returns')?(from&&to?await idbRetByDate(from,to):await idbAll('returns')):[];
+  const adjs=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
+  const filtAdjs=adjs.filter(a=>(!from||!to)||(a.date>=from&&a.date<=to));
   const clMap=new Map();
-  invs.forEach(i=>{ if(!clMap.has(i.clientId))clMap.set(i.clientId,{sales:0,paid:0,returns:0,cnt:0}); const m=clMap.get(i.clientId); m.sales=n2(m.sales+n2(i.net)); m.paid=n2(m.paid+n2(i.paid)); m.cnt++; });
-  rets.forEach(r=>{ if(!clMap.has(r.clientId))clMap.set(r.clientId,{sales:0,paid:0,returns:0,cnt:0}); clMap.get(r.clientId).returns=n2(clMap.get(r.clientId).returns+n2(r.total)); });
-  let rows='', gSales=0, gRet=0, gPaid=0;
-  [...clMap.entries()].sort((a,b)=>{const aRem=n2(a[1].sales-a[1].paid-a[1].returns),bRem=n2(b[1].sales-b[1].paid-b[1].returns);return bRem-aRem;}).forEach(([cid,m])=>{
-    const cl=C.clients.find(c=>c.id===cid); const rem=n2(m.sales-m.paid-m.returns);
-    gSales=n2(gSales+m.sales); gRet=n2(gRet+m.returns); gPaid=n2(gPaid+m.paid);
-    rows+=`<tr><td>${cl?.name||'—'}</td><td>${cl?.route||'—'}</td><td>${m.cnt}</td><td>${fmt(m.sales)}</td><td style="color:var(--org)">${fmt(m.returns)}</td><td style="color:var(--gb)">${fmt(m.paid)}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td></tr>`;
+  invs.forEach(i=>{ if(!clMap.has(i.clientId))clMap.set(i.clientId,{sales:0,paid:0,returns:0,adjustments:0,cnt:0}); const m=clMap.get(i.clientId); m.sales=n2(m.sales+n2(i.net)); m.paid=n2(m.paid+n2(i.paid)); m.cnt++; });
+  rets.forEach(r=>{ if(!clMap.has(r.clientId))clMap.set(r.clientId,{sales:0,paid:0,returns:0,adjustments:0,cnt:0}); clMap.get(r.clientId).returns=n2(clMap.get(r.clientId).returns+n2(r.total)); });
+  filtAdjs.forEach(a=>{ if(!clMap.has(a.clientId))clMap.set(a.clientId,{sales:0,paid:0,returns:0,adjustments:0,cnt:0}); clMap.get(a.clientId).adjustments=n2(clMap.get(a.clientId).adjustments+n2(a.amount)); });
+  let rows='', gSales=0, gRet=0, gPaid=0, gAdj=0;
+  [...clMap.entries()].sort((a,b)=>{const aRem=n2(a[1].sales-a[1].paid-a[1].returns-(a[1].adjustments||0)),bRem=n2(b[1].sales-b[1].paid-b[1].returns-(b[1].adjustments||0));return bRem-aRem;}).forEach(([cid,m])=>{
+    const cl=C.clients.find(c=>c.id===cid); const rem=n2(m.sales-m.paid-m.returns-(m.adjustments||0));
+    gSales=n2(gSales+m.sales); gRet=n2(gRet+m.returns); gPaid=n2(gPaid+m.paid); gAdj=n2(gAdj+(m.adjustments||0));
+    rows+=`<tr><td>${cl?.name||'—'}</td><td>${cl?.route||'—'}</td><td>${m.cnt}</td><td>${fmt(m.sales)}</td><td style="color:var(--org)">${fmt(m.returns)}</td><td style="color:var(--gb)">${fmt(m.paid)}</td><td style="color:#c9a227">${fmt(m.adjustments||0)}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td></tr>`;
   });
   const html=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">👥 تقرير العملاء${from&&to?` (${from} — ${to})`:''}</div>
-    <table><thead><tr><th>العميل</th><th>خط السير</th><th>الفواتير</th><th>المبيعات</th><th>المرتجعات</th><th>التحصيلات</th><th>الرصيد</th></tr></thead>
-    <tbody>${rows||'<tr><td colspan="7" style="text-align:center;color:var(--td)">لا توجد بيانات</td></tr>'}</tbody>
-    <tfoot><tr style="font-weight:700;background:rgba(26,122,80,.1)"><td colspan="3">الإجمالي</td><td>${fmt(gSales)}</td><td style="color:var(--org)">${fmt(gRet)}</td><td style="color:var(--gb)">${fmt(gPaid)}</td><td style="color:${n2(gSales-gPaid-gRet)>0?'var(--red)':'var(--gb)'}">${fmt(n2(gSales-gPaid-gRet))}</td></tr></tfoot></table>`;
+    <table><thead><tr><th>العميل</th><th>خط السير</th><th>الفواتير</th><th>المبيعات</th><th>المرتجعات</th><th>التحصيلات</th><th>التسويات</th><th>الرصيد</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="8" style="text-align:center;color:var(--td)">لا توجد بيانات</td></tr>'}</tbody>
+    <tfoot><tr style="font-weight:700;background:rgba(26,122,80,.1)"><td colspan="3">الإجمالي</td><td>${fmt(gSales)}</td><td style="color:var(--org)">${fmt(gRet)}</td><td style="color:var(--gb)">${fmt(gPaid)}</td><td style="color:#c9a227">${fmt(gAdj)}</td><td style="color:${n2(gSales-gPaid-gRet-gAdj)>0?'var(--red)':'var(--gb)'}">${fmt(n2(gSales-gPaid-gRet-gAdj))}</td></tr></tfoot></table>`;
   document.getElementById('rClOut').innerHTML=html;
 }
 function printClRep(){ openPrintWin(document.getElementById('rClOut').innerHTML); }
@@ -3361,18 +3405,27 @@ async function genRouteRep(){
   });
   const rets=idb.objectStoreNames.contains('returns')?(from&&to?await idbRetByDate(from,to):await idbAll('returns')):[];
   const filtRets=rets.filter(r=>{ const cl=C.clients.find(c=>c.id===r.clientId); if(did&&r.delegateId!==did)return false; if(route&&cl?.route!==route)return false; return true; });
+  const adjsAll=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
+  const filtAdjs=adjsAll.filter(a=>{
+    const cl=C.clients.find(c=>c.id===a.clientId);
+    if(did&&a.delegateId!==did)return false;
+    if(route&&cl?.route!==route)return false;
+    if((from&&to)&&!(a.date>=from&&a.date<=to))return false;
+    return true;
+  });
   const routeMap=new Map();
-  filtInvs.forEach(i=>{ const cl=C.clients.find(c=>c.id===i.clientId); const rt=cl?.route||'غير محدد'; if(!routeMap.has(rt))routeMap.set(rt,{sales:0,paid:0,returns:0,cnt:0}); const m=routeMap.get(rt); m.sales=n2(m.sales+n2(i.net)); m.paid=n2(m.paid+n2(i.paid)); m.cnt++; });
-  filtRets.forEach(r=>{ const cl=C.clients.find(c=>c.id===r.clientId); const rt=cl?.route||'غير محدد'; if(!routeMap.has(rt))routeMap.set(rt,{sales:0,paid:0,returns:0,cnt:0}); routeMap.get(rt).returns=n2(routeMap.get(rt).returns+n2(r.total)); });
-  let rows='', gSales=0, gRet=0, gPaid=0;
+  filtInvs.forEach(i=>{ const cl=C.clients.find(c=>c.id===i.clientId); const rt=cl?.route||'غير محدد'; if(!routeMap.has(rt))routeMap.set(rt,{sales:0,paid:0,returns:0,adjustments:0,cnt:0}); const m=routeMap.get(rt); m.sales=n2(m.sales+n2(i.net)); m.paid=n2(m.paid+n2(i.paid)); m.cnt++; });
+  filtRets.forEach(r=>{ const cl=C.clients.find(c=>c.id===r.clientId); const rt=cl?.route||'غير محدد'; if(!routeMap.has(rt))routeMap.set(rt,{sales:0,paid:0,returns:0,adjustments:0,cnt:0}); routeMap.get(rt).returns=n2(routeMap.get(rt).returns+n2(r.total)); });
+  filtAdjs.forEach(a=>{ const cl=C.clients.find(c=>c.id===a.clientId); const rt=cl?.route||'غير محدد'; if(!routeMap.has(rt))routeMap.set(rt,{sales:0,paid:0,returns:0,adjustments:0,cnt:0}); routeMap.get(rt).adjustments=n2(routeMap.get(rt).adjustments+n2(a.amount)); });
+  let rows='', gSales=0, gRet=0, gPaid=0, gAdj=0;
   [...routeMap.entries()].sort((a,b)=>b[1].sales-a[1].sales).forEach(([rt,m])=>{
-    const rem=n2(m.sales-m.paid-m.returns); gSales=n2(gSales+m.sales); gRet=n2(gRet+m.returns); gPaid=n2(gPaid+m.paid);
-    rows+=`<tr><td><b>${rt}</b></td><td>${m.cnt}</td><td>${fmt(m.sales)}</td><td style="color:var(--org)">${fmt(m.returns)}</td><td style="color:var(--gb)">${fmt(m.paid)}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td></tr>`;
+    const rem=n2(m.sales-m.paid-m.returns-(m.adjustments||0)); gSales=n2(gSales+m.sales); gRet=n2(gRet+m.returns); gPaid=n2(gPaid+m.paid); gAdj=n2(gAdj+(m.adjustments||0));
+    rows+=`<tr><td><b>${rt}</b></td><td>${m.cnt}</td><td>${fmt(m.sales)}</td><td style="color:var(--org)">${fmt(m.returns)}</td><td style="color:var(--gb)">${fmt(m.paid)}</td><td style="color:#c9a227">${fmt(m.adjustments||0)}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td></tr>`;
   });
   document.getElementById('rRtOut').innerHTML=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">🗺️ تقرير خطوط السير</div>
-    <table><thead><tr><th>خط السير</th><th>الفواتير</th><th>المبيعات</th><th>المرتجعات</th><th>التحصيلات</th><th>الرصيد</th></tr></thead>
-    <tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:var(--td)">لا توجد بيانات</td></tr>'}</tbody>
-    <tfoot><tr style="font-weight:700"><td>الإجمالي</td><td></td><td>${fmt(gSales)}</td><td style="color:var(--org)">${fmt(gRet)}</td><td style="color:var(--gb)">${fmt(gPaid)}</td><td style="color:${n2(gSales-gPaid-gRet)>0?'var(--red)':'var(--gb)'}">${fmt(n2(gSales-gPaid-gRet))}</td></tr></tfoot></table>`;
+    <table><thead><tr><th>خط السير</th><th>الفواتير</th><th>المبيعات</th><th>المرتجعات</th><th>التحصيلات</th><th>التسويات</th><th>الرصيد</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="7" style="text-align:center;color:var(--td)">لا توجد بيانات</td></tr>'}</tbody>
+    <tfoot><tr style="font-weight:700"><td>الإجمالي</td><td></td><td>${fmt(gSales)}</td><td style="color:var(--org)">${fmt(gRet)}</td><td style="color:var(--gb)">${fmt(gPaid)}</td><td style="color:#c9a227">${fmt(gAdj)}</td><td style="color:${n2(gSales-gPaid-gRet-gAdj)>0?'var(--red)':'var(--gb)'}">${fmt(n2(gSales-gPaid-gRet-gAdj))}</td></tr></tfoot></table>`;
 }
 function printRouteRep(){ openPrintWin(document.getElementById('rRtOut').innerHTML); }
 
@@ -3450,20 +3503,23 @@ async function genBalance(){
   const from=document.getElementById('rBalFrom').value, to=document.getElementById('rBalTo').value;
   const invs=from&&to?await idbInvByDate(from,to):await idbAll('invoices');
   const rets=idb.objectStoreNames.contains('returns')?(from&&to?await idbRetByDate(from,to):await idbAll('returns')):[];
+  const adjs=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
+  const filtAdjs=adjs.filter(a=>(!from||!to)||(a.date>=from&&a.date<=to));
   const clMap=new Map();
-  invs.forEach(i=>{ if(!clMap.has(i.clientId))clMap.set(i.clientId,{sales:0,paid:0,returns:0}); const m=clMap.get(i.clientId); m.sales=n2(m.sales+n2(i.net)); m.paid=n2(m.paid+n2(i.paid)); });
-  rets.forEach(r=>{ if(!clMap.has(r.clientId))clMap.set(r.clientId,{sales:0,paid:0,returns:0}); clMap.get(r.clientId).returns=n2(clMap.get(r.clientId).returns+n2(r.total)); });
-  let rows='', gS=0, gR=0, gP=0;
-  [...clMap.entries()].sort((a,b)=>{const ar=n2(a[1].sales-a[1].paid-a[1].returns),br=n2(b[1].sales-b[1].paid-b[1].returns);return br-ar;}).forEach(([cid,m])=>{
+  invs.forEach(i=>{ if(!clMap.has(i.clientId))clMap.set(i.clientId,{sales:0,paid:0,returns:0,adjustments:0}); const m=clMap.get(i.clientId); m.sales=n2(m.sales+n2(i.net)); m.paid=n2(m.paid+n2(i.paid)); });
+  rets.forEach(r=>{ if(!clMap.has(r.clientId))clMap.set(r.clientId,{sales:0,paid:0,returns:0,adjustments:0}); clMap.get(r.clientId).returns=n2(clMap.get(r.clientId).returns+n2(r.total)); });
+  filtAdjs.forEach(a=>{ if(!clMap.has(a.clientId))clMap.set(a.clientId,{sales:0,paid:0,returns:0,adjustments:0}); clMap.get(a.clientId).adjustments=n2(clMap.get(a.clientId).adjustments+n2(a.amount)); });
+  let rows='', gS=0, gR=0, gP=0, gA=0;
+  [...clMap.entries()].sort((a,b)=>{const ar=n2(a[1].sales-a[1].paid-a[1].returns-(a[1].adjustments||0)),br=n2(b[1].sales-b[1].paid-b[1].returns-(b[1].adjustments||0));return br-ar;}).forEach(([cid,m])=>{
     const cl=C.clients.find(c=>c.id===cid), dl=C.delegates.find(d=>d.id===cl?.delegateId);
-    const rem=n2(m.sales-m.paid-m.returns); if(rem===0&&m.sales===0)return;
-    gS=n2(gS+m.sales); gR=n2(gR+m.returns); gP=n2(gP+m.paid);
-    rows+=`<tr><td>${cl?.name||'—'}</td><td>${cl?.route||'—'}</td><td>${dl?.name||'—'}</td><td>${fmt(m.sales)}</td><td style="color:var(--org)">${fmt(m.returns)}</td><td style="color:var(--gb)">${fmt(m.paid)}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td></tr>`;
+    const rem=n2(m.sales-m.paid-m.returns-(m.adjustments||0)); if(rem===0&&m.sales===0&&!(m.adjustments>0))return;
+    gS=n2(gS+m.sales); gR=n2(gR+m.returns); gP=n2(gP+m.paid); gA=n2(gA+(m.adjustments||0));
+    rows+=`<tr><td>${cl?.name||'—'}</td><td>${cl?.route||'—'}</td><td>${dl?.name||'—'}</td><td>${fmt(m.sales)}</td><td style="color:var(--org)">${fmt(m.returns)}</td><td style="color:var(--gb)">${fmt(m.paid)}</td><td style="color:#c9a227">${fmt(m.adjustments||0)}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td></tr>`;
   });
-  document.getElementById('rBalOut').innerHTML=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">💰 تقرير الأرصدة التفصيلي (الرصيد = مبيعات − مرتجعات − تحصيلات)</div>
-    <table><thead><tr><th>العميل</th><th>خط السير</th><th>المندوب</th><th>المبيعات</th><th>المرتجعات</th><th>التحصيلات</th><th>الرصيد</th></tr></thead>
-    <tbody>${rows||'<tr><td colspan="7" style="text-align:center;color:var(--td)">لا توجد بيانات</td></tr>'}</tbody>
-    <tfoot><tr style="font-weight:700;background:rgba(26,122,80,.1)"><td colspan="3">الإجمالي</td><td>${fmt(gS)}</td><td style="color:var(--org)">${fmt(gR)}</td><td style="color:var(--gb)">${fmt(gP)}</td><td style="color:${n2(gS-gP-gR)>0?'var(--red)':'var(--gb)'};font-size:13pt">${fmt(n2(gS-gP-gR))}</td></tr></tfoot></table>`;
+  document.getElementById('rBalOut').innerHTML=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">💰 تقرير الأرصدة التفصيلي (الرصيد = مبيعات − مرتجعات − تحصيلات − تسويات)</div>
+    <table><thead><tr><th>العميل</th><th>خط السير</th><th>المندوب</th><th>المبيعات</th><th>المرتجعات</th><th>التحصيلات</th><th>التسويات</th><th>الرصيد</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="8" style="text-align:center;color:var(--td)">لا توجد بيانات</td></tr>'}</tbody>
+    <tfoot><tr style="font-weight:700;background:rgba(26,122,80,.1)"><td colspan="3">الإجمالي</td><td>${fmt(gS)}</td><td style="color:var(--org)">${fmt(gR)}</td><td style="color:var(--gb)">${fmt(gP)}</td><td style="color:#c9a227">${fmt(gA)}</td><td style="color:${n2(gS-gP-gR-gA)>0?'var(--red)':'var(--gb)'};font-size:13pt">${fmt(n2(gS-gP-gR-gA))}</td></tr></tfoot></table>`;
 }
 function printBalanceRep(){ openPrintWin(document.getElementById('rBalOut').innerHTML); }
 
