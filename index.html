@@ -2081,7 +2081,7 @@ async function refreshDash() {
       :'<div style="color:var(--td);font-size:.8rem;text-align:center;padding:8px">لا توجد مبيعات هذا الشهر</div>';
   }
 
-  // Aging — تحليل الديون مع تأثير المرتجعات
+  // Aging — تحليل الديون مع تأثير المرتجعات والتسويات معاً
   const agEl=document.getElementById('agingDash');
   if(agEl){
     const now=new Date();
@@ -2094,14 +2094,16 @@ async function refreshDash() {
       bk[bi].net=n2(bk[bi].net+n2(inv.net)); bk[bi].paid=n2(bk[bi].paid+n2(inv.paid));
       return _;
     },null);
-    // احتساب المرتجعات في تحليل العمر (توزيع نسبي)
+    // احتساب المرتجعات والتسويات في تحليل العمر (توزيع نسبي حسب وزن كل فئة من إجمالي المبيعات)
     const totalRet=n2([...BAL.entries()].filter(([cid])=>!C.clients.find(c=>c.id===cid)?.blacklisted).reduce((s,[,b])=>s+(b.returns||0),0));
+    const totalAdj=n2([...BAL.entries()].filter(([cid])=>!C.clients.find(c=>c.id===cid)?.blacklisted).reduce((s,[,b])=>s+(b.adjustments||0),0));
+    const totalDeduct=n2(totalRet+totalAdj); // ✅ المرتجعات + التسويات معاً — كانت التسويات مفقودة بالكامل من هذا الحساب
     const totalSales=n2(bk.reduce((s,b)=>s+b.net,0));
     const aging=[
-      {label:'0-30 يوم', val:n2(Math.max(0,bk[0].net-bk[0].paid-(totalSales>0?(bk[0].net/totalSales)*totalRet:0))),color:'var(--gb)'},
-      {label:'31-60 يوم',val:n2(Math.max(0,bk[1].net-bk[1].paid-(totalSales>0?(bk[1].net/totalSales)*totalRet:0))),color:'var(--gol)'},
-      {label:'61-90 يوم',val:n2(Math.max(0,bk[2].net-bk[2].paid-(totalSales>0?(bk[2].net/totalSales)*totalRet:0))),color:'var(--org)'},
-      {label:'+90 يوم',  val:n2(Math.max(0,bk[3].net-bk[3].paid-(totalSales>0?(bk[3].net/totalSales)*totalRet:0))),color:'var(--red)'},
+      {label:'0-30 يوم', val:n2(Math.max(0,bk[0].net-bk[0].paid-(totalSales>0?(bk[0].net/totalSales)*totalDeduct:0))),color:'var(--gb)'},
+      {label:'31-60 يوم',val:n2(Math.max(0,bk[1].net-bk[1].paid-(totalSales>0?(bk[1].net/totalSales)*totalDeduct:0))),color:'var(--gol)'},
+      {label:'61-90 يوم',val:n2(Math.max(0,bk[2].net-bk[2].paid-(totalSales>0?(bk[2].net/totalSales)*totalDeduct:0))),color:'var(--org)'},
+      {label:'+90 يوم',  val:n2(Math.max(0,bk[3].net-bk[3].paid-(totalSales>0?(bk[3].net/totalSales)*totalDeduct:0))),color:'var(--red)'},
     ];
     const total=n2(aging.reduce((s,a)=>s+a.val,0));
     agEl.innerHTML=aging.map(ag=>{
@@ -3645,7 +3647,14 @@ async function genSplitRep() {
   if(from) invs=invs.filter(i=>i.date>=from);
   if(to)   invs=invs.filter(i=>i.date<=to);
   invs.sort((a,b)=>a.date.localeCompare(b.date)||a.num-b.num);
-  if(!invs.length){ document.getElementById('rSplitOut').innerHTML='<div style="text-align:center;color:var(--td);padding:20px">لا توجد فواتير في هذه الفترة</div>'; return; }
+  // ✅ جلب مرتجعات نفس العميل بنفس فلاتر المندوب والفترة أولاً (قبل أي فحص توقف مبكر)
+  //    حتى لو لم توجد فواتير جديدة في نفس الفترة بالضبط (مثال: فاتورة قديمة قبل الفترة، ومرتجع داخل الفترة)
+  let rets=idb.objectStoreNames.contains('returns')?await idbRetByClient(clId):[];
+  if(dlId) rets=rets.filter(r=>r.delegateId===dlId);
+  if(from) rets=rets.filter(r=>r.date>=from);
+  if(to)   rets=rets.filter(r=>r.date<=to);
+  rets.sort((a,b)=>a.date.localeCompare(b.date)||a.num-b.num);
+  if(!invs.length && !rets.length){ document.getElementById('rSplitOut').innerHTML='<div style="text-align:center;color:var(--td);padding:20px">لا توجد فواتير أو مرتجعات في هذه الفترة</div>'; return; }
   const prefix=C.settings.invPrefix||'INV';
   // تجميع البنود حسب نوع الصنف
   const mgRows=[], hsRows=[];  // مغذي، حشري وفطري
@@ -3657,11 +3666,27 @@ async function genSplitRep() {
       if(itype==='مغذي') mgRows.push(row); else hsRows.push(row);
     });
   });
+  // تقسيم بنود المرتجعات حسب نوع الصنف — عشان تُخصم من كل قسم قبل حساب نسبة الخصم
+  // (الخصم يجب ألا يُحتسب على بضاعة رجعت فعلاً)
+  const mgRetRows=[], hsRetRows=[];
+  const retPrefix='RET';
+  rets.forEach(ret=>{
+    (ret.items||[]).forEach(it=>{
+      const itype=it.itemType||'مغذي';
+      const row={ date:ret.date, invNum:retPrefix+'-'+ret.num, refNum:ret.reason||'', name:it.prodName, type:itype, qty:it.qty, price:it.price, total:it.total };
+      if(itype==='مغذي') mgRetRows.push(row); else hsRetRows.push(row);
+    });
+  });
   // حساب الإجماليات
   const mgTotal=n2(mgRows.reduce((s,r)=>s+n2(r.total),0));
   const hsTotal=n2(hsRows.reduce((s,r)=>s+n2(r.total),0));
-  const discVal=n2(mgTotal*discPct/100);
-  const mgAfterDisc=n2(mgTotal-discVal);
+  const mgRetTotal=n2(mgRetRows.reduce((s,r)=>s+n2(r.total),0));
+  const hsRetTotal=n2(hsRetRows.reduce((s,r)=>s+n2(r.total),0));
+  // ✅ صافي كل قسم بعد خصم مرتجعاته أولاً — الخصم يُحسب على الصافي، ليس على إجمالي المبيعات الخام
+  const mgNet=n2(mgTotal-mgRetTotal);
+  const hsNet=n2(hsTotal-hsRetTotal);
+  const discVal=n2(mgNet*discPct/100);
+  const mgAfterDisc=n2(mgNet-discVal);
   // ✅ تسويات/خصومات العميل اليدوية بنفس فلاتر العميل والمندوب والفترة — تُخصم من الإجمالي النهائي فقط (لا تدخل تقسيم مغذي/حشري)
   let adjs=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
   adjs=adjs.filter(a=>a.clientId===clId);
@@ -3669,7 +3694,7 @@ async function genSplitRep() {
   if(from) adjs=adjs.filter(a=>a.date>=from);
   if(to)   adjs=adjs.filter(a=>a.date<=to);
   const adjTotal=n2(adjs.reduce((s,a)=>s+n2(a.amount),0));
-  const grandTotal=n2(mgAfterDisc+hsTotal-adjTotal);
+  const grandTotal=n2(mgAfterDisc+hsNet-adjTotal);
   // دالة مساعدة لبناء جدول البنود
   const buildTable=(rows)=>{
     if(!rows.length) return '<div style="color:var(--td);font-size:.82rem;text-align:center;padding:8px">لا توجد بنود</div>';
@@ -3705,14 +3730,26 @@ async function genSplitRep() {
         🌿 أصناف المغذي
       </div>
       ${buildTable(mgRows)}
+      ${mgRetRows.length?`
+      <div style="background:#fdecec;border-top:2px dashed #b00020;padding:8px 14px;font-weight:700;color:#b00020;font-size:.85rem">↩️ مرتجعات المغذي</div>
+      ${buildTable(mgRetRows)}`:''}
       <div style="background:#d4f0e0;border:2px solid #1a7a50;border-top:none;border-radius:0 0 8px 8px;padding:10px 14px">
         <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
-          <span style="font-weight:700;color:#0a3d2e">إجمالي قسم المغذي قبل الخصم:</span>
+          <span style="font-weight:700;color:#0a3d2e">إجمالي قسم المغذي:</span>
           <span style="font-weight:900;color:#0a3d2e;font-size:1.05rem">${fmt(mgTotal)} جنيه</span>
         </div>
+        ${mgRetTotal>0?`
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:6px;color:#b00020">
+          <span style="font-weight:700">مرتجعات المغذي:</span>
+          <span style="font-weight:900;font-size:1.05rem">(${fmt(mgRetTotal)}) جنيه</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:6px;border-top:1px dashed #1a7a50;padding-top:6px">
+          <span style="font-weight:700;color:#0a3d2e">صافي المغذي بعد المرتجعات:</span>
+          <span style="font-weight:900;color:#0a3d2e;font-size:1.05rem">${fmt(mgNet)} جنيه</span>
+        </div>`:''}
         ${discPct>0?`
         <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:6px;color:#b00020">
-          <span style="font-weight:700">خصم المغذي (${discPct}%):</span>
+          <span style="font-weight:700">خصم المغذي (${discPct}% على الصافي بعد المرتجعات):</span>
           <span style="font-weight:900;font-size:1.05rem">(${fmt(discVal)}) جنيه</span>
         </div>
         <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:6px;border-top:1px solid #1a7a50;padding-top:6px">
@@ -3728,11 +3765,23 @@ async function genSplitRep() {
         🐛 أصناف الحشري والفطري
       </div>
       ${buildTable(hsRows)}
+      ${hsRetRows.length?`
+      <div style="background:#fdecec;border-top:2px dashed #b00020;padding:8px 14px;font-weight:700;color:#b00020;font-size:.85rem">↩️ مرتجعات الحشري والفطري</div>
+      ${buildTable(hsRetRows)}`:''}
       <div style="background:#fde8cc;border:2px solid #b86000;border-top:none;border-radius:0 0 8px 8px;padding:10px 14px">
         <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px">
           <span style="font-weight:700;color:#b86000">إجمالي قسم الحشري والفطري (بدون خصم):</span>
           <span style="font-weight:900;color:#b86000;font-size:1.05rem">${fmt(hsTotal)} جنيه</span>
         </div>
+        ${hsRetTotal>0?`
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:6px;color:#b00020">
+          <span style="font-weight:700">مرتجعات الحشري والفطري:</span>
+          <span style="font-weight:900;font-size:1.05rem">(${fmt(hsRetTotal)}) جنيه</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:6px;border-top:1px dashed #b86000;padding-top:6px">
+          <span style="font-weight:700;color:#b86000">صافي الحشري والفطري بعد المرتجعات:</span>
+          <span style="font-weight:900;color:#b86000;font-size:1.05rem">${fmt(hsNet)} جنيه</span>
+        </div>`:''}
       </div>
     </div>
 
@@ -3755,7 +3804,7 @@ async function genSplitRep() {
     <!-- ═══ الإجمالي النهائي ═══ -->
     <div style="background:linear-gradient(135deg,#0a3d2e,#1a7a50);border-radius:10px;padding:16px 20px;color:#fff;text-align:center">
       <div style="font-size:.85rem;margin-bottom:8px;opacity:.85">
-        الإجمالي النهائي = إجمالي المغذي بعد الخصم + إجمالي الحشري والفطري − التسويات/الخصومات
+        الإجمالي النهائي = (المغذي − مرتجعاته) بعد الخصم + (الحشري والفطري − مرتجعاته) − التسويات/الخصومات
       </div>
       <div style="font-size:1.6rem;font-weight:900">${fmt(grandTotal)} جنيه</div>
       ${discPct>0?`<div style="font-size:.78rem;margin-top:6px;opacity:.8">وفّرت ${fmt(discVal)} جنيه خصم على قسم المغذي</div>`:''}
