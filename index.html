@@ -927,6 +927,21 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
           <div class="br"><button class="btn bg" onclick="saveSettings()">💾 حفظ الإعدادات</button></div>
         </div>
         <div class="card">
+          <div class="card-title">🖼️ شعار الشركة (علامة مائية في التقارير)</div>
+          <div style="font-size:.8rem;color:var(--tm);margin-bottom:12px">الشعار هيظهر باهتاً في خلفية كل التقارير المطبوعة، بدون ما يأثر على وضوح النص أو الأرقام.</div>
+          <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+            <div id="logoPreviewBox" style="width:110px;height:110px;border:2px dashed var(--brd);border-radius:10px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--bgc2)">
+              <span id="logoPreviewEmpty" style="font-size:.72rem;color:var(--td);text-align:center;padding:6px">لا يوجد شعار</span>
+              <img id="logoPreviewImg" style="max-width:100%;max-height:100%;object-fit:contain;display:none">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <input type="file" id="logoFileInput" accept="image/*" style="display:none" onchange="handleLogoUpload(event)">
+              <button class="btn bb" onclick="document.getElementById('logoFileInput').click()">📁 اختيار صورة الشعار</button>
+              <button class="btn br2" id="logoRemoveBtn" style="display:none" onclick="removeLogo()">🗑️ إزالة الشعار</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
           <div class="card-title">💾 النسخ الاحتياطي</div>
           <div style="background:rgba(45,216,133,.08);border:1px solid var(--gb);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:.85rem;color:var(--gb)">
             ✅ <strong>Smart Cache + SQLite حقيقي</strong> — ملف قاعدة بيانات على القرص (rosetta.db) | أرصدة في الذاكرة | المعادلة: رصيد = مبيعات − مرتجعات − تحصيلات
@@ -1427,7 +1442,7 @@ const C = {
   clients:[], products:[], delegates:[],
   settings:{
     company:'روزيتا المتحدة للمبيدات الزراعية',
-    address:'', phone:'', commRate:3,
+    address:'', phone:'', commRate:3, logo:'',
     adminUser:'admin', adminPass:'1234',
     lastBackup:null, invPrefix:'INV',
     nextInvNum:1001, nextRetNum:1, nextAdjId:1,
@@ -1529,6 +1544,10 @@ function openPrintWin(html) {
   iframe.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;border:none;z-index:99999;background:#fff';
   document.body.appendChild(iframe);
 
+  // ✅ العلامة المائية: تُحقن مرة واحدة هنا فقط، فتظهر تلقائياً في كل تقرير بدون أي تكرار للكود
+  const logo = C.settings.logo || '';
+  const watermarkHtml = logo ? `<div class="watermark"><img src="${logo}"></div>` : '';
+
   const doc = iframe.contentDocument || iframe.contentWindow.document;
   doc.open();
   doc.write(`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
@@ -1545,13 +1564,20 @@ th{background:#f0f0f0}
   font-family:'Cairo',sans-serif;font-size:13px;font-weight:700}
 .btn-pr{background:#1a7a50;color:#fff}
 .btn-cl{background:#888;color:#fff}
-.pcontent{padding:70px 20px 20px}
-@media print{.ptoolbar{display:none!important}.pcontent{padding:0}}
+.pcontent{padding:70px 20px 20px;position:relative;z-index:1}
+.watermark{position:fixed;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:0}
+.watermark img{max-width:50%;max-height:50%;object-fit:contain;opacity:.07}
+@media print{
+  .ptoolbar{display:none!important}
+  .pcontent{padding:0}
+  .watermark{position:fixed}
+}
 </style></head><body>
 <div class="ptoolbar">
   <button class="btn-pr" onclick="window.print()">🖨️ طباعة</button>
   <button class="btn-cl" onclick="parent.document.getElementById('__print_iframe__').remove()">✕ إغلاق</button>
 </div>
+${watermarkHtml}
 <div class="pcontent">${html}</div>
 </body></html>`);
   doc.close();
@@ -2723,7 +2749,7 @@ async function renderReturns() {
   const dlId=parseInt(document.getElementById('retFilterDl')?.value)||null;
   let rets=[];
   if(idb.objectStoreNames.contains('returns')) rets=await idbAll('returns');
-  rets.sort((a,b)=>b.num-a.num);
+  rets.sort((a,b)=> b.date.localeCompare(a.date) || (b.createdAt||0)-(a.createdAt||0) );
   if(from) rets=rets.filter(r=>r.date>=from);
   if(to)   rets=rets.filter(r=>r.date<=to);
   if(dlId) rets=rets.filter(r=>r.delegateId===dlId);
@@ -2948,7 +2974,7 @@ async function showLastInv() {
   const cl=C.clients.find(c=>c.id===clId);
   const cnt=parseInt(document.getElementById('liCount').value)||5;
   const invs=await idbInvByClient(clId);
-  invs.sort((a,b)=>b.num-a.num);
+  invs.sort((a,b)=> b.date.localeCompare(a.date) || (b.createdAt||0)-(a.createdAt||0) );
   const shown=invs.slice(0,cnt);
   const rets=await idbRetByClient(clId);
   const b=BAL.get(clId)||{sales:0,paid:0,returns:0};
@@ -3503,10 +3529,13 @@ function printRouteRep(){ openPrintWin(document.getElementById('rRtOut').innerHT
 
 // ── آخر فاتورة بالخط ─────────────────────────────────────
 // ✅ يعرض رقم الفاتورة اليدوي (refNum) كما أدخله المستخدم — لا رقم تسلسلي تلقائي
+// ✅ الترتيب: حسب تاريخ الفاتورة الذي اختاره المستخدم يدوياً (وليس رقم الفاتورة الداخلي)،
+//    وعند تطابق التاريخ لنفس العميل، يُرجَّح بتوقيت الإدخال الفعلي من الجهاز (createdAt)
 async function genLastInvRep(){
   const did=parseInt(document.getElementById('rLiDl').value)||null;
   const route=document.getElementById('rLiRoute').value;
-  const invs=await idbAll('invoices'); invs.sort((a,b)=>b.num-a.num);
+  const invs=await idbAll('invoices');
+  invs.sort((a,b)=> b.date.localeCompare(a.date) || (b.createdAt||0)-(a.createdAt||0) );
   const lastByClient=new Map();
   invs.forEach(i=>{ if(!lastByClient.has(i.clientId)) lastByClient.set(i.clientId,i); });
   let rows='';
@@ -3547,26 +3576,57 @@ async function genBs(){
 function printBsRep(){ openPrintWin(document.getElementById('rBsOut').innerHTML); }
 
 // ── الفواتير المتأخرة ────────────────────────────────────
+// ✅ إعادة تصميم: صف واحد فقط لكل عميل (بيانات آخر فاتورة له)، ويشمل أيضاً العملاء
+//    الذين لم يُدخل لهم أي فاتورة إطلاقاً خلال المدة المختارة (تتبّع عدم النشاط، وليس فقط الديون)
+//    الترتيب الزمني: تاريخ الفاتورة المُختار يدوياً، وعند التطابق يُرجَّح بتوقيت الإدخال الفعلي (createdAt)
 async function genOverdue(){
   const days=parseInt(document.getElementById('rOverdueDays').value)||90;
   const did=parseInt(document.getElementById('rOverdueDl').value)||null;
   const now=new Date(); const invs=await idbAll('invoices');
-  const filt=invs.filter(i=>{
-    if(n2(i.remain)<=0)return false;
-    if(did&&i.delegateId!==did)return false;
-    const cl=C.clients.find(c=>c.id===i.clientId);
-    if(cl?.blacklisted)return false; // ✅ دين مجمّد بالقائمة السوداء — مستبعد من متابعة التحصيل
-    return Math.floor((now-new Date(i.date+'T00:00:00'))/86400000)>days;
-  }).sort((a,b)=>a.date.localeCompare(b.date));
-  const total=n2(filt.reduce((s,i)=>s+n2(i.remain),0));
-  let rows=filt.map(i=>{
-    const cl=C.clients.find(c=>c.id===i.clientId), dl=C.delegates.find(d=>d.id===i.delegateId);
-    const ag=Math.floor((now-new Date(i.date+'T00:00:00'))/86400000);
-    return`<tr><td>${(C.settings.invPrefix||'INV')}-${i.num}</td><td>${i.date}</td><td>${cl?.name||'—'}</td><td>${cl?.route||'—'}</td><td>${dl?.name||'—'}</td><td>${fmt(i.net)}</td><td style="color:var(--red);font-weight:700">${fmt(i.remain)}</td><td style="color:${ag>180?'var(--red)':ag>90?'var(--org)':'var(--gol)'}">${ag} يوم</td></tr>`;
+  // آخر فاتورة لكل عميل (حسب التاريخ المختار يدوياً، وعند التطابق حسب توقيت الإدخال)
+  const sortedInvs=[...invs].sort((a,b)=> b.date.localeCompare(a.date) || (b.createdAt||0)-(a.createdAt||0) );
+  const lastByClient=new Map();
+  sortedInvs.forEach(i=>{ if(!lastByClient.has(i.clientId)) lastByClient.set(i.clientId,i); });
+
+  const rows2=[];
+  C.clients.forEach(cl=>{
+    if(cl.blacklisted)return; // ✅ دين مجمّد بالقائمة السوداء — مستبعد من متابعة التحصيل والنشاط
+    if(did&&cl.delegateId!==did)return;
+    const lastInv=lastByClient.get(cl.id);
+    let daysSince, include;
+    if(lastInv){
+      daysSince=Math.floor((now-new Date(lastInv.date+'T00:00:00'))/86400000);
+      include=daysSince>days;
+    } else {
+      daysSince=null; // لم يتعامل معه إطلاقاً
+      include=true;
+    }
+    if(!include)return;
+    rows2.push({cl, lastInv, daysSince});
+  });
+  // ترتيب: الأكثر تأخيراً أولاً (من لم يتعامل معه إطلاقاً في المقدمة، ثم الأقدم تاريخاً)
+  rows2.sort((a,b)=>{
+    if(a.daysSince===null&&b.daysSince===null)return 0;
+    if(a.daysSince===null)return -1;
+    if(b.daysSince===null)return 1;
+    return b.daysSince-a.daysSince;
+  });
+
+  let total=0;
+  let rows=rows2.map(({cl,lastInv,daysSince})=>{
+    const dl=C.delegates.find(d=>d.id===cl.delegateId);
+    const rem=clRemain(cl.id); // ✅ الرصيد التراكمي الحقيقي للعميل — وليس متبقي آخر فاتورة فقط
+    if(rem>0) total=n2(total+rem);
+    const invLabel=lastInv?`${(C.settings.invPrefix||'INV')}-${lastInv.num}`:'—';
+    const dateLabel=lastInv?lastInv.date:'—';
+    const ageLabel=daysSince===null?'لم يتعامل معه من قبل':`${daysSince} يوم`;
+    const ageColor=daysSince===null?'var(--red)':(daysSince>180?'var(--red)':daysSince>90?'var(--org)':'var(--gol)');
+    return`<tr><td>${invLabel}</td><td>${dateLabel}</td><td><b>${cl.name}</b></td><td>${cl.route||'—'}</td><td>${dl?.name||'—'}</td><td style="color:${rem>0?'var(--red)':'var(--gb)'};font-weight:700">${fmt(rem)}</td><td style="color:${ageColor};font-weight:700">${ageLabel}</td></tr>`;
   }).join('');
-  document.getElementById('rOverdueOut').innerHTML=`<div style="font-weight:700;color:var(--red);margin-bottom:12px">⚠️ فواتير متأخرة أكثر من ${days} يوم — إجمالي المتأخر: ${fmt(total)} جنيه</div>
-    <table><thead><tr><th>الفاتورة</th><th>التاريخ</th><th>العميل</th><th>خط السير</th><th>المندوب</th><th>الإجمالي</th><th>المتأخر</th><th>التأخير</th></tr></thead>
-    <tbody>${rows||'<tr><td colspan="8" style="text-align:center;color:var(--td)">لا توجد فواتير متأخرة 🎉</td></tr>'}</tbody></table>`;
+  document.getElementById('rOverdueOut').innerHTML=`<div style="font-weight:700;color:var(--red);margin-bottom:12px">⚠️ عملاء بدون نشاط أكثر من ${days} يوم (أو لم يتعامل معهم إطلاقاً) — إجمالي أرصدتهم القائمة: ${fmt(total)} جنيه</div>
+    <div style="font-size:.78rem;color:var(--tm);margin-bottom:10px">صف واحد فقط لكل عميل (بيانات آخر فاتورة له) — والرصيد المعروض هو رصيده التراكمي الكامل الحالي</div>
+    <table><thead><tr><th>آخر فاتورة</th><th>تاريخها</th><th>العميل</th><th>خط السير</th><th>المندوب</th><th>الرصيد الحالي</th><th>مدة عدم النشاط</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="7" style="text-align:center;color:var(--td)">لا يوجد عملاء متأخرين 🎉</td></tr>'}</tbody></table>`;
 }
 function printOverdueRep(){ openPrintWin(document.getElementById('rOverdueOut').innerHTML); }
 
@@ -3600,7 +3660,7 @@ async function genReturnsRep(){
   const from=document.getElementById('rRetFrom').value, to=document.getElementById('rRetTo').value;
   const rets=idb.objectStoreNames.contains('returns')?(from&&to?await idbRetByDate(from,to):await idbAll('returns')):[];
   const filt=did?rets.filter(r=>r.delegateId===did):rets;
-  filt.sort((a,b)=>b.num-a.num);
+  filt.sort((a,b)=> b.date.localeCompare(a.date) || (b.createdAt||0)-(a.createdAt||0) );
   const total=n2(filt.reduce((s,r)=>s+n2(r.total),0));
   let rows=filt.map(r=>{
     const cl=C.clients.find(c=>c.id===r.clientId), dl=C.delegates.find(d=>d.id===r.delegateId);
@@ -3911,7 +3971,55 @@ function loadSettingsUI(){
   document.getElementById('setPass').value=C.settings.adminPass||'';
   const lb=document.getElementById('lastBackup');
   if(lb)lb.textContent=C.settings.lastBackup?new Date(C.settings.lastBackup).toLocaleString('ar-EG'):'لا توجد';
+  renderLogoPreview();
 }
+
+// ═══════════════════════════════════════════════════════════
+//  🖼️ شعار الشركة — يُخزَّن كـ base64 داخل الإعدادات، ويُستخدم
+//  كعلامة مائية في كل التقارير عبر نقطة الطباعة المركزية openPrintWin()
+// ═══════════════════════════════════════════════════════════
+function renderLogoPreview(){
+  const img=document.getElementById('logoPreviewImg'), empty=document.getElementById('logoPreviewEmpty'), rmBtn=document.getElementById('logoRemoveBtn');
+  if(!img)return;
+  if(C.settings.logo){ img.src=C.settings.logo; img.style.display='block'; empty.style.display='none'; rmBtn.style.display=''; }
+  else { img.style.display='none'; empty.style.display=''; rmBtn.style.display='none'; }
+}
+
+function handleLogoUpload(event){
+  const file=event.target.files?.[0]; if(!file)return;
+  if(!file.type.startsWith('image/')) { showToast('❌ الملف المختار مش صورة'); event.target.value=''; return; }
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const img=new Image();
+    img.onload=async function(){
+      // ✅ ضغط/تصغير الصورة لأقصى عرض 500px عشان الشعار ما يضخّمش حجم قاعدة البيانات
+      const maxDim=500;
+      let w=img.width, h=img.height;
+      if(w>maxDim||h>maxDim){ const ratio=Math.min(maxDim/w,maxDim/h); w=Math.round(w*ratio); h=Math.round(h*ratio); }
+      const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
+      const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,w,h);
+      const dataUrl=canvas.toDataURL('image/png', 0.9);
+      C.settings.logo=dataUrl;
+      await idbPutSettings(C.settings);
+      renderLogoPreview();
+      showToast('✅ تم حفظ الشعار — هيظهر تلقائياً في كل التقارير المطبوعة');
+    };
+    img.onerror=()=>showToast('❌ تعذّر قراءة الصورة');
+    img.src=e.target.result;
+  };
+  reader.onerror=()=>showToast('❌ تعذّر قراءة الملف');
+  reader.readAsDataURL(file);
+  event.target.value='';
+}
+
+async function removeLogo(){
+  if(!confirm('⚠️ هل تريد إزالة الشعار من كل التقارير؟'))return;
+  C.settings.logo='';
+  await idbPutSettings(C.settings);
+  renderLogoPreview();
+  showToast('✅ تم إزالة الشعار');
+}
+
 async function saveSettings(){
   C.settings.company    = document.getElementById('setCompany').value.trim() || C.settings.company;
   C.settings.commRate   = n2(parseFloat(document.getElementById('setCommRate').value)||3);
