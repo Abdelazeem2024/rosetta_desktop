@@ -56,6 +56,9 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-hei
 .fr3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
 .fr2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px}
 .fg{display:flex;flex-direction:column;gap:5px}
+.chk-month{display:flex;align-items:center;gap:5px;background:var(--bgc2);border:1px solid var(--brd);border-radius:6px;padding:6px 8px;font-size:.78rem;cursor:pointer;user-select:none}
+.chk-month input{cursor:pointer}
+.chk-month:has(input:checked){background:rgba(45,216,133,.15);border-color:var(--gb);color:var(--gb);font-weight:700}
 .fg label{font-size:.78rem;color:var(--tm);font-weight:600}
 .fc{background:var(--bg);border:1px solid var(--brd);border-radius:8px;padding:9px 12px;color:var(--tx);font-family:'Cairo',sans-serif;font-size:.88rem;width:100%;transition:border-color .2s}
 .fc:focus{outline:none;border-color:var(--g)}
@@ -253,6 +256,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
       <button class="sidebar-btn" id="sb-statement" onclick="go('statement',this)"><span class="sidebar-icon">📋</span><span>كشف الحساب</span></button>
       <button class="sidebar-btn" id="sb-adjustment" onclick="go('adjustment',this)"><span class="sidebar-icon">💸</span><span>تسوية عميل</span></button>
       <button class="sidebar-btn" id="sb-blacklist" onclick="go('blacklist',this)"><span class="sidebar-icon">🚫</span><span>القائمة السوداء</span></button>
+      <button class="sidebar-btn" id="sb-financiers" onclick="go('financiers',this)"><span class="sidebar-icon">💼</span><span>الممولون</span></button>
       <button class="sidebar-btn" id="sb-lastinv" onclick="go('lastinv',this)"><span class="sidebar-icon">🔍</span><span>آخر فاتورة للعميل</span></button>
       <div class="sidebar-section">الإدارة</div>
       <button class="sidebar-btn" id="sb-clients" onclick="go('clients',this)"><span class="sidebar-icon">👥</span><span>العملاء</span></button>
@@ -548,6 +552,154 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
         </div>
       </div>
 
+      <!-- ════ FINANCIERS — الممولون (وحدة مستقلة 100%) ═══════════════ -->
+      <div class="page" id="page-financiers">
+        <div class="page-title">💼 الممولون</div>
+        <div style="font-size:.78rem;color:var(--tm);margin-bottom:14px">
+          وحدة مستقلة تماماً عن النظام المحاسبي الأساسي — لا تؤثر على أرصدة العملاء أو الفواتير أو أي حساب آخر بالبرنامج.
+        </div>
+
+        <!-- لوحة الإحصائيات -->
+        <div class="stats-grid" id="finStatsGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px">
+          <div class="sc"><div class="si">👥</div><div class="sl">عدد الممولين</div><div class="sv" id="finS1">0</div></div>
+          <div class="sc"><div class="si">⬇️</div><div class="sl">إجمالي الإيداعات</div><div class="sv" id="finS2">0<span> جنيه</span></div></div>
+          <div class="sc"><div class="si">⬆️</div><div class="sl">إجمالي السحوبات</div><div class="sv" id="finS3">0<span> جنيه</span></div></div>
+          <div class="sc"><div class="si">💰</div><div class="sl">إجمالي الأرصدة الحالية</div><div class="sv" id="finS4">0<span> جنيه</span></div></div>
+          <div class="sc"><div class="si">📈</div><div class="sl">إجمالي الأرباح المستحقة</div><div class="sv" id="finS5">0<span> جنيه</span></div></div>
+          <div class="sc"><div class="si">✅</div><div class="sl">إجمالي الأرباح المصروفة</div><div class="sv" id="finS6">0<span> جنيه</span></div></div>
+          <div class="sc"><div class="si">⏳</div><div class="sl">إجمالي الأرباح المتبقية</div><div class="sv" id="finS7">0<span> جنيه</span></div></div>
+        </div>
+
+        <div class="card">
+          <div class="br" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+            <button class="btn bg" onclick="openFinModal()">➕ إضافة ممول</button>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <input class="fc" id="finSearch" placeholder="🔍 بحث بالاسم / الكود / الهاتف..." style="min-width:220px" oninput="renderFinanciers()">
+              <select class="fc" id="finFilter" onchange="renderFinanciers()">
+                <option value="all">جميع الممولين</option>
+                <option value="active">النشطون</option>
+                <option value="ended">المنتهون</option>
+                <option value="due">مستحقون</option>
+                <option value="closed">مغلقون</option>
+                <option value="stopped">متوقفون</option>
+                <option value="hasBalance">لديهم أرصدة</option>
+                <option value="hasWithdrawals">لديهم سحوبات</option>
+                <option value="hasProfitDue">لديهم أرباح مستحقة</option>
+                <option value="hasProfitPaid">لديهم أرباح مصروفة</option>
+              </select>
+            </div>
+          </div>
+          <div class="tw" style="margin-top:12px"><table><thead><tr>
+            <th>الممول</th><th>الكود</th><th>بداية التمويل</th><th>نهاية التمويل</th><th>إجمالي الإيداعات</th><th>إجمالي السحوبات</th><th>الرصيد الحالي</th><th>الأرباح المستحقة</th><th>الحالة</th><th></th>
+          </tr></thead><tbody id="finTbody"></tbody></table></div>
+        </div>
+
+        <!-- تفاصيل الممول (Lightbox داخل نفس الصفحة) -->
+        <div class="card" id="finDetailCard" style="display:none"><div id="finDetailContent"></div></div>
+      </div>
+
+      <!-- ════ Modal: إضافة/تعديل ممول ════ -->
+      <div class="modal-overlay" id="finModal">
+        <div class="modal" style="max-width:560px">
+          <h3 id="finModalTitle">➕ إضافة ممول جديد</h3>
+          <input type="hidden" id="finId">
+          <div class="fr2">
+            <div class="fg"><label>اسم الممول ✱</label><input class="fc" id="finName" placeholder="الاسم بالكامل"></div>
+            <div class="fg"><label>كود الممول</label><input class="fc" id="finCode" readonly style="font-weight:900;color:var(--gb)"></div>
+          </div>
+          <div class="fr2">
+            <div class="fg"><label>رقم الهاتف</label><input class="fc" id="finPhone" placeholder="01xxxxxxxxx"></div>
+            <div class="fg"><label>العنوان</label><input class="fc" id="finAddress" placeholder="العنوان"></div>
+          </div>
+          <div class="fr2">
+            <div class="fg"><label>تاريخ بداية التمويل ✱</label><input class="fc" type="date" id="finStart"></div>
+            <div class="fg"><label>تاريخ نهاية التمويل</label><input class="fc" type="date" id="finEnd"></div>
+          </div>
+          <div class="fr2">
+            <div class="fg"><label>مدة التمويل (وصف اختياري)</label><input class="fc" id="finDuration" placeholder="مثال: سنة واحدة"></div>
+            <div class="fg"><label>حالة يدوية (اختياري)</label>
+              <select class="fc" id="finStatusOverride">
+                <option value="">تلقائي (حسب الحركات والتواريخ)</option>
+                <option value="stopped">متوقف يدوياً</option>
+                <option value="closed">مغلق يدوياً</option>
+              </select>
+            </div>
+          </div>
+          <div class="fg"><label>ملاحظات</label><textarea class="fc" id="finNotes" rows="2"></textarea></div>
+          <div class="br">
+            <button class="btn bg" onclick="saveFinancier()">💾 حفظ</button>
+            <button class="btn bo" onclick="closeModal('finModal')">إلغاء</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ Modal: إضافة/تعديل حركة ممول ════ -->
+      <div class="modal-overlay" id="finTxModal">
+        <div class="modal" style="max-width:520px">
+          <h3 id="finTxModalTitle">➕ إضافة حركة</h3>
+          <input type="hidden" id="finTxId"><input type="hidden" id="finTxFinId">
+          <div class="fr2">
+            <div class="fg"><label>نوع الحركة ✱</label>
+              <select class="fc" id="finTxType" onchange="onFinTxTypeChange()">
+                <option value="deposit">⬇️ إيداع</option>
+                <option value="addition">➕ إضافة مبلغ أثناء المدة</option>
+                <option value="withdraw">⬆️ سحب</option>
+                <option value="profit_paid">✅ صرف ربح</option>
+                <option value="adjustment">⚙️ تعديل محاسبي داخلي</option>
+              </select>
+            </div>
+            <div class="fg"><label>التاريخ ✱</label><input class="fc" type="date" id="finTxDate"></div>
+          </div>
+          <div class="fr2">
+            <div class="fg"><label>المبلغ ✱</label><input class="fc" type="number" id="finTxAmount" min="0" step="0.01" placeholder="0.00"></div>
+            <div class="fg" id="finTxSignRow" style="display:none"><label>إشارة التعديل</label>
+              <select class="fc" id="finTxSign"><option value="1">إضافة (+)</option><option value="-1">خصم (-)</option></select>
+            </div>
+          </div>
+          <div class="fg"><label>ملاحظات</label><input class="fc" id="finTxNotes" placeholder="اختياري"></div>
+          <div class="br">
+            <button class="btn bg" onclick="saveFinTx()">💾 حفظ الحركة</button>
+            <button class="btn bo" onclick="closeModal('finTxModal')">إلغاء</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ════ Modal: التسوية النهائية ════ -->
+      <div class="modal-overlay" id="finSettleModal">
+        <div class="modal" style="max-width:680px">
+          <h3>🏁 تصفية / تسوية دورية</h3>
+          <input type="hidden" id="finSettleFinId">
+          <div id="finSettleInfo" style="background:var(--bgc2);border-radius:8px;padding:12px;margin-bottom:14px;font-size:.85rem"></div>
+          <div class="fr2">
+            <div class="fg"><label>من تاريخ (بداية فترة التصفية) ✱</label><input class="fc" type="date" id="finSettleFrom" oninput="calcFinSettlePreview()"></div>
+            <div class="fg"><label>إلى تاريخ (ميعاد التصفية) ✱</label><input class="fc" type="date" id="finSettleTo" oninput="calcFinSettlePreview()"></div>
+          </div>
+          <div class="fr2">
+            <div class="fg"><label>طريقة احتساب الربح ✱</label>
+              <select class="fc" id="finSettleMethod" onchange="onFinSettleMethodChange()">
+                <option value="annual_rate">نسبة ربح سنوية — تُحسب لكل فترة بين العمليات حسب عدد شهورها الفعلي</option>
+                <option value="time_weighted">حسب المتوسط الزمني المرجّح للرصيد (نسبة إجمالية مباشرة)</option>
+                <option value="final_balance">حسب الرصيد النهائي الحالي (نسبة إجمالية مباشرة)</option>
+                <option value="manual">إدخال يدوي بالكامل</option>
+              </select>
+            </div>
+            <div class="fg" id="finSettlePctRow"><label id="finSettlePctLabel">النسبة السنوية %</label><input class="fc" type="number" id="finSettlePct" min="0" step="0.01" oninput="calcFinSettlePreview()"></div>
+          </div>
+          <div class="fg" id="finSettleManualRow" style="display:none"><label>الربح المستحق يدوياً</label><input class="fc" type="number" id="finSettleManualVal" min="0" step="0.01" oninput="calcFinSettlePreview()"></div>
+          <div id="finSettleSegmentsWrap" style="display:none;margin:10px 0">
+            <div style="font-weight:700;font-size:.85rem;margin-bottom:6px">📊 تفصيل الربح لكل فترة:</div>
+            <div class="tw"><table><thead><tr><th>من</th><th>إلى</th><th>المبلغ خلال الفترة</th><th>المدة</th><th>ربح الفترة</th></tr></thead>
+            <tbody id="finSettleSegmentsBody"></tbody></table></div>
+          </div>
+          <div id="finSettlePreview" style="background:#eaf7ef;border:2px solid #1a7a50;border-radius:8px;padding:12px;margin:10px 0;font-size:.88rem"></div>
+          <div class="fg"><label>ملاحظات</label><input class="fc" id="finSettleNotes" placeholder="اختياري"></div>
+          <div class="br">
+            <button class="btn bg" onclick="confirmFinSettle()">✅ اعتماد التسوية النهائية</button>
+            <button class="btn bo" onclick="closeModal('finSettleModal')">إلغاء</button>
+          </div>
+        </div>
+      </div>
+
       <!-- ════ LAST INVOICE ═════════════════════════════════ -->
       <div class="page" id="page-lastinv">
         <div class="page-title">🔍 سجل العميل</div>
@@ -592,6 +744,23 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
           <div class="fr2">
             <div class="fg"><label>خط السير</label><input class="fc" id="clRoute" placeholder="مثال: خط الجيزة"></div>
             <div class="fg"><label>ملاحظات</label><input class="fc" id="clNotes"></div>
+          </div>
+          <div class="fg">
+            <label>📅 شهور التصفية (اختياري — بيان استرشادي فقط، لا يؤثر على أي رصيد)</label>
+            <div id="clSettleMonthsRow" style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:4px">
+              <label class="chk-month"><input type="checkbox" value="1" class="clSettleMonth"> يناير</label>
+              <label class="chk-month"><input type="checkbox" value="2" class="clSettleMonth"> فبراير</label>
+              <label class="chk-month"><input type="checkbox" value="3" class="clSettleMonth"> مارس</label>
+              <label class="chk-month"><input type="checkbox" value="4" class="clSettleMonth"> أبريل</label>
+              <label class="chk-month"><input type="checkbox" value="5" class="clSettleMonth"> مايو</label>
+              <label class="chk-month"><input type="checkbox" value="6" class="clSettleMonth"> يونيو</label>
+              <label class="chk-month"><input type="checkbox" value="7" class="clSettleMonth"> يوليو</label>
+              <label class="chk-month"><input type="checkbox" value="8" class="clSettleMonth"> أغسطس</label>
+              <label class="chk-month"><input type="checkbox" value="9" class="clSettleMonth"> سبتمبر</label>
+              <label class="chk-month"><input type="checkbox" value="10" class="clSettleMonth"> أكتوبر</label>
+              <label class="chk-month"><input type="checkbox" value="11" class="clSettleMonth"> نوفمبر</label>
+              <label class="chk-month"><input type="checkbox" value="12" class="clSettleMonth"> ديسمبر</label>
+            </div>
           </div>
           <input type="hidden" id="clEditId">
           <div class="br">
@@ -720,6 +889,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
           <div class="qb" onclick="showRep('overdue')" style="padding:16px"><span class="qi">⚠️</span>الفواتير المتأخرة</div>
           <div class="qb" onclick="showRep('returnsrep')" style="padding:16px"><span class="qi">↩️</span>تقرير المرتجعات</div>
           <div class="qb" onclick="showRep('splitrep')" style="padding:16px;border:2px solid var(--gold)"><span class="qi">📊</span>كشف حساب بالأصناف</div>
+          <div class="qb" onclick="showRep('clientsettle')" style="padding:16px"><span class="qi">📅</span>تصفية العملاء</div>
         </div>
         <div class="card rep-panel" id="rpanel-daily">
           <div class="card-title">📅 تقرير يومي</div>
@@ -834,6 +1004,33 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
             </div>
           </div>
           <div id="rSplitOut" style="margin-top:14px"></div>
+        </div>
+
+        <div class="card rep-panel" id="rpanel-clientsettle">
+          <div class="card-title">📅 تصفية العملاء</div>
+          <div style="font-size:.78rem;color:var(--tm);margin-bottom:10px">تقرير استبياني فقط لمعرفة عملاء كل مندوب المستحق تصفيتهم خلال مدى شهور معين — لا يؤثر على أي رصيد أو عملية محاسبية.</div>
+          <div class="fr3">
+            <div class="fg"><label>المندوب</label><select class="fc" id="rSettleDl"><option value="">-- الكل --</option></select></div>
+            <div class="fg"><label>من شهر</label>
+              <select class="fc" id="rSettleFrom">
+                <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option><option value="4">أبريل</option>
+                <option value="5">مايو</option><option value="6">يونيو</option><option value="7">يوليو</option><option value="8">أغسطس</option>
+                <option value="9">سبتمبر</option><option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12">ديسمبر</option>
+              </select>
+            </div>
+            <div class="fg"><label>إلى شهر</label>
+              <select class="fc" id="rSettleTo">
+                <option value="1">يناير</option><option value="2">فبراير</option><option value="3">مارس</option><option value="4">أبريل</option>
+                <option value="5">مايو</option><option value="6">يونيو</option><option value="7">يوليو</option><option value="8">أغسطس</option>
+                <option value="9">سبتمبر</option><option value="10">أكتوبر</option><option value="11">نوفمبر</option><option value="12" selected>ديسمبر</option>
+              </select>
+            </div>
+          </div>
+          <div class="br">
+            <button class="btn bgo" onclick="genClientSettleRep()">📅 عرض</button>
+            <button class="btn bg" onclick="printClientSettleRep()">🖨️ طباعة</button>
+          </div>
+          <div id="rSettleOut" style="margin-top:14px"></div>
         </div>
       </div>
 
@@ -1216,6 +1413,616 @@ function groupLedgerBy(invoices, returns, adjustments, keyFn) {
   return map;
 }
 
+// ═══════════════════════════════════════════════════════════════════
+//  💼 FINANCIERS MODULE — وحدة «الممولون» — مستقلة 100% عن النظام المحاسبي الأساسي
+//  ─────────────────────────────────────────────────────────────────
+//  ⚠️ قاعدة حاكمة صارمة: أي دالة في هذا القسم يجب ألا:
+//     • تقرأ أو تكتب في BAL أو C.clients أو C.products أو C.delegates
+//     • تستدعي rebuildAllBalances / updateBAL / idbInvByClient وما شابه
+//     • تُنشئ أي سجل في stores الفواتير/المرتجعات/التسويات
+//  كل بيانات هذه الوحدة في 3 مخازن مستقلة تماماً:
+//     financiers (بيانات الممول) — finTransactions (الحركات) — finSettlements (التسويات)
+// ═══════════════════════════════════════════════════════════════════
+const FIN = { financiers:[], transactions:[], settlements:[] }; // كاش في الذاكرة، منفصل تماماً عن BAL
+
+async function finLoadAll(){
+  const [fins, txs, setts] = await Promise.all([
+    idbAll('financiers'), idbAll('finTransactions'), idbAll('finSettlements')
+  ]);
+  FIN.financiers = fins; FIN.transactions = txs; FIN.settlements = setts;
+}
+
+function finNextCode(){
+  // ✅ كود تلقائي فريد — لا يسمح بتكرار نفس الكود لممولين مختلفين
+  const n = C.settings.nextFinId || 1;
+  return 'FIN-' + String(n).padStart(4,'0');
+}
+
+// حركات ممول واحد مرتبة (تاريخ الحركة، وعند التطابق توقيت الإدخال الفعلي)
+function finTxOf(finId){
+  return FIN.transactions.filter(t=>t.finId===finId)
+    .sort((a,b)=> a.date.localeCompare(b.date) || (a.createdAt||0)-(b.createdAt||0));
+}
+
+// اتجاه الحركة على "أصل المبلغ" (principal) — صرف الأرباح لا يؤثر على الأصل إطلاقاً
+function finTxPrincipalDelta(t){
+  if(t.type==='deposit'   ) return  n2(t.amount);
+  if(t.type==='addition'  ) return  n2(t.amount);
+  if(t.type==='withdraw'  ) return -n2(t.amount);
+  if(t.type==='adjustment') return  n2(t.amount) * (t.sign===-1?-1:1); // تعديل محاسبي داخلي: يحدد المستخدم إشارته
+  return 0; // profit_paid لا يؤثر على الأصل
+}
+
+// ملخص كامل لممول واحد: الرصيد الحالي + إجمالي الإيداعات/السحوبات/الأرباح المصروفة
+function finSummary(finId){
+  const txs = finTxOf(finId);
+  let balance=0, totalDeposits=0, totalWithdrawals=0, totalAdditions=0, totalProfitPaid=0, totalAdjustments=0;
+  txs.forEach(t=>{
+    if(t.type==='deposit')   { totalDeposits=n2(totalDeposits+t.amount); balance=n2(balance+t.amount); }
+    else if(t.type==='addition') { totalAdditions=n2(totalAdditions+t.amount); balance=n2(balance+t.amount); }
+    else if(t.type==='withdraw'){ totalWithdrawals=n2(totalWithdrawals+t.amount); balance=n2(balance-t.amount); }
+    else if(t.type==='adjustment'){ const d=finTxPrincipalDelta(t); totalAdjustments=n2(totalAdjustments+d); balance=n2(balance+d); }
+    else if(t.type==='profit_paid'){ totalProfitPaid=n2(totalProfitPaid+t.amount); }
+  });
+  const lastSettle = [...FIN.settlements].filter(s=>s.finId===finId).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0))[0]||null;
+  const profitDue = lastSettle ? n2(lastSettle.profitDue) : 0;
+  const profitRemaining = n2(profitDue - totalProfitPaid);
+  return { balance, totalDeposits, totalAdditions, totalWithdrawals, totalProfitPaid, totalAdjustments, profitDue, profitRemaining, txCount:txs.length, lastSettle };
+}
+
+// ✅ الحساب الزمني المرجّح (Time-Weighted) — مرجعي فقط، يُعرض للمحاسب وقت التسوية
+//    ولا يُفرض كطريقة وحيدة إجبارية للربح (حسب الشرط الصريح: عدم اختراع معادلة نهائية)
+function finTimeWeighted(finId, asOfDateStr){
+  const txs = finTxOf(finId).filter(t=>['deposit','addition','withdraw','adjustment'].includes(t.type));
+  if(!txs.length) return { weightedAvg:0, totalDays:0, weightedSum:0, finalPrincipal:0, timeline:[] };
+  const asOf = asOfDateStr ? new Date(asOfDateStr+'T00:00:00') : new Date();
+  const dayDiff=(d1,d2)=>Math.max(0,Math.round((d2-d1)/86400000));
+  let principal=0, weightedSum=0, prevDate=new Date(txs[0].date+'T00:00:00');
+  const timeline=[];
+  txs.forEach(t=>{
+    const tDate=new Date(t.date+'T00:00:00');
+    const days=dayDiff(prevDate,tDate);
+    if(days>0){ weightedSum=n2(weightedSum+principal*days); timeline.push({from:prevDate.toISOString().slice(0,10),to:t.date,principal,days}); }
+    principal=n2(principal+finTxPrincipalDelta(t));
+    prevDate=tDate;
+  });
+  const tailDays=dayDiff(prevDate,asOf);
+  if(tailDays>0){ weightedSum=n2(weightedSum+principal*tailDays); timeline.push({from:prevDate.toISOString().slice(0,10),to:asOf.toISOString().slice(0,10),principal,days:tailDays}); }
+  const totalDays=dayDiff(new Date(txs[0].date+'T00:00:00'),asOf);
+  const weightedAvg=totalDays>0?n2(weightedSum/totalDays):principal;
+  return { weightedAvg, totalDays, weightedSum, finalPrincipal:principal, timeline };
+}
+
+// ═══════════════════════════════════════════════════════════
+//  ✅ التصفية الدورية بنسبة ربح سنوية — مقسّمة على كل فترة (بين عمليتين) على حدة
+//  كل فترة تُحسب: مبلغها × (النسبة السنوية/100) × (عدد أيامها/365)
+//  والإجمالي = مجموع أرباح كل الفترات — هذا يحل بالضبط مثال العميل:
+//  إيداع 100,000 (شهر1) ← إيداع 20,000 (شهر3) ← سحب 50,000 (شهر5) ← إيداع 10,000 (شهر8)
+//  كل فترة بمبلغها الفعلي وعدد شهورها الحقيقي، من نسبة سنوية واحدة (مثال: 25%)
+// ═══════════════════════════════════════════════════════════
+function finPeriodSegments(finId, fromDateStr, toDateStr, annualPct){
+  const dayDiff=(d1,d2)=>Math.max(0,Math.round((d2-d1)/86400000));
+  const allTxs = finTxOf(finId).filter(t=>['deposit','addition','withdraw','adjustment'].includes(t.type));
+  // ✅ مبلغ الأصل المتراكم قبل بداية الفترة (من كل الحركات السابقة عليها)، عشان الفترة الجديدة تبدأ من رصيدها الصحيح
+  let principal=0;
+  allTxs.filter(t=>t.date<fromDateStr).forEach(t=>{ principal=n2(principal+finTxPrincipalDelta(t)); });
+  const inPeriod=allTxs.filter(t=>t.date>=fromDateStr&&t.date<=toDateStr)
+    .sort((a,b)=>a.date.localeCompare(b.date)||(a.createdAt||0)-(b.createdAt||0));
+  const fromDate=new Date(fromDateStr+'T00:00:00'), toDate=new Date(toDateStr+'T00:00:00');
+  let cursor=fromDate;
+  const segments=[];
+  inPeriod.forEach(t=>{
+    const tDate=new Date(t.date+'T00:00:00');
+    const days=dayDiff(cursor,tDate);
+    if(days>0){
+      const profit=n2(principal*(annualPct/100)*(days/365));
+      segments.push({ from:cursor.toISOString().slice(0,10), to:t.date, principal, days, months:n2(days/30.4368), profit });
+    }
+    principal=n2(principal+finTxPrincipalDelta(t));
+    cursor=tDate;
+  });
+  const tailDays=dayDiff(cursor,toDate);
+  if(tailDays>0){
+    const profit=n2(principal*(annualPct/100)*(tailDays/365));
+    segments.push({ from:cursor.toISOString().slice(0,10), to:toDateStr, principal, days:tailDays, months:n2(tailDays/30.4368), profit });
+  }
+  const totalProfit=n2(segments.reduce((s,seg)=>s+seg.profit,0));
+  return { segments, totalProfit, finalPrincipal:principal };
+}
+
+// حالة الممول: نشط / منتهي (تاريخ النهاية فات) / مغلق (تم اعتماد تسوية نهائية) / متوقف (يدوي) / مستحق (منتهي وله رصيد أو ربح لم يُصرف)
+function finStatus(fin){
+  if(fin.statusOverride==='stopped') return 'متوقف';
+  if(fin.statusOverride==='closed') return 'مغلق';
+  const s=finSummary(fin.id);
+  const isSettled = fin.statusOverride==='closed' || (s.lastSettle && s.profitRemaining<=0 && s.balance<=0);
+  if(isSettled) return 'مغلق';
+  if(fin.fundEnd){
+    const ended = new Date(fin.fundEnd+'T00:00:00') < new Date(td()+'T00:00:00');
+    if(ended) return (s.balance>0||s.profitRemaining>0) ? 'مستحق' : 'منتهي';
+  }
+  return 'نشط';
+}
+
+function finStatusBadge(status){
+  const map={'نشط':'bgg','مستحق':'bggo','منتهي':'bgo','مغلق':'bb','متوقف':'bgr'};
+  return `<span class="badge ${map[status]||'bb'}">${status}</span>`;
+}
+
+// لوحة الإحصائيات — أرقام خاصة بوحدة الممولين فقط، لا علاقة لها بأرصدة النظام الأساسي
+function refreshFinStats(){
+  let totalDep=0, totalWd=0, totalBal=0, totalProfitDue=0, totalProfitPaid=0;
+  FIN.financiers.forEach(fin=>{
+    const s=finSummary(fin.id);
+    totalDep=n2(totalDep+s.totalDeposits+s.totalAdditions);
+    totalWd=n2(totalWd+s.totalWithdrawals);
+    totalBal=n2(totalBal+s.balance);
+    totalProfitDue=n2(totalProfitDue+s.profitDue);
+    totalProfitPaid=n2(totalProfitPaid+s.totalProfitPaid);
+  });
+  const totalProfitRemaining=n2(totalProfitDue-totalProfitPaid);
+  document.getElementById('finS1').textContent=FIN.financiers.length;
+  document.getElementById('finS2').innerHTML=fmt(totalDep)+'<span> جنيه</span>';
+  document.getElementById('finS3').innerHTML=fmt(totalWd)+'<span> جنيه</span>';
+  document.getElementById('finS4').innerHTML=fmt(totalBal)+'<span> جنيه</span>';
+  document.getElementById('finS5').innerHTML=fmt(totalProfitDue)+'<span> جنيه</span>';
+  document.getElementById('finS6').innerHTML=fmt(totalProfitPaid)+'<span> جنيه</span>';
+  document.getElementById('finS7').innerHTML=fmt(totalProfitRemaining)+'<span> جنيه</span>';
+}
+
+function renderFinanciers(){
+  const q=(document.getElementById('finSearch')?.value||'').trim().toLowerCase();
+  const filter=document.getElementById('finFilter')?.value||'all';
+  let list=FIN.financiers.filter(fin=>{
+    if(q){
+      const hay=[fin.name,fin.code,fin.phone,String(fin.id)].join(' ').toLowerCase();
+      if(!hay.includes(q))return false;
+    }
+    const s=finSummary(fin.id); const status=finStatus(fin);
+    if(filter==='active'&&status!=='نشط')return false;
+    if(filter==='ended'&&status!=='منتهي')return false;
+    if(filter==='due'&&status!=='مستحق')return false;
+    if(filter==='closed'&&status!=='مغلق')return false;
+    if(filter==='stopped'&&status!=='متوقف')return false;
+    if(filter==='hasBalance'&&s.balance<=0)return false;
+    if(filter==='hasWithdrawals'&&s.totalWithdrawals<=0)return false;
+    if(filter==='hasProfitDue'&&s.profitDue<=0)return false;
+    if(filter==='hasProfitPaid'&&s.totalProfitPaid<=0)return false;
+    return true;
+  });
+  list.sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+  const tbody=document.getElementById('finTbody'); if(!tbody)return;
+  tbody.innerHTML=list.map(fin=>{
+    const s=finSummary(fin.id); const status=finStatus(fin);
+    return `<tr>
+      <td><b>${fin.name}</b></td>
+      <td style="color:var(--gb);font-weight:700">${fin.code}</td>
+      <td>${fin.fundStart||'—'}</td>
+      <td>${fin.fundEnd||'—'}</td>
+      <td style="color:var(--gb)">${fmt(n2(s.totalDeposits+s.totalAdditions))}</td>
+      <td style="color:var(--org)">${fmt(s.totalWithdrawals)}</td>
+      <td style="font-weight:700;color:${s.balance>0?'var(--gb)':'var(--tm)'}">${fmt(s.balance)}</td>
+      <td style="color:#c9a227">${fmt(s.profitDue)}</td>
+      <td>${finStatusBadge(status)}</td>
+      <td><button class="btn bb bsm" onclick="openFinDetail('${fin.id}')">📂 فتح</button></td>
+    </tr>`;
+  }).join('') || `<tr><td colspan="10" style="text-align:center;color:var(--td);padding:24px">لا يوجد ممولون بعد — اضغط "➕ إضافة ممول" للبدء</td></tr>`;
+}
+
+// ── إضافة / تعديل ممول ────────────────────────────────────
+function openFinModal(finId){
+  document.getElementById('finModalTitle').textContent = finId ? '✏️ تعديل بيانات ممول' : '➕ إضافة ممول جديد';
+  document.getElementById('finId').value = finId||'';
+  if(finId){
+    const fin=FIN.financiers.find(f=>f.id===finId); if(!fin)return;
+    document.getElementById('finCode').value=fin.code;
+    document.getElementById('finName').value=fin.name;
+    document.getElementById('finPhone').value=fin.phone||'';
+    document.getElementById('finAddress').value=fin.address||'';
+    document.getElementById('finStart').value=fin.fundStart||'';
+    document.getElementById('finEnd').value=fin.fundEnd||'';
+    document.getElementById('finDuration').value=fin.duration||'';
+    document.getElementById('finStatusOverride').value=fin.statusOverride||'';
+    document.getElementById('finNotes').value=fin.notes||'';
+  } else {
+    document.getElementById('finCode').value=finNextCode();
+    document.getElementById('finName').value='';
+    document.getElementById('finPhone').value='';
+    document.getElementById('finAddress').value='';
+    document.getElementById('finStart').value=td();
+    document.getElementById('finEnd').value='';
+    document.getElementById('finDuration').value='';
+    document.getElementById('finStatusOverride').value='';
+    document.getElementById('finNotes').value='';
+  }
+  openModal('finModal');
+}
+
+async function saveFinancier(){
+  const id=document.getElementById('finId').value||null;
+  const name=document.getElementById('finName').value.trim();
+  const fundStart=document.getElementById('finStart').value;
+  if(!name) return showToast('❌ يجب إدخال اسم الممول');
+  if(!fundStart) return showToast('❌ يجب إدخال تاريخ بداية التمويل');
+  if(!_lockSave())return;
+  try{
+    let fin;
+    if(id){
+      fin=FIN.financiers.find(f=>f.id===id); if(!fin)return;
+    } else {
+      // ✅ منع تكرار نفس كود الممول
+      const code=finNextCode();
+      if(FIN.financiers.some(f=>f.code===code)) return showToast('❌ الكود مكرر — حاول مرة أخرى');
+      fin={ id:uid(), code, createdAt:Date.now() };
+      C.settings.nextFinId=(C.settings.nextFinId||1)+1;
+      await idbPutSettings(C.settings);
+    }
+    fin.name=name;
+    fin.phone=document.getElementById('finPhone').value.trim();
+    fin.address=document.getElementById('finAddress').value.trim();
+    fin.fundStart=fundStart;
+    fin.fundEnd=document.getElementById('finEnd').value||'';
+    fin.duration=document.getElementById('finDuration').value.trim();
+    fin.statusOverride=document.getElementById('finStatusOverride').value||'';
+    fin.notes=document.getElementById('finNotes').value.trim();
+    await idbPut('financiers',fin);
+    if(!id) FIN.financiers.push(fin);
+    closeModal('finModal');
+    showToast('✅ تم حفظ بيانات الممول');
+    renderFinanciers(); refreshFinStats();
+  } finally { _unlockSave(); }
+}
+
+async function deleteFinancier(id){
+  const fin=FIN.financiers.find(f=>f.id===id); if(!fin)return;
+  const txCount=FIN.transactions.filter(t=>t.finId===id).length;
+  const msg = txCount>0
+    ? `⚠️ هذا الممول "${fin.name}" لديه ${txCount} حركة مسجّلة. حذفه سيحذف كل حركاته وتسوياته نهائياً ولا يمكن التراجع.\n\nاكتب اسم الممول بالكامل لتأكيد الحذف:`
+    : `هل تريد حذف الممول "${fin.name}"؟`;
+  if(txCount>0){
+    const typed=prompt(msg);
+    if(typed!==fin.name) return showToast('❌ تم إلغاء الحذف — الاسم غير مطابق');
+  } else {
+    if(!confirm(msg)) return;
+  }
+  await idbDel('financiers',id);
+  const txs=FIN.transactions.filter(t=>t.finId===id);
+  for(const t of txs) await idbDel('finTransactions',t.id);
+  const setts=FIN.settlements.filter(s=>s.finId===id);
+  for(const s of setts) await idbDel('finSettlements',s.id);
+  FIN.financiers=FIN.financiers.filter(f=>f.id!==id);
+  FIN.transactions=FIN.transactions.filter(t=>t.finId!==id);
+  FIN.settlements=FIN.settlements.filter(s=>s.finId!==id);
+  document.getElementById('finDetailCard').style.display='none';
+  showToast('✅ تم حذف الممول وكل بياناته');
+  renderFinanciers(); refreshFinStats();
+}
+
+let _finCurrentId=null;
+
+function finTxTypeLabel(type){
+  return {deposit:'⬇️ إيداع',addition:'➕ إضافة مبلغ',withdraw:'⬆️ سحب',profit_paid:'✅ صرف ربح',adjustment:'⚙️ تعديل محاسبي'}[type]||type;
+}
+
+function openFinDetail(finId){
+  _finCurrentId=finId;
+  renderFinDetail(finId);
+  document.getElementById('finDetailCard').style.display='';
+  document.getElementById('finDetailCard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function closeFinDetail(){
+  _finCurrentId=null;
+  document.getElementById('finDetailCard').style.display='none';
+}
+
+function renderFinDetail(finId){
+  const fin=FIN.financiers.find(f=>f.id===finId); if(!fin)return;
+  const s=finSummary(finId);
+  const status=finStatus(fin);
+  const txs=finTxOf(finId);
+  // رصيد تراكمي بعد كل حركة (لعرض سجل الحركات فقط — لا علاقة له بأي حساب في النظام الأساسي)
+  let running=0;
+  const rows=txs.map(t=>{
+    const delta = t.type==='profit_paid' ? 0 : finTxPrincipalDelta(t);
+    running=n2(running+delta);
+    const amtColor = ['deposit','addition'].includes(t.type)?'var(--gb)':(t.type==='withdraw'?'var(--red)':(t.type==='profit_paid'?'#c9a227':'var(--tm)'));
+    const amtSign = ['deposit','addition'].includes(t.type)?'+':(t.type==='withdraw'?'-':(t.type==='adjustment'&&t.sign===-1?'-':(t.type==='adjustment'?'+':'')));
+    return `<tr>
+      <td>${t.date}</td>
+      <td>${finTxTypeLabel(t.type)}</td>
+      <td style="color:${amtColor};font-weight:700">${amtSign}${fmt(t.amount)}</td>
+      <td style="font-weight:700">${t.type==='profit_paid'?'—':fmt(running)}</td>
+      <td style="font-size:.78rem;color:var(--tm)">${t.notes||'—'}</td>
+      <td style="display:flex;gap:6px">
+        <button class="btn bb bsm" onclick="openFinTxModal('${finId}','${t.id}')">✏️</button>
+        <button class="btn br2 bsm" onclick="deleteFinTx('${t.id}','${finId}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  const endAlert = (fin.fundEnd && new Date(fin.fundEnd+'T00:00:00')<new Date(td()+'T00:00:00') && status!=='مغلق')
+    ? `<div style="background:#fdecec;border:2px solid #b00020;border-radius:8px;padding:12px 16px;margin-bottom:14px;color:#b00020;font-weight:700">
+        ⏰ انتهت مدة التمويل — يرجى إجراء التسوية النهائية
+      </div>` : '';
+
+  document.getElementById('finDetailContent').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+      <div>
+        <div style="font-size:1.2rem;font-weight:900">${fin.name} <span style="font-size:.8rem;color:var(--gb)">(${fin.code})</span></div>
+        <div style="font-size:.8rem;color:var(--tm)">${fin.phone||'—'} | ${fin.address||'—'}</div>
+      </div>
+      <div style="text-align:left">
+        <div style="font-size:.75rem;color:var(--tm)">الرصيد الحالي</div>
+        <div style="font-size:1.4rem;font-weight:900;color:var(--gb)">${fmt(s.balance)} جنيه</div>
+      </div>
+      <div>${finStatusBadge(status)}</div>
+    </div>
+    ${endAlert}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:16px">
+      <div class="sc"><div class="sl">إجمالي الإيداعات</div><div class="sv" style="font-size:1rem">${fmt(n2(s.totalDeposits+s.totalAdditions))}</div></div>
+      <div class="sc"><div class="sl">إجمالي السحوبات</div><div class="sv" style="font-size:1rem">${fmt(s.totalWithdrawals)}</div></div>
+      <div class="sc"><div class="sl">صافي الرصيد</div><div class="sv" style="font-size:1rem">${fmt(s.balance)}</div></div>
+      <div class="sc"><div class="sl">الأرباح المستحقة</div><div class="sv" style="font-size:1rem;color:#c9a227">${fmt(s.profitDue)}</div></div>
+      <div class="sc"><div class="sl">الأرباح المصروفة</div><div class="sv" style="font-size:1rem">${fmt(s.totalProfitPaid)}</div></div>
+      <div class="sc"><div class="sl">الأرباح المتبقية</div><div class="sv" style="font-size:1rem;color:var(--red)">${fmt(s.profitRemaining)}</div></div>
+    </div>
+    <div class="card" style="background:var(--bgc2)">
+      <div class="card-title" style="font-size:.9rem">📅 معلومات التمويل</div>
+      <div style="font-size:.85rem;line-height:1.9">
+        تاريخ البداية: <b>${fin.fundStart||'—'}</b> &nbsp;|&nbsp;
+        تاريخ النهاية: <b>${fin.fundEnd||'—'}</b> &nbsp;|&nbsp;
+        المدة: <b>${fin.duration||'—'}</b> &nbsp;|&nbsp;
+        الحالة: ${finStatusBadge(status)}
+        ${fin.notes?`<div style="margin-top:6px;color:var(--tm)">ملاحظات: ${fin.notes}</div>`:''}
+      </div>
+    </div>
+    <div class="br" style="margin:14px 0">
+      <button class="btn bg" onclick="openFinTxModal('${finId}')">➕ إضافة حركة</button>
+      <button class="btn" style="background:#c9a227;color:#fff" onclick="openFinSettleModal('${finId}')">🏁 التسوية النهائية</button>
+      <button class="btn bo" onclick="printFinStatement('${finId}')">🖨️ كشف الحساب</button>
+      <button class="btn bb" onclick="openFinModal('${finId}')">✏️ تعديل البيانات</button>
+      <button class="btn br2" onclick="deleteFinancier('${finId}')">🗑️ حذف الممول</button>
+      <button class="btn bo" onclick="closeFinDetail()">✕ إغلاق</button>
+    </div>
+    <div class="card-title" style="font-size:.9rem">📜 سجل الحركات</div>
+    <div class="tw"><table><thead><tr><th>التاريخ</th><th>نوع الحركة</th><th>المبلغ</th><th>الرصيد بعد الحركة</th><th>ملاحظات</th><th>إجراءات</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:var(--td);padding:16px">لا توجد حركات بعد</td></tr>'}</tbody></table></div>
+  `;
+}
+
+// ── إضافة / تعديل حركة ────────────────────────────────────
+function openFinTxModal(finId, txId){
+  document.getElementById('finTxModalTitle').textContent = txId ? '✏️ تعديل حركة' : '➕ إضافة حركة';
+  document.getElementById('finTxFinId').value=finId;
+  document.getElementById('finTxId').value=txId||'';
+  if(txId){
+    const t=FIN.transactions.find(x=>x.id===txId); if(!t)return;
+    document.getElementById('finTxType').value=t.type;
+    document.getElementById('finTxDate').value=t.date;
+    document.getElementById('finTxAmount').value=t.amount;
+    document.getElementById('finTxSign').value=t.sign===-1?'-1':'1';
+    document.getElementById('finTxNotes').value=t.notes||'';
+  } else {
+    document.getElementById('finTxType').value='deposit';
+    document.getElementById('finTxDate').value=td();
+    document.getElementById('finTxAmount').value='';
+    document.getElementById('finTxSign').value='1';
+    document.getElementById('finTxNotes').value='';
+  }
+  onFinTxTypeChange();
+  openModal('finTxModal');
+}
+
+function onFinTxTypeChange(){
+  const type=document.getElementById('finTxType').value;
+  document.getElementById('finTxSignRow').style.display = type==='adjustment' ? '' : 'none';
+}
+
+async function saveFinTx(){
+  const finId=document.getElementById('finTxFinId').value;
+  const txId=document.getElementById('finTxId').value||null;
+  const type=document.getElementById('finTxType').value;
+  const date=document.getElementById('finTxDate').value;
+  const amount=n2(parseFloat(document.getElementById('finTxAmount').value)||0);
+  const sign=parseInt(document.getElementById('finTxSign').value)||1;
+  const notes=document.getElementById('finTxNotes').value.trim();
+  if(!date) return showToast('❌ يجب إدخال التاريخ');
+  if(amount<=0) return showToast('❌ يجب إدخال مبلغ أكبر من صفر');
+  if(!_lockSave())return;
+  try{
+    let t;
+    if(txId){ t=FIN.transactions.find(x=>x.id===txId); if(!t)return; }
+    else { t={id:uid(), finId, createdAt:Date.now()}; }
+    t.type=type; t.date=date; t.amount=amount; t.notes=notes;
+    t.sign = type==='adjustment' ? sign : undefined;
+    await idbPut('finTransactions',t);
+    if(!txId) FIN.transactions.push(t);
+    closeModal('finTxModal');
+    showToast('✅ تم حفظ الحركة — تم إعادة احتساب الرصيد تلقائياً');
+    renderFinDetail(finId); renderFinanciers(); refreshFinStats();
+  } finally { _unlockSave(); }
+}
+
+async function deleteFinTx(txId, finId){
+  if(!confirm('⚠️ هل أنت متأكد من حذف هذه الحركة؟ سيتم إعادة احتساب رصيد الممول والأرباح تلقائياً.'))return;
+  await idbDel('finTransactions',txId);
+  FIN.transactions=FIN.transactions.filter(t=>t.id!==txId);
+  showToast('✅ تم حذف الحركة وإعادة الاحتساب تلقائياً');
+  renderFinDetail(finId); renderFinanciers(); refreshFinStats();
+}
+
+// ── التسوية النهائية ───────────────────────────────────────
+function openFinSettleModal(finId){
+  const fin=FIN.financiers.find(f=>f.id===finId); if(!fin)return;
+  document.getElementById('finSettleFinId').value=finId;
+  const s=finSummary(finId);
+  // ✅ الفترة الافتراضية: من تاريخ آخر تصفية معتمدة (أو بداية التمويل لو أول مرة) إلى اليوم
+  const lastSettle=[...FIN.settlements].filter(x=>x.finId===finId).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0))[0];
+  const defaultFrom = lastSettle ? lastSettle.periodTo : (fin.fundStart||td());
+  document.getElementById('finSettleFrom').value=defaultFrom;
+  document.getElementById('finSettleTo').value=td();
+  document.getElementById('finSettleInfo').innerHTML=`
+    <b>${fin.name}</b> (${fin.code})<br>
+    الرصيد الحالي: <b>${fmt(s.balance)}</b> جنيه &nbsp;|&nbsp;
+    أرباح مصروفة سابقاً: <b>${fmt(s.totalProfitPaid)}</b> جنيه
+    ${lastSettle?`<br>آخر تصفية معتمدة: ${lastSettle.periodFrom||'—'} → ${lastSettle.periodTo} (ربح: ${fmt(lastSettle.profitDue)} جنيه)`:''}
+  `;
+  document.getElementById('finSettleMethod').value='annual_rate';
+  document.getElementById('finSettlePct').value='';
+  document.getElementById('finSettleManualVal').value='';
+  document.getElementById('finSettleNotes').value='';
+  onFinSettleMethodChange();
+  openModal('finSettleModal');
+}
+
+function onFinSettleMethodChange(){
+  const method=document.getElementById('finSettleMethod').value;
+  document.getElementById('finSettlePctRow').style.display = method==='manual' ? 'none' : '';
+  document.getElementById('finSettlePctLabel').textContent = method==='annual_rate' ? 'النسبة السنوية %' : 'نسبة ربح الشركة الفعلية %';
+  document.getElementById('finSettleManualRow').style.display = method==='manual' ? '' : 'none';
+  document.getElementById('finSettleSegmentsWrap').style.display = method==='annual_rate' ? '' : 'none';
+  calcFinSettlePreview();
+}
+
+function calcFinSettlePreview(){
+  const finId=document.getElementById('finSettleFinId').value;
+  const fin=FIN.financiers.find(f=>f.id===finId); if(!fin)return;
+  const s=finSummary(finId);
+  const method=document.getElementById('finSettleMethod').value;
+  const pct=parseFloat(document.getElementById('finSettlePct').value)||0;
+  const periodFrom=document.getElementById('finSettleFrom').value;
+  const periodTo=document.getElementById('finSettleTo').value;
+  let profitDue=0, baseLabel='';
+  if(method==='annual_rate'){
+    if(!periodFrom||!periodTo||periodTo<periodFrom){
+      document.getElementById('finSettleSegmentsBody').innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--td)">حدد فترة صحيحة (من - إلى)</td></tr>';
+    } else {
+      const r=finPeriodSegments(finId, periodFrom, periodTo, pct);
+      profitDue=r.totalProfit;
+      document.getElementById('finSettleSegmentsBody').innerHTML = r.segments.map(seg=>
+        `<tr><td>${seg.from}</td><td>${seg.to}</td><td>${fmt(seg.principal)}</td><td>${seg.days} يوم (${seg.months} شهر)</td><td style="font-weight:700;color:#c9a227">${fmt(seg.profit)}</td></tr>`
+      ).join('') || '<tr><td colspan="5" style="text-align:center;color:var(--td)">لا توجد حركات ضمن هذه الفترة</td></tr>';
+    }
+    baseLabel=`مجموع أرباح الفترات (${pct}% سنوياً) من ${periodFrom||'—'} إلى ${periodTo||'—'}`;
+  } else if(method==='time_weighted'){
+    const tw=finTimeWeighted(finId, td());
+    profitDue=n2(tw.weightedAvg*pct/100);
+    baseLabel=`${fmt(tw.weightedAvg)} (متوسط مرجّح) × ${pct}%`;
+  } else if(method==='final_balance'){
+    profitDue=n2(s.balance*pct/100);
+    baseLabel=`${fmt(s.balance)} (الرصيد الحالي) × ${pct}%`;
+  } else {
+    profitDue=n2(parseFloat(document.getElementById('finSettleManualVal').value)||0);
+    baseLabel='إدخال يدوي مباشر';
+  }
+  const netRemaining=n2(profitDue-s.totalProfitPaid);
+  const totalDue=n2(s.balance+netRemaining);
+  document.getElementById('finSettlePreview').innerHTML=`
+    طريقة الحساب: ${baseLabel}<br>
+    <b>الربح المستحق الإجمالي: ${fmt(profitDue)} جنيه</b><br>
+    مخصوم منه أرباح مصروفة سابقاً: (${fmt(s.totalProfitPaid)}) جنيه<br>
+    <b style="color:#c9a227">صافي الربح المتبقي: ${fmt(netRemaining)} جنيه</b><br>
+    <b style="color:var(--gb);font-size:1.05rem">الإجمالي المستحق للممول (رصيد + ربح متبقي): ${fmt(totalDue)} جنيه</b>
+  `;
+}
+
+async function confirmFinSettle(){
+  const finId=document.getElementById('finSettleFinId').value;
+  const fin=FIN.financiers.find(f=>f.id===finId); if(!fin)return;
+  const method=document.getElementById('finSettleMethod').value;
+  const pct=parseFloat(document.getElementById('finSettlePct').value)||0;
+  const periodFrom=document.getElementById('finSettleFrom').value;
+  const periodTo=document.getElementById('finSettleTo').value;
+  const s=finSummary(finId);
+  let profitDue=0, segments=[];
+  if(method==='annual_rate'){
+    if(!periodFrom||!periodTo||periodTo<periodFrom) return showToast('❌ حدد فترة صحيحة (من - إلى)');
+    const r=finPeriodSegments(finId, periodFrom, periodTo, pct);
+    profitDue=r.totalProfit; segments=r.segments;
+  } else if(method==='time_weighted'){
+    const tw=finTimeWeighted(finId, td());
+    profitDue=n2(tw.weightedAvg*pct/100);
+  } else if(method==='final_balance'){
+    profitDue=n2(s.balance*pct/100);
+  } else {
+    profitDue=n2(parseFloat(document.getElementById('finSettleManualVal').value)||0);
+  }
+  if(!confirm(`⚠️ هل تريد اعتماد هذه التسوية؟\nالربح المستحق: ${fmt(profitDue)} جنيه\nلا يمكن التراجع عن هذا القرار إلا بحذف التسوية يدوياً.`))return;
+  if(!_lockSave())return;
+  try{
+    const sett={
+      id:uid(), finId, date:td(), method, companyProfitPct:pct,
+      periodFrom: method==='annual_rate'?periodFrom:'', periodTo: method==='annual_rate'?periodTo:td(),
+      segments, // ✅ تفصيل الفترات مُجمَّد وقت الاعتماد — يظهر كما هو في كشف الحساب دائماً حتى لو تغيّرت الحركات لاحقاً
+      finalBalance:s.balance, profitDue,
+      previouslyPaidProfit:s.totalProfitPaid,
+      netProfitRemaining:n2(profitDue-s.totalProfitPaid),
+      totalDue:n2(s.balance+n2(profitDue-s.totalProfitPaid)),
+      notes:document.getElementById('finSettleNotes').value.trim(),
+      createdAt:Date.now()
+
+    };
+    await idbPut('finSettlements',sett);
+    FIN.settlements.push(sett);
+    closeModal('finSettleModal');
+    showToast('✅ تم اعتماد التسوية النهائية للممول '+fin.name);
+    renderFinDetail(finId); renderFinanciers(); refreshFinStats();
+  } finally { _unlockSave(); }
+}
+
+// ── كشف حساب الممول (قابل للطباعة عبر نقطة الطباعة المركزية — يحصل على العلامة المائية تلقائياً) ──
+function printFinStatement(finId){
+  const fin=FIN.financiers.find(f=>f.id===finId); if(!fin)return;
+  const s=finSummary(finId);
+  const status=finStatus(fin);
+  const txs=finTxOf(finId);
+  let running=0;
+  const rows=txs.map(t=>{
+    const delta = t.type==='profit_paid' ? 0 : finTxPrincipalDelta(t);
+    running=n2(running+delta);
+    return `<tr>
+      <td>${t.date}</td><td>${finTxTypeLabel(t.type)}</td>
+      <td style="font-weight:700">${fmt(t.amount)}</td>
+      <td style="font-weight:700">${t.type==='profit_paid'?'—':fmt(running)}</td>
+      <td>${t.notes||'—'}</td>
+    </tr>`;
+  }).join('');
+  const allSettles=[...FIN.settlements].filter(x=>x.finId===finId).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+  const settleHtml = allSettles.map(st=>{
+    const segRows = (st.segments&&st.segments.length) ? `
+      <table style="margin-top:8px"><thead><tr><th>من</th><th>إلى</th><th>المبلغ خلال الفترة</th><th>المدة</th><th>ربح الفترة</th></tr></thead>
+      <tbody>${st.segments.map(seg=>`<tr><td>${seg.from}</td><td>${seg.to}</td><td>${fmt(seg.principal)}</td><td>${seg.days} يوم (${seg.months} شهر)</td><td style="font-weight:700">${fmt(seg.profit)}</td></tr>`).join('')}</tbody></table>` : '';
+    return `
+    <div style="background:#fff3d6;border:2px solid #c9a227;border-radius:8px;padding:12px 16px;margin:14px 0">
+      <b>🏁 تصفية بتاريخ ${st.date}</b> ${st.periodFrom?`(الفترة: ${st.periodFrom} → ${st.periodTo})`:''} ${st.method==='annual_rate'?`— نسبة سنوية ${st.companyProfitPct}%`:''}
+      ${segRows}
+      <div style="margin-top:8px">
+        الربح المستحق لهذه التصفية: <b>${fmt(st.profitDue)}</b> جنيه | أرباح مصروفة سابقاً حتى وقتها: ${fmt(st.previouslyPaidProfit)} جنيه<br>
+        <b>صافي الربح المتبقي وقتها: ${fmt(st.netProfitRemaining)} جنيه | الإجمالي المستحق وقتها: ${fmt(st.totalDue)} جنيه</b>
+      </div>
+    </div>`;
+  }).join('');
+  const html=`<div>
+    <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #1a7a50">
+      <div style="font-size:1.1rem;font-weight:900;color:#0a3d2e">${C.settings.company||'روزيتا المتحدة للمبيدات الزراعية'}</div>
+      <div style="font-size:1rem;font-weight:700;margin-top:6px">💼 كشف حساب ممول</div>
+    </div>
+    <div style="margin-bottom:14px;font-size:.9rem">
+      <b>الممول:</b> ${fin.name} (${fin.code}) | <b>الهاتف:</b> ${fin.phone||'—'}<br>
+      <b>بداية التمويل:</b> ${fin.fundStart||'—'} | <b>نهاية التمويل:</b> ${fin.fundEnd||'—'} | <b>الحالة:</b> ${status}
+    </div>
+    <table><thead><tr><th>التاريخ</th><th>نوع الحركة</th><th>المبلغ</th><th>الرصيد بعد الحركة</th><th>ملاحظات</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="5" style="text-align:center">لا توجد حركات</td></tr>'}</tbody></table>
+    ${settleHtml}
+    <div style="background:#eaf7ef;border:2px solid #1a7a50;border-radius:8px;padding:12px 16px;margin-top:14px;text-align:center">
+      <b style="font-size:1.1rem">الرصيد الحالي: ${fmt(s.balance)} جنيه</b><br>
+      <span style="font-size:.85rem">إجمالي الإيداعات: ${fmt(n2(s.totalDeposits+s.totalAdditions))} | إجمالي السحوبات: ${fmt(s.totalWithdrawals)} | الأرباح المصروفة: ${fmt(s.totalProfitPaid)}</span>
+    </div>
+  </div>`;
+  openPrintWin(html);
+}
+
 // إجمالي المديونيات
 function totalDebt() {
   let d = 0;
@@ -1445,7 +2252,7 @@ const C = {
     address:'', phone:'', commRate:3, logo:'',
     adminUser:'admin', adminPass:'1234',
     lastBackup:null, invPrefix:'INV',
-    nextInvNum:1001, nextRetNum:1, nextAdjId:1,
+    nextInvNum:1001, nextRetNum:1, nextAdjId:1, nextFinId:1,
     nextClId:1, nextPrId:1, nextDlId:1
   }
 };
@@ -1654,6 +2461,9 @@ async function boot() {
     } else { C.clients=cls; C.products=prs; C.delegates=dls; }
     if (settings) Object.assign(C.settings,settings);
     if (!C.settings.nextRetNum) C.settings.nextRetNum=1;
+    if (!C.settings.nextFinId) C.settings.nextFinId=1;
+    prog(60,'تحميل بيانات الممولين (وحدة مستقلة)...');
+    await finLoadAll();
     prog(65,'بناء ذاكرة الأرصدة (شامل المرتجعات)...');
     await rebuildAllBalances();
     prog(85,'فحص سلامة البيانات...');
@@ -1756,6 +2566,7 @@ function go(name,btn) {
     statement: ()=>{ fillSel('stmDl',C.delegates,'id','name','-- الكل --'); renderStmClDrop(''); },
     adjustment:()=>{ fillSel('adjDl',C.delegates,'id','name','-- الكل --'); renderAdjClDrop(''); clearAdjForm(); },
     blacklist: ()=>{ fillSel('blDl',C.delegates,'id','name','-- الكل --'); renderBlClDrop(''); clearBlForm(); renderBlacklist(); },
+    financiers:()=>{ document.getElementById('finDetailCard').style.display='none'; renderFinanciers(); refreshFinStats(); },
     lastinv:   ()=>{ fillSel('liDl',C.delegates,'id','name','-- الكل --'); renderLiDrop(''); },
     clients:   ()=>{ renderClients(); fillSel('clDl',C.delegates,'id','name','-- بدون مندوب --'); fillSel('clFilterDl',C.delegates,'id','name','جميع المندوبين'); },
     products:  renderProds,
@@ -1799,6 +2610,7 @@ function refreshAllDDs() {
   fillSel('rRtDl',C.delegates,'id','name','-- الكل --');
   fillSel('rLiDl',C.delegates,'id','name','-- الكل --');
   fillSel('rRetDl',C.delegates,'id','name','-- الكل --');
+  fillSel('rSettleDl',C.delegates,'id','name','-- الكل --');
 }
 function refreshInvDDs() { fillSel('invDl',C.delegates,'id','name','-- اختر مندوب --'); }
 
@@ -3029,13 +3841,16 @@ async function saveClient() {
   const name=document.getElementById('clName').value.trim();
   if(!name) return showToast('❌ اسم العميل مطلوب');
   const editId=parseInt(document.getElementById('clEditId').value)||0;
+  // ✅ شهور التصفية: بيان استرشادي فقط للتقارير — لا يُستخدم في أي معادلة رصيد أو حساب
+  const settlementMonths=[...document.querySelectorAll('.clSettleMonth:checked')].map(el=>parseInt(el.value));
   const cl={
     id:editId||(C.settings.nextClId++),
     name, phone:document.getElementById('clPhone').value.trim(),
     address:document.getElementById('clAddr').value.trim(),
     delegateId:parseInt(document.getElementById('clDl').value)||null,
     route:document.getElementById('clRoute').value.trim(),
-    notes:document.getElementById('clNotes').value.trim()
+    notes:document.getElementById('clNotes').value.trim(),
+    settlementMonths
   };
   await idbPut('clients',cl);
   if(!editId) await idbPutSettings(C.settings);
@@ -3046,6 +3861,7 @@ async function saveClient() {
 function clearCl(){
   ['clName','clPhone','clAddr','clRoute','clNotes'].forEach(id=>{ const el=document.getElementById(id); if(el)el.value=''; });
   document.getElementById('clDl').value=''; document.getElementById('clEditId').value='';
+  document.querySelectorAll('.clSettleMonth').forEach(el=>el.checked=false);
   document.getElementById('clTitle').textContent='➕ إضافة عميل جديد';
 }
 function editClient(id){
@@ -3054,6 +3870,9 @@ function editClient(id){
   document.getElementById('clAddr').value=cl.address||''; document.getElementById('clDl').value=cl.delegateId||'';
   document.getElementById('clRoute').value=cl.route||''; document.getElementById('clNotes').value=cl.notes||'';
   document.getElementById('clEditId').value=id;
+  // ✅ تعبئة شهور التصفية المحفوظة (اختياري — تظهر فارغة تماماً للعملاء القدامى الذين لم يُحدَّد لهم شيء بعد)
+  const savedMonths=cl.settlementMonths||[];
+  document.querySelectorAll('.clSettleMonth').forEach(el=>{ el.checked = savedMonths.includes(parseInt(el.value)); });
   document.getElementById('clTitle').textContent='✏️ تعديل بيانات العميل';
   document.querySelector('#page-clients').scrollTop=0;
 }
@@ -3630,6 +4449,37 @@ async function genOverdue(){
 }
 function printOverdueRep(){ openPrintWin(document.getElementById('rOverdueOut').innerHTML); }
 
+// ── تصفية العملاء (تقرير استبياني فقط — لا يكتب ولا يعدّل أي بيانات) ────
+function genClientSettleRep(){
+  const did=parseInt(document.getElementById('rSettleDl').value)||null;
+  const fromM=parseInt(document.getElementById('rSettleFrom').value)||1;
+  const toM=parseInt(document.getElementById('rSettleTo').value)||12;
+  const monthName=['','يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+  const inRange=(m)=> fromM<=toM ? (m>=fromM&&m<=toM) : (m>=fromM||m<=toM); // يدعم مدى يلف حول نهاية السنة (مثال: من 11 إلى 2)
+  let list=C.clients.filter(cl=>{
+    if(did&&cl.delegateId!==did)return false;
+    if(cl.blacklisted)return false;
+    const months=cl.settlementMonths||[];
+    return months.some(inRange);
+  });
+  list.sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+  let rows='', totalRem=0;
+  list.forEach(cl=>{
+    const dl=C.delegates.find(d=>d.id===cl.delegateId);
+    const rem=clRemain(cl.id); // ✅ قراءة فقط من الرصيد المركزي — لا يوجد أي كتابة أو تعديل
+    if(rem>0) totalRem=n2(totalRem+rem);
+    const monthsLabel=(cl.settlementMonths||[]).slice().sort((a,b)=>a-b).map(m=>monthName[m]).join('، ')||'—';
+    rows+=`<tr><td><b>${cl.name}</b></td><td>${cl.route||'—'}</td><td>${dl?.name||'—'}</td><td>${cl.phone||'—'}</td><td style="color:var(--gol)">${monthsLabel}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td></tr>`;
+  });
+  const rangeLabel = fromM===toM ? monthName[fromM] : `${monthName[fromM]} → ${monthName[toM]}`;
+  document.getElementById('rSettleOut').innerHTML=`
+    <div style="font-weight:700;color:var(--gb);margin-bottom:12px">📅 عملاء مستحق تصفيتهم خلال: ${rangeLabel} (${list.length} عميل) — إجمالي أرصدتهم: ${fmt(totalRem)} جنيه</div>
+    <table><thead><tr><th>العميل</th><th>خط السير</th><th>المندوب</th><th>الهاتف</th><th>شهور التصفية</th><th>الرصيد الحالي</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:var(--td);padding:16px">لا يوجد عملاء لديهم شهر تصفية ضمن هذا المدى</td></tr>'}</tbody></table>
+  `;
+}
+function printClientSettleRep(){ openPrintWin(document.getElementById('rSettleOut').innerHTML); }
+
 // ── تقرير الأرصدة التفصيلي (محدث بالمرتجعات) ────────────
 async function genBalance(){
   const from=document.getElementById('rBalFrom').value, to=document.getElementById('rBalTo').value;
@@ -4036,8 +4886,13 @@ async function saveSettings(){
 //  EXPORT / IMPORT
 // ═══════════════════════════════════════════════════════════
 async function exportData(){
-  const [invs,rets,cls,prs,dls,adjs]=await Promise.all([idbAll('invoices'),idbAll('returns'),idbAll('clients'),idbAll('products'),idbAll('delegates'),idb.objectStoreNames.contains('adjustments')?idbAll('adjustments'):Promise.resolve([])]);
-  const data={version:6,exportDate:new Date().toISOString(),settings:C.settings,clients:cls,products:prs,delegates:dls,invoices:invs,returns:rets,adjustments:adjs};
+  const [invs,rets,cls,prs,dls,adjs,fins,finTxs,finSetts]=await Promise.all([
+    idbAll('invoices'),idbAll('returns'),idbAll('clients'),idbAll('products'),idbAll('delegates'),
+    idb.objectStoreNames.contains('adjustments')?idbAll('adjustments'):Promise.resolve([]),
+    idbAll('financiers'),idbAll('finTransactions'),idbAll('finSettlements')
+  ]);
+  const data={version:7,exportDate:new Date().toISOString(),settings:C.settings,clients:cls,products:prs,delegates:dls,invoices:invs,returns:rets,adjustments:adjs,
+    financiers:fins, finTransactions:finTxs, finSettlements:finSetts};
   const filename='rosetta_backup_'+td()+'.json';
   const content=JSON.stringify(data,null,2);
   try {
@@ -4055,7 +4910,7 @@ async function importData(event){
   try {
     const text=await file.text(); const data=JSON.parse(text);
     if(!data.clients&&!data.invoices) throw new Error('ملف غير صالح');
-    if(data.settings){ Object.assign(C.settings,data.settings); if(!C.settings.nextRetNum)C.settings.nextRetNum=1; if(!C.settings.nextAdjId)C.settings.nextAdjId=1; }
+    if(data.settings){ Object.assign(C.settings,data.settings); if(!C.settings.nextRetNum)C.settings.nextRetNum=1; if(!C.settings.nextAdjId)C.settings.nextAdjId=1; if(!C.settings.nextFinId)C.settings.nextFinId=1; }
     const ops=[];
     if(data.clients) { await idbBulk('clients',data.clients); C.clients=data.clients; }
     if(data.products){ await idbBulk('products',data.products); C.products=data.products; }
@@ -4063,10 +4918,14 @@ async function importData(event){
     if(data.invoices) await idbBulk('invoices',data.invoices);
     if(data.returns&&data.returns.length) await idbBulk('returns',data.returns);
     if(data.adjustments&&data.adjustments.length) await idbBulk('adjustments',data.adjustments);
+    // ✅ وحدة الممولين — مستقلة تماماً، تُستعاد كاملة بدون أي تأثير على بقية بيانات الاستيراد
+    if(data.financiers&&data.financiers.length){ await idbBulk('financiers',data.financiers); FIN.financiers=data.financiers; }
+    if(data.finTransactions&&data.finTransactions.length){ await idbBulk('finTransactions',data.finTransactions); FIN.transactions=data.finTransactions; }
+    if(data.finSettlements&&data.finSettlements.length){ await idbBulk('finSettlements',data.finSettlements); FIN.settlements=data.finSettlements; }
     await idbPutSettings(C.settings);
     await rebuildAllBalances();
     refreshAllDDs(); loadSettingsUI(); updateDbInfo();
-    showToast('✅ تم استيراد البيانات بنجاح ('+data.invoices?.length+' فاتورة, '+(data.returns?.length||0)+' مرتجع, '+(data.adjustments?.length||0)+' تسوية)');
+    showToast('✅ تم استيراد البيانات بنجاح ('+data.invoices?.length+' فاتورة, '+(data.returns?.length||0)+' مرتجع, '+(data.adjustments?.length||0)+' تسوية, '+(data.financiers?.length||0)+' ممول)');
   } catch(e){ showToast('❌ خطأ في الاستيراد: '+e.message); }
   event.target.value='';
 }
