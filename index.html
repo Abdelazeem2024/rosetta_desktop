@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rosetta ERP V2</title>
+<title>Rikaz Pro</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -17,7 +17,9 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
 #splash{position:fixed;inset:0;z-index:99999;background:radial-gradient(ellipse at 40% 40%,#0d2a1e,var(--bg) 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px}
-.sp-logo{font-size:4rem;animation:pulse 2s ease-in-out infinite}
+.brand-ico{background:url(data:image/png;base64,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) center/contain no-repeat;display:inline-block;flex:none}
+.sp-logo{width:96px;height:96px;animation:pulse 2s ease-in-out infinite}
+.sp-tag{font-size:.95rem;color:var(--gol);letter-spacing:.5px;margin-top:-4px}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 .sp-title{font-size:1.6rem;font-weight:900;color:var(--gb);letter-spacing:3px}
 .sp-sub{font-size:.9rem;color:var(--tm)}
@@ -44,7 +46,8 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-hei
 .sidebar-btn:hover{background:var(--bgc2);color:var(--tx)}
 .sidebar-btn.active{background:linear-gradient(270deg,rgba(26,122,80,.2),transparent);color:var(--gb);border-right-color:var(--gb);font-weight:700}
 .sidebar-icon{font-size:1rem;width:20px;text-align:center;flex-shrink:0}
-.credit-bar{text-align:center;padding:14px;border-top:1px solid var(--brd);margin-top:auto;font-size:.85rem;font-weight:700;letter-spacing:2px;background:linear-gradient(270deg,#2dd885,#c9a227,#4a9edd,#2dd885);background-size:400% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite}
+.credit-bar{text-align:center;padding:14px;border-top:1px solid var(--brd);margin-top:auto;font-size:.85rem;font-weight:700;letter-spacing:2px;background:linear-gradient(270deg,#2dd885,#c9a227,#4a9edd,#2dd885);background-size:400% 100%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:shimmer 3s linear infinite,creditGlow 2.2s ease-in-out infinite;direction:ltr;letter-spacing:.6px;font-size:.8rem;white-space:nowrap;padding:14px 4px}
+@keyframes creditGlow{0%,100%{filter:drop-shadow(0 0 4px rgba(45,216,133,.55)) drop-shadow(0 0 9px rgba(74,158,221,.35))}50%{filter:drop-shadow(0 0 8px rgba(45,216,133,.95)) drop-shadow(0 0 20px rgba(74,158,221,.8))}}
 @keyframes shimmer{0%{background-position:100% 50%}100%{background-position:-100% 50%}}
 .main-content{flex:1;padding:22px;overflow-y:auto}
 .page{display:none}.page.active{display:block;animation:fadeIn .2s ease}
@@ -56,6 +59,30 @@ body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-hei
 .fr3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:14px}
 .fr2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:14px}
 .fg{display:flex;flex-direction:column;gap:5px}
+.ab-box{margin-top:16px;padding:14px;border:1px solid var(--brd);border-radius:10px;background:var(--bgc2)}
+.ab-title{font-weight:800;margin-bottom:10px}
+.ab-check{display:flex;gap:8px;align-items:center;font-size:.88rem;cursor:pointer;margin-bottom:10px}
+.ab-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.ab-row .fc{flex:1;min-width:230px;text-align:left;font-family:Consolas,monospace;font-size:.78rem}
+.ab-hint{font-size:.76rem;color:var(--tm);line-height:1.8;margin-bottom:10px}
+.ab-status{margin-top:10px;font-size:.82rem;line-height:1.9} .ab-ok{color:var(--gb)} .ab-bad{color:#ff6b6b}
+/* ── نظام التفعيل ── */
+.lic-chip{cursor:pointer;font-size:.74rem;font-weight:700;padding:5px 10px;border-radius:20px;border:1px solid var(--brd);background:var(--bgc2);white-space:nowrap}
+.lic-chip.lic-ok{color:var(--gb);border-color:var(--gb)} .lic-chip.lic-trial{color:var(--gol);border-color:var(--gol)}
+.lic-chip.lic-warn{color:#ff9d4a;border-color:#ff9d4a;animation:pulse 1.6s ease-in-out infinite} .lic-chip.lic-expired{color:#fff;background:#b00020;border-color:#b00020;animation:pulse 1.2s ease-in-out infinite}
+.lic-login-line{font-size:.8rem;font-weight:700;margin:6px 0 4px} .lic-login-line.lic-ok{color:var(--gb)} .lic-login-line.lic-trial{color:var(--gol)} .lic-login-line.lic-expired{color:#ff6b6b}
+.lic-login-btn{margin-top:6px;background:transparent;border:1px solid var(--brd);color:var(--tm);border-radius:8px;padding:6px 12px;font-family:inherit;font-size:.78rem;cursor:pointer}
+.lic-login-btn:hover{border-color:var(--gb);color:var(--gb)}
+.lic-status{border:1px solid var(--brd);border-radius:10px;padding:12px 14px;margin-bottom:12px;background:var(--bgc2)}
+.lic-status.lic-ok{border-color:var(--gb)} .lic-status.lic-trial{border-color:var(--gol)} .lic-status.lic-warn{border-color:#ff9d4a} .lic-status.lic-expired{border-color:#b00020;background:rgba(176,0,32,.12)}
+.lic-big{font-size:1rem;font-weight:800} .lic-sub{font-size:.8rem;color:var(--tm);margin-top:4px;line-height:1.7}
+.lic-bar{height:8px;border-radius:6px;background:rgba(255,255,255,.08);margin:8px 0;overflow:hidden} .lic-bar>div{height:100%;background:linear-gradient(90deg,var(--gb),var(--gol));border-radius:6px}
+.lic-label{font-size:.82rem;font-weight:700;margin:12px 0 5px;color:var(--tm)}
+.lic-fp-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap} .lic-fp{flex:1;min-width:240px;font-family:Consolas,monospace;font-weight:800;letter-spacing:1px;color:var(--gb);text-align:center}
+.lic-code{font-family:Consolas,monospace;font-size:.78rem;width:100%;resize:vertical}
+.lic-msg{margin-top:8px;font-size:.84rem;font-weight:700;line-height:1.7} .lic-msg.lic-ok{color:var(--gb)} .lic-msg.lic-bad{color:#ff6b6b}
+body.lic-locked .sidebar-btn:not(#sb-settings){opacity:.3;cursor:not-allowed}
+
 .chk-month{display:flex;align-items:center;gap:5px;background:var(--bgc2);border:1px solid var(--brd);border-radius:6px;padding:6px 8px;font-size:.78rem;cursor:pointer;user-select:none}
 .chk-month input{cursor:pointer}
 .chk-month:has(input:checked){background:rgba(45,216,133,.15);border-color:var(--gb);color:var(--gb);font-weight:700}
@@ -191,9 +218,10 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
 
 <!-- ══ SPLASH ══════════════════════════════════════════════ -->
 <div id="splash">
-  <div class="sp-logo">🌿</div>
-  <div class="sp-title">ROSETTA ERP V2</div>
-  <div class="sp-sub">روزيتا المتحدة للمبيدات الزراعية</div>
+  <div class="sp-logo brand-ico"></div>
+  <div class="sp-title">Rikaz Pro</div>
+  <div class="sp-tag">إدارة مترابطة • تحكم أوضح</div>
+  <div class="sp-sub js-company"></div>
   <div class="sp-bar-w"><div class="sp-bar" id="spBar"></div></div>
   <div class="sp-st" id="spSt">جارٍ التهيئة...</div>
 </div>
@@ -201,16 +229,26 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
 <!-- ══ LOGIN ═══════════════════════════════════════════════ -->
 <div id="loginScreen">
   <div class="lb">
-    <div style="font-size:3rem;margin-bottom:8px">🌿</div>
-    <div style="font-size:1.5rem;font-weight:900;color:var(--gb);letter-spacing:2px">ROSETTA ERP V2</div>
-    <div style="font-size:.8rem;color:var(--tm);margin-bottom:28px">روزيتا المتحدة للمبيدات الزراعية</div>
+    <div class="brand-ico" style="width:76px;height:76px;margin:0 auto 8px"></div>
+    <div style="font-size:1.6rem;font-weight:900;color:var(--gb);letter-spacing:2px">Rikaz Pro</div>
+    <div style="font-size:.85rem;color:var(--gol);margin-bottom:2px">إدارة مترابطة • تحكم أوضح</div>
+    <div class="js-company" style="font-size:.78rem;color:var(--tm);margin-bottom:26px"></div>
     <div style="text-align:right;font-size:.78rem;color:var(--tm);margin-bottom:4px">اسم المستخدم</div>
     <input type="text" id="loginUser" value="admin" autocomplete="username">
     <div style="text-align:right;font-size:.78rem;color:var(--tm);margin-bottom:4px">كلمة المرور</div>
     <input type="password" id="loginPass" placeholder="••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn-login" onclick="doLogin()">دخول النظام</button>
     <div style="color:var(--red);font-size:.85rem;margin-top:8px;min-height:20px" id="loginErr"></div>
+    <div id="licLoginLine" class="lic-login-line"></div>
+    <button class="lic-login-btn" onclick="licOpenModal()">🔑 تفعيل البرنامج / بصمة الجهاز</button>
     <div style="margin-top:10px;font-size:.72rem;color:var(--td)">كلمة المرور الافتراضية: 1234</div>
+  </div>
+</div>
+<div class="modal-overlay" id="licModal" style="z-index:20000">
+  <div class="modal" style="max-width:600px;position:relative">
+    <button onclick="closeModal('licModal')" style="position:sticky;float:left;top:0;background:var(--bgc2);border:1px solid var(--brd);border-radius:50%;width:32px;height:32px;font-size:1rem;cursor:pointer;color:var(--tm);z-index:5">✕</button>
+    <h3>🔑 تفعيل البرنامج</h3>
+    <div id="licPanelLogin"></div>
   </div>
 </div>
 
@@ -220,12 +258,13 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
   <!-- Topbar -->
   <div class="topbar">
     <div style="display:flex;align-items:center;gap:12px">
-      <span style="font-size:1.5rem">🌿</span>
+      <span class="brand-ico" style="width:36px;height:36px"></span>
       <div>
-        <div class="logo-text">ROSETTA ERP V2</div>
-        <div class="logo-sub">روزيتا المتحدة للمبيدات الزراعية</div>
+        <div class="logo-text">Rikaz Pro</div>
+        <div class="logo-sub js-company"></div>
       </div>
       <span class="db-badge">💾 Smart Cache + SQLite</span>
+      <span id="licChip" class="lic-chip" onclick="licOpenSettings()" title="حالة الترخيص"></span>
     </div>
     <div style="display:flex;align-items:center;gap:16px">
       <div style="text-align:center">
@@ -269,7 +308,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
       <button class="sidebar-btn" id="sb-calc" onclick="go('calc',this)"><span class="sidebar-icon">🧪</span><span>حاسبة التركيبات</span></button>
       <div class="sidebar-section">النظام</div>
       <button class="sidebar-btn" id="sb-settings" onclick="go('settings',this)"><span class="sidebar-icon">⚙️</span><span>الإعدادات</span></button>
-      <div class="credit-bar">إعداد م : عبدالعظيم شوقي</div>
+      <div class="credit-bar">Developed by Raqnova</div>
     </div>
 
     <!-- Main Content -->
@@ -893,10 +932,12 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
           <div class="qb" onclick="showRep('returnsrep')" style="padding:16px"><span class="qi">↩️</span>تقرير المرتجعات</div>
           <div class="qb" onclick="showRep('splitrep')" style="padding:16px;border:2px solid var(--gold)"><span class="qi">📊</span>كشف حساب بالأصناف</div>
           <div class="qb" onclick="showRep('clientsettle')" style="padding:16px"><span class="qi">📅</span>تصفية العملاء</div>
+          <div class="qb" onclick="showRep('perf')" style="padding:16px"><span class="qi">📈</span>تقييم الأداء</div>
+          <div class="qb" onclick="showRep('itemaudit')" style="padding:16px"><span class="qi">🔎</span>فحص أسماء الأصناف</div>
         </div>
         <div class="card rep-panel" id="rpanel-daily">
           <div class="card-title">📅 تقرير يومي</div>
-          <div class="fr2"><div class="fg"><label>التاريخ</label><input class="fc" type="date" id="rDailyDate"></div></div>
+          <div class="fr2"><div class="fg"><label>التاريخ</label><input class="fc" type="date" id="rDailyDate"></div><div class="fg"><label>المندوب</label><select class="fc" id="rDailyDl"><option value="">-- الكل --</option></select></div></div>
           <div class="br"><button class="btn bg" onclick="genDaily()">عرض</button><button class="btn bgo" onclick="printDailyRep()">🖨️ طباعة</button></div>
           <div id="rDailyOut" style="margin-top:14px"></div>
         </div>
@@ -906,19 +947,20 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
             <div class="fg"><label>من شهر</label><input class="fc" type="month" id="rMonthFrom"></div>
             <div class="fg"><label>إلى شهر</label><input class="fc" type="month" id="rMonthTo"></div>
             <div class="fg"><label>نوع التقرير</label><select class="fc" id="rMonthType"><option value="summary">إجمالي</option><option value="detail">تفصيلي</option></select></div>
+            <div class="fg"><label>المندوب</label><select class="fc" id="rMonthDl"><option value="">-- الكل --</option></select></div>
           </div>
           <div class="br"><button class="btn bg" onclick="genMonthly()">عرض</button><button class="btn bgo" onclick="printMonthlyRep()">🖨️ طباعة</button></div>
           <div id="rMonthOut" style="margin-top:14px"></div>
         </div>
         <div class="card rep-panel" id="rpanel-client">
           <div class="card-title">👥 تقرير العملاء</div>
-          <div class="fr2"><div class="fg"><label>من تاريخ</label><input class="fc" type="date" id="rClFrom"></div><div class="fg"><label>إلى تاريخ</label><input class="fc" type="date" id="rClTo"></div></div>
+          <div class="fr2"><div class="fg"><label>من تاريخ</label><input class="fc" type="date" id="rClFrom"></div><div class="fg"><label>إلى تاريخ</label><input class="fc" type="date" id="rClTo"></div><div class="fg"><label>المندوب</label><select class="fc" id="rClDl"><option value="">-- الكل --</option></select></div></div>
           <div class="br"><button class="btn bg" onclick="genClRep()">عرض</button><button class="btn bgo" onclick="printClRep()">🖨️ طباعة</button></div>
           <div id="rClOut" style="margin-top:14px"></div>
         </div>
         <div class="card rep-panel" id="rpanel-delegate">
           <div class="card-title">🧑‍💼 تقرير المندوبين</div>
-          <div class="fr2"><div class="fg"><label>من تاريخ</label><input class="fc" type="date" id="rDlFrom"></div><div class="fg"><label>إلى تاريخ</label><input class="fc" type="date" id="rDlTo"></div></div>
+          <div class="fr2"><div class="fg"><label>من تاريخ</label><input class="fc" type="date" id="rDlFrom"></div><div class="fg"><label>إلى تاريخ</label><input class="fc" type="date" id="rDlTo"></div><div class="fg"><label>المندوب</label><select class="fc" id="rDlSel"><option value="">-- الكل --</option></select></div></div>
           <div class="br"><button class="btn bg" onclick="genDlRep()">عرض</button><button class="btn bgo" onclick="printDlRep()">🖨️ طباعة</button></div>
           <div id="rDlOut" style="margin-top:14px"></div>
         </div>
@@ -943,7 +985,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
         </div>
         <div class="card rep-panel" id="rpanel-bs">
           <div class="card-title">⭐ الأصناف الأكثر والأقل مبيعاً</div>
-          <div class="fr2"><div class="fg"><label>من تاريخ</label><input class="fc" type="date" id="rBsFrom"></div><div class="fg"><label>إلى تاريخ</label><input class="fc" type="date" id="rBsTo"></div></div>
+          <div class="fr2"><div class="fg"><label>من تاريخ</label><input class="fc" type="date" id="rBsFrom"></div><div class="fg"><label>إلى تاريخ</label><input class="fc" type="date" id="rBsTo"></div><div class="fg"><label>المندوب</label><select class="fc" id="rBsDl"><option value="">-- الكل --</option></select></div></div>
           <div class="br"><button class="btn bg" onclick="genBs()">عرض</button><button class="btn bgo" onclick="printBsRep()">🖨️ طباعة</button></div>
           <div id="rBsOut" style="margin-top:14px"></div>
         </div>
@@ -963,7 +1005,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
         </div>
         <div class="card rep-panel" id="rpanel-balance">
           <div class="card-title">💰 تقرير الأرصدة التفصيلي</div>
-          <div class="fr2"><div class="fg"><label>من تاريخ</label><input class="fc" type="date" id="rBalFrom"></div><div class="fg"><label>إلى تاريخ</label><input class="fc" type="date" id="rBalTo"></div></div>
+          <div class="fr2"><div class="fg"><label>من تاريخ</label><input class="fc" type="date" id="rBalFrom"></div><div class="fg"><label>إلى تاريخ</label><input class="fc" type="date" id="rBalTo"></div><div class="fg"><label>المندوب</label><select class="fc" id="rBalDl"><option value="">-- الكل --</option></select></div></div>
           <div class="br"><button class="btn bg" onclick="genBalance()">عرض</button><button class="btn bgo" onclick="printBalanceRep()">🖨️ طباعة</button></div>
           <div id="rBalOut" style="margin-top:14px"></div>
         </div>
@@ -1034,6 +1076,32 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
             <button class="btn bg" onclick="printClientSettleRep()">🖨️ طباعة</button>
           </div>
           <div id="rSettleOut" style="margin-top:14px"></div>
+        </div>
+
+        <div class="card rep-panel" id="rpanel-perf">
+          <div class="card-title">📈 تقرير تقييم الأداء</div>
+          <div style="font-size:.78rem;color:var(--tm);margin-bottom:10px">إجمالي المبيعات والمدفوع والمتبقي لكل مندوب وخط سير في الفترة المحددة — للعرض فقط، لا يؤثر على أي عملية محاسبية.</div>
+          <div class="fr3">
+            <div class="fg"><label>المندوب</label><select class="fc" id="rPerfDl" onchange="updateRouteSelect('rPerfRoute','rPerfDl')"><option value="">-- كل المناديب --</option></select></div>
+            <div class="fg"><label>خط السير</label><select class="fc" id="rPerfRoute"><option value="">-- كل الخطوط --</option></select></div>
+            <div class="fg"><label>من تاريخ</label><input class="fc" type="date" id="rPerfFrom"></div>
+            <div class="fg"><label>إلى تاريخ</label><input class="fc" type="date" id="rPerfTo"></div>
+          </div>
+          <div class="br"><button class="btn bgo" onclick="genPerfRep()">📈 عرض</button><button class="btn bg" onclick="printPerfRep()">🖨️ طباعة</button></div>
+          <div id="rPerfOut" style="margin-top:14px"></div>
+        </div>
+
+        <div class="card rep-panel" id="rpanel-itemaudit">
+          <div class="card-title">🔎 فحص أسماء الأصناف في الفواتير</div>
+          <div style="font-size:.78rem;color:var(--tm);margin-bottom:10px">أسماء الأصناف تُحفظ داخل بنود الفواتير نفسها، فأي اسم يُكتب يدوياً في الفاتورة يظهر في التقارير حتى لو ليس في صفحة الأصناف. هذه الأداة تكشف أين سُجّل كل اسم وفي أي فواتير — للقراءة فقط ولا تعدّل أي بيانات.</div>
+          <div class="fr3">
+            <div class="fg"><label>جزء من اسم الصنف</label><input class="fc" id="rAuditQ" placeholder="مثال: رصي"></div>
+            <div class="fg"><label>من تاريخ (اختياري)</label><input class="fc" type="date" id="rAuditFrom"></div>
+            <div class="fg"><label>إلى تاريخ (اختياري)</label><input class="fc" type="date" id="rAuditTo"></div>
+          </div>
+          <div class="br"><button class="btn bg" onclick="auditRun(false)">🔎 بحث بالاسم</button><button class="btn bgo" onclick="auditRun(true)">⚠️ كل الأصناف غير المسجّلة</button><button class="btn bo" onclick="printAudit()">🖨️ طباعة</button></div>
+          <div id="rAuditOut" style="margin-top:14px"></div>
+          <div id="rAuditDetail"></div>
         </div>
       </div>
 
@@ -1109,10 +1177,14 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
       <!-- ════ SETTINGS ═════════════════════════════════════ -->
       <div class="page" id="page-settings">
         <div class="page-title">⚙️ الإعدادات</div>
+        <div class="card" id="licCardSettings">
+          <div class="card-title">🔑 تفعيل البرنامج</div>
+          <div id="licPanelSettings"></div>
+        </div>
         <div class="card">
           <div class="card-title">بيانات الشركة والنظام</div>
           <div class="fr2">
-            <div class="fg"><label>اسم الشركة <span style="font-size:.72rem;color:var(--td)">(ثابت — غير قابل للتعديل)</span></label><input class="fc" id="setCompany" readonly style="opacity:.7;cursor:not-allowed;background:var(--bgc2)"></div>
+            <div class="fg"><label>اسم الشركة <span style="font-size:.72rem;color:var(--td)">(يظهر في كل التقارير والفواتير وشاشات البرنامج)</span></label><input class="fc" id="setCompany" placeholder="اكتب اسم شركتك" maxlength="80"></div>
             <div class="fg"><label>نسبة العمولة الافتراضية %</label><input class="fc" type="number" id="setCommRate"></div>
           </div>
           <div class="fr2">
@@ -1154,7 +1226,19 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
             <button class="btn bg" onclick="exportCSV('returns')">↩️ تصدير المرتجعات CSV</button>
             <button class="btn br2" onclick="confirmClear()">🗑️ مسح كل البيانات</button>
           </div>
-          <div style="margin-top:10px;font-size:.78rem;color:var(--tm)">آخر نسخة احتياطية: <span id="lastBackup">لا توجد</span></div>
+          <div style="margin-top:10px;font-size:.78rem;color:var(--tm)">آخر نسخة احتياطية يدوية: <span id="lastBackup">لا توجد</span></div>
+          <div class="ab-box">
+            <div class="ab-title">🔄 التصدير التلقائي اليومي</div>
+            <label class="ab-check"><input type="checkbox" id="abEnabled" onchange="abToggle()"> تصدير تلقائي مرة واحدة كل يوم عند فتح البرنامج (كل البيانات في ملف واحد)</label>
+            <div class="ab-row">
+              <input class="fc" id="abDir" readonly placeholder="المجلد الافتراضي: المستندات ▸ Rikaz Pro Backups" dir="ltr">
+              <button class="btn bb" onclick="abPickFolder()">📁 اختيار المجلد</button>
+              <button class="btn bo" onclick="abResetFolder()">↩️ المجلد الافتراضي</button>
+            </div>
+            <div class="ab-hint">اسم الملف: <b dir="ltr">rikaz_auto_backup_YYYY-MM-DD.json</b> (بتاريخ اليوم). يحتفظ البرنامج بآخر <b>15</b> نسخة تلقائية ويحذف الأقدم منها فقط — ولا يلمس أي ملف آخر في المجلد، ولا النسخ اليدوية.</div>
+            <div class="br"><button class="btn bg" onclick="abRunNow()">▶️ تشغيل نسخة تلقائية الآن</button></div>
+            <div id="abStatus" class="ab-status"></div>
+          </div>
           <div style="margin-top:6px;font-size:.78rem;color:var(--td)" id="dbInfo"></div>
         </div>
         <div class="card" id="healthCard">
@@ -1217,6 +1301,7 @@ input[type="number"]::-webkit-inner-spin-button{opacity:.4}
   </div>
 </div>
 <div id="toast"></div>
+<script type="text/plain" id="licenseFileSource">/*__LICENSE_FILE__*/</script>
 <script>
 'use strict';
 // ═══════════════════════════════════════════════════════════
@@ -2008,7 +2093,7 @@ function printFinStatement(finId){
   }).join('');
   const html=`<div>
     <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #1a7a50">
-      <div style="font-size:1.1rem;font-weight:900;color:#0a3d2e">${C.settings.company||'روزيتا المتحدة للمبيدات الزراعية'}</div>
+      <div style="font-size:1.1rem;font-weight:900;color:#0a3d2e">${coName()}</div>
       <div style="font-size:1rem;font-weight:700;margin-top:6px">💼 كشف حساب ممول</div>
     </div>
     <div style="margin-bottom:14px;font-size:.9rem">
@@ -2024,6 +2109,333 @@ function printFinStatement(finId){
     </div>
   </div>`;
   openPrintWin(html);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  🧑‍💼 أدوات اختيار المندوب في التقارير — عرض وفلترة فقط، لا علاقة لها بأي حساب
+// ═══════════════════════════════════════════════════════════
+// ═══ اسم الشركة — مصدر واحد لكل الشاشات والتقارير ═══
+function coName(){ return (C.settings.company||'').trim() || 'Rikaz Pro'; }
+function applyCompanyName(){
+  document.querySelectorAll('.js-company').forEach(el=>{ el.textContent=(C.settings.company||'').trim(); });
+  document.title = (C.settings.company||'').trim() ? ('Rikaz Pro — '+coName()) : 'Rikaz Pro';
+}
+// ═══════════════════════════════════════════════════════════════════════
+//  بيئة تشغيل ملف الترخيص الأصلي (license.cjs) داخل المتصفح بدون أي تعديل عليه
+//  الملف الأصلي مكتوب لـ Node.js ويستخدم require('crypto') و require('os') و Buffer.
+//  هنا نوفّر نفس الواجهات المستخدمة فقط (SHA-256 + التحقق بتوقيع Ed25519 + Buffer مبسّط)
+//  بتنفيذ متزامن بجافاسكريبت صرف، وقد اختُبر مقابل Node الحقيقي.
+// ═══════════════════════════════════════════════════════════════════════
+const RikazLicShim = (function(){
+  'use strict';
+  // ── ثوابت SHA-2 تُحسب بدقة من الجذور (BigInt) بدل كتابتها يدوياً ──
+  const primes=[]; for(let n=2;primes.length<80;n++){ let ok=true; for(const p of primes){ if(p*p>n)break; if(n%p===0){ok=false;break;} } if(ok)primes.push(n); }
+  const isqrt=n=>{ if(n<2n)return n; let x=1n<<BigInt((n.toString(2).length>>1)+1); for(;;){ const y=(x+n/x)>>1n; if(y>=x)return x; x=y; } };
+  const icbrt=n=>{ let lo=0n, hi=1n<<BigInt((n.toString(2).length/3|0)+2); while(lo<hi){ const m=(lo+hi+1n)>>1n; if(m*m*m<=n)lo=m; else hi=m-1n; } return lo; };
+  const M32=(1n<<32n)-1n, M64=(1n<<64n)-1n;
+  const K256=primes.slice(0,64).map(p=>Number(icbrt(BigInt(p)<<96n)&M32));
+  const H256=primes.slice(0,8).map(p=>Number(isqrt(BigInt(p)<<64n)&M32));
+  const K512=primes.slice(0,80).map(p=>icbrt(BigInt(p)<<192n)&M64);
+  const H512=primes.slice(0,8).map(p=>isqrt(BigInt(p)<<128n)&M64);
+
+  function toBytes(x){ if(x instanceof Uint8Array)return x; if(typeof x==='string')return new TextEncoder().encode(x); return new Uint8Array(x); }
+
+  function sha256(input){
+    const msg=toBytes(input), l=msg.length, padLen=(l+9+63)&~63, buf=new Uint8Array(padLen);
+    buf.set(msg); buf[l]=0x80; const dv=new DataView(buf.buffer);
+    dv.setUint32(padLen-8,Math.floor(l*8/0x100000000)); dv.setUint32(padLen-4,(l*8)>>>0);
+    const H=Uint32Array.from(H256), w=new Uint32Array(64);
+    for(let off=0;off<padLen;off+=64){
+      for(let i=0;i<16;i++) w[i]=dv.getUint32(off+i*4);
+      for(let i=16;i<64;i++){ const a=w[i-15], b=w[i-2];
+        const s0=((a>>>7)|(a<<25))^((a>>>18)|(a<<14))^(a>>>3), s1=((b>>>17)|(b<<15))^((b>>>19)|(b<<13))^(b>>>10);
+        w[i]=(w[i-16]+s0+w[i-7]+s1)|0; }
+      let a=H[0],b=H[1],c=H[2],d=H[3],e=H[4],f=H[5],g=H[6],h=H[7];
+      for(let i=0;i<64;i++){
+        const S1=((e>>>6)|(e<<26))^((e>>>11)|(e<<21))^((e>>>25)|(e<<7)), ch=(e&f)^(~e&g);
+        const t1=(h+S1+ch+K256[i]+w[i])|0;
+        const S0=((a>>>2)|(a<<30))^((a>>>13)|(a<<19))^((a>>>22)|(a<<10)), mj=(a&b)^(a&c)^(b&c);
+        const t2=(S0+mj)|0; h=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0; }
+      H[0]=(H[0]+a)|0;H[1]=(H[1]+b)|0;H[2]=(H[2]+c)|0;H[3]=(H[3]+d)|0;H[4]=(H[4]+e)|0;H[5]=(H[5]+f)|0;H[6]=(H[6]+g)|0;H[7]=(H[7]+h)|0; }
+    const out=new Uint8Array(32), odv=new DataView(out.buffer); for(let i=0;i<8;i++) odv.setUint32(i*4,H[i]>>>0); return out;
+  }
+
+  function sha512(input){
+    const msg=toBytes(input), l=msg.length, padLen=(l+17+127)&~127, buf=new Uint8Array(padLen);
+    buf.set(msg); buf[l]=0x80; const dv=new DataView(buf.buffer); dv.setBigUint64(padLen-8,BigInt(l)*8n);
+    const rotr=(x,n)=>((x>>n)|(x<<(64n-n)))&M64; const H=H512.slice(), w=new Array(80);
+    for(let off=0;off<padLen;off+=128){
+      for(let i=0;i<16;i++) w[i]=dv.getBigUint64(off+i*8);
+      for(let i=16;i<80;i++){ const a=w[i-15], b=w[i-2];
+        const s0=rotr(a,1n)^rotr(a,8n)^(a>>7n), s1=rotr(b,19n)^rotr(b,61n)^(b>>6n);
+        w[i]=(w[i-16]+s0+w[i-7]+s1)&M64; }
+      let [a,b,c,d,e,f,g,h]=H;
+      for(let i=0;i<80;i++){
+        const S1=rotr(e,14n)^rotr(e,18n)^rotr(e,41n), ch=(e&f)^((~e&M64)&g), t1=(h+S1+ch+K512[i]+w[i])&M64;
+        const S0=rotr(a,28n)^rotr(a,34n)^rotr(a,39n), mj=(a&b)^(a&c)^(b&c), t2=(S0+mj)&M64;
+        h=g;g=f;f=e;e=(d+t1)&M64;d=c;c=b;b=a;a=(t1+t2)&M64; }
+      const v=[a,b,c,d,e,f,g,h]; for(let i=0;i<8;i++) H[i]=(H[i]+v[i])&M64; }
+    const out=new Uint8Array(64), odv=new DataView(out.buffer); for(let i=0;i<8;i++) odv.setBigUint64(i*8,H[i]); return out;
+  }
+
+  // ── Ed25519 (RFC 8032) — تحقق فقط ──
+  const P=(1n<<255n)-19n, L=(1n<<252n)+27742317777372353535851937790883648493n;
+  const mod=(a)=>{ const r=a%P; return r>=0n?r:r+P; };
+  const pow=(b,e,m)=>{ let r=1n; b%=m; while(e>0n){ if(e&1n) r=r*b%m; b=b*b%m; e>>=1n; } return r; };
+  const inv=a=>pow(mod(a),P-2n,P);
+  const D=mod(-121665n*inv(121666n)), D2=mod(2n*D), SQRTM1=pow(2n,(P-1n)/4n,P);
+  function recoverX(y,sign){
+    const y2=mod(y*y), x2=mod((y2-1n)*inv(D*y2+1n)); if(x2===0n) return sign?null:0n;
+    let x=pow(x2,(P+3n)/8n,P); if(mod(x*x-x2)!==0n) x=mod(x*SQRTM1); if(mod(x*x-x2)!==0n) return null;
+    if(Number(x&1n)!==sign) x=P-x; return x; }
+  const BY=mod(4n*inv(5n)), BX=recoverX(BY,0), BASE=[BX,BY,1n,mod(BX*BY)];
+  const ZERO=[0n,1n,1n,0n];
+  function add(p,q){
+    const A=mod((p[1]-p[0])*(q[1]-q[0])), B=mod((p[1]+p[0])*(q[1]+q[0])), C=mod(p[3]*D2*q[3]), Dd=mod(2n*p[2]*q[2]);
+    const E=B-A, F=Dd-C, G=Dd+C, H=B+A; return [mod(E*F),mod(G*H),mod(F*G),mod(E*H)]; }
+  function mul(k,pt){ let r=ZERO, a=pt; while(k>0n){ if(k&1n) r=add(r,a); a=add(a,a); k>>=1n; } return r; }
+  const leToBig=b=>{ let n=0n; for(let i=b.length-1;i>=0;i--) n=(n<<8n)|BigInt(b[i]); return n; };
+  function encode(pt){ const zi=inv(pt[2]), x=mod(pt[0]*zi), y=mod(pt[1]*zi); let n=y|((x&1n)<<255n); const o=new Uint8Array(32); for(let i=0;i<32;i++){ o[i]=Number(n&0xffn); n>>=8n; } return o; }
+  function decode(b){ if(b.length!==32) return null; const c=Uint8Array.from(b); const sign=c[31]>>7; c[31]&=0x7f; const y=leToBig(c); if(y>=P) return null; const x=recoverX(y,sign); if(x===null) return null; return [x,y,1n,mod(x*y)]; }
+  function ed25519Verify(sig,msg,pub){
+    if(sig.length!==64||pub.length!==32) return false;
+    const A=decode(pub); if(!A) return false;
+    const R=sig.slice(0,32), S=leToBig(sig.slice(32)); if(S>=L) return false;
+    const hIn=new Uint8Array(32+32+msg.length); hIn.set(R,0); hIn.set(pub,32); hIn.set(msg,64);
+    const h=leToBig(sha512(hIn))%L;
+    const Rp=add(mul(S,BASE),mul((L-h)%L,A)); const enc=encode(Rp);
+    for(let i=0;i<32;i++) if(enc[i]!==R[i]) return false; return true; }
+
+  // ── Buffer مبسّط (الاستخدامات في ملف الترخيص فقط) ──
+  const B64='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+  const B64V=(()=>{ const m={}; for(let i=0;i<64;i++) m[B64[i]]=i; m['-']=62; m['_']=63; return m; })();
+  function b64decode(s){ const out=[]; let acc=0,bits=0; for(const ch of String(s)){ if(ch==='=') break; const v=B64V[ch]; if(v===undefined) continue; acc=(acc<<6)|v; bits+=6; if(bits>=8){ bits-=8; out.push((acc>>bits)&0xff); acc&=(1<<bits)-1; } } return Uint8Array.from(out); }
+  function b64encode(u){ let s='',i=0; for(;i+2<u.length;i+=3){ const n=(u[i]<<16)|(u[i+1]<<8)|u[i+2]; s+=B64[n>>18]+B64[(n>>12)&63]+B64[(n>>6)&63]+B64[n&63]; } if(i<u.length){ const n=(u[i]<<16)|((u[i+1]||0)<<8); s+=B64[n>>18]+B64[(n>>12)&63]+(i+1<u.length?B64[(n>>6)&63]:'=')+'='; } return s; }
+  class Buf extends Uint8Array {
+    static from(v,enc){ if(typeof v==='string'){ if(enc==='base64url'||enc==='base64') return new Buf(b64decode(v)); if(enc==='hex'){ const o=[]; for(let i=0;i+1<v.length;i+=2) o.push(parseInt(v.substr(i,2),16)); return new Buf(o); } return new Buf(new TextEncoder().encode(v)); } return new Buf(v); }
+    toString(enc){ if(enc==='hex') return Array.from(this,x=>x.toString(16).padStart(2,'0')).join(''); if(enc==='base64') return b64encode(this); if(enc==='base64url') return b64encode(this).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); return new TextDecoder('utf-8').decode(this); }
+  }
+
+  function pemToRawEd25519(pem){
+    const b64=String(pem).replace(/-----[^-]+-----/g,'').replace(/\s+/g,''); const der=b64decode(b64);
+    const prefix=[0x30,0x2a,0x30,0x05,0x06,0x03,0x2b,0x65,0x70,0x03,0x21,0x00];
+    if(der.length!==44||prefix.some((v,i)=>der[i]!==v)) throw new Error('unsupported key');
+    return der.slice(12); }
+
+  const cryptoShim={
+    createHash(alg){ if(alg!=='sha256') throw new Error('unsupported hash'); const chunks=[];
+      const h={ update(d){ chunks.push(toBytes(d)); return h; }, digest(enc){ const tot=chunks.reduce((s,c)=>s+c.length,0), all=new Uint8Array(tot); let o=0; for(const c of chunks){ all.set(c,o); o+=c.length; } const out=new Buf(sha256(all)); return enc?out.toString(enc):out; } }; return h; },
+    verify(alg,data,key,sig){ if(alg!==null&&alg!==undefined) throw new Error('unsupported algorithm'); return ed25519Verify(toBytes(sig),toBytes(data),pemToRawEd25519(key)); }
+  };
+  const osShim={ hostname:()=>'rikaz-webview', platform:()=>'win32', arch:()=>'x64', cpus:()=>[{model:'unknown'}], totalmem:()=>0 };
+  const requireShim=name=>{ if(name==='crypto') return cryptoShim; if(name==='os') return osShim; throw new Error('module not available: '+name); };
+
+  // تشغيل نص ملف الترخيص كما هو (بدون أي تعديل) وإرجاع ما يصدّره
+  function loadLicenseModule(source){
+    const module={exports:{}};
+    new Function('require','module','exports','Buffer',source)(requireShim,module,module.exports,Buf);
+    return module.exports;
+  }
+  return { loadLicenseModule, sha256, sha512, ed25519Verify, Buf };
+})();
+
+// ═══════════════════════════════════════════════════════════════════════
+//  🔑 نظام التفعيل — فترة تجريبية 30 يوماً + كود تفعيل موقّع رقمياً (Ed25519)
+//  • ملف الترخيص الأصلي (license.cjs) يُدمج عند البناء ويعمل كما هو بدون أي تعديل.
+//  • بيانات الترخيص في مخزن مستقل 'license' (لا يدخل النسخ الاحتياطي ولا يُمسح بـ"مسح كل البيانات")
+//    مع نسخة مرآة في localStorage — فلا تُصفَّر الفترة التجريبية بمسح أحدهما فقط.
+//  • بعد انتهاء الفترة تُقفل كل الصفحات ما عدا الإعدادات (فيها التفعيل وبصمة الجهاز).
+//  • مستقل تماماً عن الحسابات: لا يقرأ ولا يكتب أي رصيد أو فاتورة.
+// ═══════════════════════════════════════════════════════════════════════
+const LIC_TRIAL_DAYS = 30;
+const LIC_LS_KEY = 'rikazLic_v1';
+const LIC_DAY = 86400000;
+let LICREC = null, LICMOD = null, LICMOD_ERR = '', LICSTATE = null, LIC_SIG = '';
+const LIC_CACHE = new Map();
+
+function licHex32(){ const a=new Uint8Array(16); crypto.getRandomValues(a); return Array.from(a,b=>b.toString(16).padStart(2,'0')).join('').toUpperCase(); }
+
+// تحميل ملف الترخيص الأصلي كما هو من النص المدمج وقت البناء
+function licLoadMod(){
+  if(LICMOD||LICMOD_ERR) return LICMOD;
+  try{
+    const src=document.getElementById('licenseFileSource')?.textContent||'';
+    const m=RikazLicShim.loadLicenseModule(src);
+    if(!m||typeof m.verifyLicenseCode!=='function'||!m.PRODUCT_ID) throw new Error('ملف الترخيص غير مدمج في هذه النسخة');
+    LICMOD=m;
+  }catch(e){ LICMOD_ERR=String(e&&e.message||e); }
+  return LICMOD;
+}
+
+async function licPersist(){
+  if(!LICREC) return;
+  try{ await idbPut('license',Object.assign({id:'main'},LICREC)); }catch(e){ console.warn('[LIC] db',e); }
+  try{ localStorage.setItem(LIC_LS_KEY,JSON.stringify(LICREC)); }catch(e){}
+}
+
+async function licInit(){
+  try{
+    let rec=null, ls=null;
+    try{ rec=await idbGet('license','main'); }catch(e){}
+    try{ ls=JSON.parse(localStorage.getItem(LIC_LS_KEY)||'null'); }catch(e){}
+    const num=v=>(Number.isFinite(v)&&v>0)?v:null;
+    const base=rec||ls||{};
+    const starts=[num(rec&&rec.trialStart),num(ls&&ls.trialStart)].filter(Boolean);
+    const now=Date.now();
+    const id=(base.installId&&/^[0-9A-F]{32}$/.test(base.installId))?base.installId:licHex32();
+    LICREC={
+      installId:id,
+      trialStart:starts.length?Math.min(...starts):now,                       // أقدم تاريخ بداية بين المصدرين
+      lastSeen:Math.max(num(rec&&rec.lastSeen)||0,num(ls&&ls.lastSeen)||0),    // أحدث وقت شوهد (حماية من إرجاع الساعة)
+      code:base.code||((ls&&ls.installId===id&&ls.code)?ls.code:''),
+      activatedAt:base.activatedAt||0
+    };
+    LICREC.lastSeen=Math.max(LICREC.lastSeen,now);
+    await licPersist();
+  }catch(e){
+    console.warn('[LIC] init',e);
+    if(!LICREC) LICREC={installId:licHex32(),trialStart:Date.now(),lastSeen:Date.now(),code:'',activatedAt:0};
+  }
+  licLoadMod(); licRefreshUI();
+}
+
+function licVerify(code,mid){
+  const mod=licLoadMod(); if(!mod) return {valid:false,message:'ملف الترخيص غير مُدمج في هذه النسخة'};
+  const key=mid+'|'+code; if(LIC_CACHE.has(key)) return LIC_CACHE.get(key);
+  let r; try{ r=mod.verifyLicenseCode(code,mid); }catch(e){ r={valid:false,message:'تعذّر فحص كود التفعيل'}; }
+  LIC_CACHE.set(key,r); return r;
+}
+
+// تقييم الحالة (متزامن) — لا يغيّر أي بيانات
+function licEvaluate(){
+  const rec=LICREC||{installId:'',trialStart:Date.now(),lastSeen:Date.now(),code:''};
+  const now=Math.max(Date.now(),rec.lastSeen||0);                 // الوقت الفعلي المعتمد: لا يرجع للخلف أبداً
+  const trialEnd=rec.trialStart+LIC_TRIAL_DAYS*LIC_DAY;
+  const s={ fingerprint:rec.installId, trialEnd, trialLeft:Math.max(0,Math.ceil((trialEnd-now)/LIC_DAY)),
+            trialActive:now<trialEnd, mode:'trial', locked:false, type:null, expiresAt:null, daysLeft:null, message:'', codeProblem:'', error:LICMOD_ERR, activatedAt:rec.activatedAt||0 };
+  const mod=licLoadMod();
+  if(!mod){ s.mode='error'; s.error=LICMOD_ERR||'ملف الترخيص غير مُدمج'; return s; }   // لا نقفل العميل بسبب خلل فني
+  if(rec.code){
+    const r=licVerify(rec.code,rec.installId);
+    if(r.valid && r.expiresAt && Date.parse(r.expiresAt)<now) { s.codeProblem='انتهت صلاحية الترخيص'; }
+    else if(r.valid){
+      s.mode='activated'; s.type=r.type; s.message=r.message;
+      if(r.expiresAt){ s.expiresAt=r.expiresAt; s.daysLeft=Math.max(0,Math.ceil((Date.parse(r.expiresAt)-now)/LIC_DAY)); }
+      return s;
+    } else s.codeProblem=r.message;
+  }
+  if(s.trialActive){ s.mode='trial'; return s; }
+  s.mode='expired'; s.locked=true; return s;
+}
+function licLocked(){ return !!(LICSTATE&&LICSTATE.locked); }
+const licDate=ms=>new Date(ms).toLocaleDateString('ar-EG',{year:'numeric',month:'2-digit',day:'2-digit'});
+
+function licRefreshUI(){
+  LICSTATE=licEvaluate(); const s=LICSTATE;
+  document.body.classList.toggle('lic-locked',s.locked);
+  const chip=document.getElementById('licChip');
+  if(chip){
+    let txt,cls='';
+    if(s.mode==='trial'){ txt='⏳ تجريبي — متبقي '+s.trialLeft+' يوم'; cls=s.trialLeft<=7?'lic-warn':'lic-trial'; }
+    else if(s.mode==='activated'){ txt=s.daysLeft===null?'✅ مُفعّل — ترخيص دائم':'✅ مُفعّل — متبقي '+s.daysLeft+' يوم'; cls='lic-ok'; }
+    else if(s.mode==='expired'){ txt='🔒 انتهت الفترة التجريبية — اضغط للتفعيل'; cls='lic-expired'; }
+    else { txt='⚠️ الترخيص غير متاح'; cls='lic-warn'; }
+    chip.textContent=txt; chip.className='lic-chip '+cls;
+  }
+  const line=document.getElementById('licLoginLine');
+  if(line){
+    line.className='lic-login-line '+(s.mode==='expired'?'lic-expired':s.mode==='activated'?'lic-ok':'lic-trial');
+    line.textContent = s.mode==='trial' ? ('⏳ فترة تجريبية — متبقي '+s.trialLeft+' يوم')
+      : s.mode==='activated' ? ('✅ '+(s.daysLeft===null?'مُفعّل — ترخيص دائم':'مُفعّل — متبقي '+s.daysLeft+' يوم'))
+      : s.mode==='expired' ? '🔒 انتهت الفترة التجريبية — سجّل الدخول ثم فعّل البرنامج من الإعدادات (أو اضغط الزر أدناه)' : '';
+  }
+  const sig=[s.mode,s.trialLeft,s.daysLeft,s.type,s.codeProblem].join('|');
+  if(sig!==LIC_SIG){ LIC_SIG=sig; ['licPanelSettings','licPanelLogin'].forEach(id=>{ if(document.getElementById(id)) renderLicensePanel(id); }); }
+}
+
+function licMsg(cid,text,ok){ const el=document.getElementById(cid+'_msg'); if(el){ el.className='lic-msg '+(ok?'lic-ok':'lic-bad'); el.textContent=text; } }
+
+function renderLicensePanel(cid){
+  const box=document.getElementById(cid); if(!box) return;
+  const s=licEvaluate();
+  const oldTa=box.querySelector('textarea'); const oldVal=oldTa?oldTa.value:'';
+  let status='';
+  if(s.mode==='trial'){
+    const pct=Math.max(0,Math.min(100,Math.round(s.trialLeft/LIC_TRIAL_DAYS*100)));
+    status=`<div class="lic-status ${s.trialLeft<=7?'lic-warn':'lic-trial'}">
+      <div class="lic-big">⏳ فترة تجريبية — متبقي <b>${s.trialLeft}</b> يوم من ${LIC_TRIAL_DAYS}</div>
+      <div class="lic-bar"><div style="width:${pct}%"></div></div>
+      <div class="lic-sub">تنتهي بتاريخ ${licDate(s.trialEnd)} — يمكنك التفعيل الآن في أي وقت دون انتظار انتهائها.</div></div>`;
+  } else if(s.mode==='activated'){
+    status=`<div class="lic-status lic-ok"><div class="lic-big">✅ البرنامج مُفعّل — ${s.type==='permanent'?'ترخيص دائم':(s.type==='yearly'?'ترخيص سنوي':'ترخيص مؤقت')}</div>
+      <div class="lic-sub">${s.message}${s.daysLeft!==null?' — متبقي <b>'+s.daysLeft+'</b> يوم':''}${s.activatedAt?' — تاريخ التفعيل '+licDate(s.activatedAt):''}</div></div>`;
+  } else if(s.mode==='expired'){
+    status=`<div class="lic-status lic-expired"><div class="lic-big">🔒 انتهت الفترة التجريبية</div>
+      <div class="lic-sub">البرنامج متوقف حالياً ولا تعمل إلا هذه الصفحة. أرسل بصمة الجهاز أدناه إلى المطوّر، ثم الصق كود التفعيل الذي يصلك.</div></div>`;
+  } else {
+    status=`<div class="lic-status lic-warn"><div class="lic-big">⚠️ ملف الترخيص غير متاح في هذه النسخة</div><div class="lic-sub">${s.error||''} — تواصل مع المطوّر.</div></div>`;
+  }
+  const problem=s.codeProblem?`<div class="lic-msg lic-bad">⚠️ كود التفعيل المحفوظ لا يعمل حالياً: ${s.codeProblem}</div>`:'';
+  box.innerHTML=`${status}${problem}
+    <div class="lic-label">🖥️ بصمة الجهاز (انسخها وأرسلها للمطوّر)</div>
+    <div class="lic-fp-row">
+      <input class="fc lic-fp" id="${cid}_fp" readonly value="${s.fingerprint}" onclick="this.select()" dir="ltr">
+      <button class="btn bb" onclick="licCopyFp('${cid}')">📋 نسخ البصمة</button>
+    </div>
+    <div class="lic-label">🔑 كود التفعيل ${s.mode==='activated'?'(لإدخال كود جديد عند التجديد)':''}</div>
+    <textarea class="fc lic-code" id="${cid}_code" rows="4" dir="ltr" spellcheck="false" placeholder="الصق كود التفعيل هنا ... AGRI2.xxxxx.xxxxx"></textarea>
+    <div class="br"><button class="btn bg" onclick="licActivate('${cid}')">✅ تفعيل البرنامج</button></div>
+    <div class="lic-msg" id="${cid}_msg"></div>`;
+  const ta=document.getElementById(cid+'_code'); if(ta&&oldVal) ta.value=oldVal;
+}
+
+async function licCopyFp(cid){
+  const v=LICREC?LICREC.installId:''; let ok=false;
+  try{ await navigator.clipboard.writeText(v); ok=true; }catch(e){}
+  if(!ok){ const el=document.getElementById(cid+'_fp'); if(el){ el.removeAttribute('readonly'); el.select(); try{ ok=document.execCommand('copy'); }catch(e){} el.setAttribute('readonly',''); } }
+  licMsg(cid, ok?'✅ تم نسخ بصمة الجهاز — يمكنك لصقها وإرسالها':'⚠️ تعذّر النسخ التلقائي — البصمة محدّدة، اضغط Ctrl+C', ok);
+}
+
+async function licActivate(cid){
+  const ta=document.getElementById(cid+'_code'); const raw=(ta&&ta.value||'').trim();
+  if(!raw) return licMsg(cid,'❌ الصق كود التفعيل أولاً',false);
+  if(!licLoadMod()) return licMsg(cid,'❌ ملف الترخيص غير مُدمج في هذه النسخة — تواصل مع المطوّر',false);
+  const r=licVerify(raw,LICREC.installId);
+  if(!r.valid) return licMsg(cid,'❌ '+r.message,false);
+  if(r.expiresAt && Date.parse(r.expiresAt)<Math.max(Date.now(),LICREC.lastSeen)) return licMsg(cid,'❌ انتهت صلاحية هذا الكود',false);
+  LICREC.code=raw.replace(/\s+/g,''); LICREC.activatedAt=Date.now();
+  await licPersist();
+  LIC_SIG=''; licRefreshUI();
+  licMsg(cid,'✅ تم التفعيل بنجاح — '+r.message,true);
+  try{ showToast('✅ تم تفعيل البرنامج — '+r.message); }catch(e){}
+}
+
+function licOpenSettings(){ go('settings',document.getElementById('sb-settings')); setTimeout(()=>document.getElementById('licCardSettings')?.scrollIntoView({behavior:'smooth',block:'start'}),120); }
+function licOpenModal(){ renderLicensePanel('licPanelLogin'); openModal('licModal'); }
+
+// تطبيق القفل: عند الانتهاء لا تعمل إلا صفحة الإعدادات
+function licEnforce(){
+  licRefreshUI();
+  if(licLocked()){
+    const cur=document.querySelector('.page.active');
+    if(!cur||cur.id!=='page-settings') go('settings',document.getElementById('sb-settings'));
+  }
+}
+let _licTimer=null, _licTicks=0;
+function licStartTicker(){
+  if(_licTimer) return;
+  _licTimer=setInterval(()=>{
+    if(LICREC){ const now=Date.now(); if(now>LICREC.lastSeen){ LICREC.lastSeen=now; if((++_licTicks)%10===0) licPersist(); } }
+    const wasLocked=licLocked(); licEnforce();
+    if(!wasLocked&&licLocked()){ try{ showToast('🔒 انتهت الفترة التجريبية — فعّل البرنامج من الإعدادات'); }catch(e){} licPersist(); }
+  },60000);
+}
+
+function repDlId(selId){ return parseInt(document.getElementById(selId)?.value)||null; }
+function repDlLabel(did){
+  if(!did) return '';
+  const d=C.delegates.find(x=>x.id===did); if(!d) return '';
+  return `<div style="font-weight:700;margin:0 0 10px">🧑‍💼 المندوب: <b>${d.name}</b></div>`;
 }
 
 // إجمالي المديونيات
@@ -2251,7 +2663,7 @@ async function deleteOrphanInvoice(id){
 const C = {
   clients:[], products:[], delegates:[],
   settings:{
-    company:'روزيتا المتحدة للمبيدات الزراعية',
+    company:'',
     address:'', phone:'', commRate:3, logo:'',
     adminUser:'admin', adminPass:'1234',
     lastBackup:null, invPrefix:'INV',
@@ -2259,64 +2671,6 @@ const C = {
     nextClId:1, nextPrId:1, nextDlId:1
   }
 };
-
-// ═══════════════════════════════════════════════════════════
-//  قائمة الأصناف الرسمية المعتمدة — مقسمة حسب نوع الصنف
-//  مغذي: 38 صنف | حشري وفطري: 11 صنف
-// ═══════════════════════════════════════════════════════════
-const DEFAULT_PRODUCTS = [
-  // ── مغذي (38 صنف) ───────────────────────────────────────
-  {name:'سيترافيد بلس',    itemType:'مغذي'},
-  {name:'سيترافيد',        itemType:'مغذي'},
-  {name:'فروتنج',          itemType:'مغذي'},
-  {name:'سترا جراند',      itemType:'مغذي'},
-  {name:'جولد',            itemType:'مغذي'},
-  {name:'بوتاسترونج',      itemType:'مغذي'},
-  {name:'بوت أسيل',        itemType:'مغذي'},
-  {name:'اكسترا كالبور',   itemType:'مغذي'},
-  {name:'فرست كال',        itemType:'مغذي'},
-  {name:'هاي كال',         itemType:'مغذي'},
-  {name:'بور كالماج',      itemType:'مغذي'},
-  {name:'روسال',           itemType:'مغذي'},
-  {name:'التراسال',        itemType:'مغذي'},
-  {name:'انتي سال',        itemType:'مغذي'},
-  {name:'تيراسول',         itemType:'مغذي'},
-  {name:'ساليفور',         itemType:'مغذي'},
-  {name:'فوسفاتين',        itemType:'مغذي'},
-  {name:'فلوراسيون',       itemType:'مغذي'},
-  {name:'فوكسين',          itemType:'مغذي'},
-  {name:'فلور زنك',        itemType:'مغذي'},
-  {name:'ماجنفيكو',        itemType:'مغذي'},
-  {name:'لارجست',          itemType:'مغذي'},
-  {name:'نتروماج',         itemType:'مغذي'},
-  {name:'جراند كال',       itemType:'مغذي'},
-  {name:'فيرا مكس',        itemType:'مغذي'},
-  {name:'انزيمات',         itemType:'مغذي'},
-  {name:'الجابور',         itemType:'مغذي'},
-  {name:'كروبنج',          itemType:'مغذي'},
-  {name:'الجامارا',        itemType:'مغذي'},
-  {name:'سي ويد',          itemType:'مغذي'},
-  {name:'جاست روت',        itemType:'مغذي'},
-  {name:'حديد 6%',         itemType:'مغذي'},
-  {name:'حديد 15%',        itemType:'مغذي'},
-  {name:'زنك',             itemType:'مغذي'},
-  {name:'منجنيز',          itemType:'مغذي'},
-  {name:'اجرينو',          itemType:'مغذي'},
-  {name:'تيرا بور',        itemType:'مغذي'},
-  {name:'اكوا سالفون',     itemType:'مغذي'},
-  // ── حشري وفطري (11 صنف) ─────────────────────────────────
-  {name:'اميدا كلوبرايد',  itemType:'حشري وفطري'},
-  {name:'لمبادا 5%',       itemType:'حشري وفطري'},
-  {name:'كين',             itemType:'حشري وفطري'},
-  {name:'رومكتين',         itemType:'حشري وفطري'},
-  {name:'فيتانيم',         itemType:'حشري وفطري'},
-  {name:'انتي نيم',        itemType:'حشري وفطري'},
-  {name:'بروتكت فورنيم',   itemType:'حشري وفطري'},
-  {name:'نيماثيون',        itemType:'حشري وفطري'},
-  {name:'شيتوكوبر',        itemType:'حشري وفطري'},
-  {name:'كوبرا سيد',       itemType:'حشري وفطري'},
-  {name:'كال كوبرا',       itemType:'حشري وفطري'},
-];
 
 // ═══════════════════════════════════════════════════════════
 //  HELPERS
@@ -2418,22 +2772,31 @@ function doLogout() {
 // ═══════════════════════════════════════════════════════════
 async function exportCSV(type) {
   let rows=[], headers=[], filename='';
+  const cell=v=> v===undefined||v===null ? '' : (typeof v==='object' ? JSON.stringify(v) : v);
+  const isoTime=t=> t ? new Date(t).toISOString().replace('T',' ').slice(0,19) : '';
+  const fmtItems=items=>(items||[]).map(it=>`${it.prodName||'—'}${it.itemType?' ['+it.itemType+']':''} | ${it.qty} × ${it.price} = ${it.total}`).join(' ؛ ');
+  // أي حقل إضافي مخزّن في السجل ولم يُذكر في الأعمدة المعروفة يُضاف تلقائياً في آخر الجدول — حتى لا يُفقد أي شيء
+  const extraKeys=(recs,known)=>{ const ks=new Set(); recs.forEach(r=>Object.keys(r).forEach(k=>{ if(!known.includes(k)) ks.add(k); })); return [...ks].sort(); };
   if (type==='invoices') {
     const invs = await idbAll('invoices'); invs.sort((a,b)=>a.num-b.num);
-    headers=['رقم الفاتورة','المرجع','التاريخ','العميل','خط السير','المندوب','الإجمالي','المدفوع','المتبقي','الحالة'];
+    const extra=extraKeys(invs,['id','num','refNum','date','clientId','delegateId','route','net','paid','remain','items','createdAt']);
+    headers=['رقم الفاتورة','المرجع','التاريخ','العميل','خط السير','المندوب','الإجمالي','المدفوع','المتبقي','الحالة','وقت الإدخال','المعرّف الداخلي','كود العميل','كود المندوب','عدد البنود','تفاصيل البنود',...extra];
     rows=invs.map(i=>{
       const cl=C.clients.find(c=>c.id===i.clientId); const dl=C.delegates.find(d=>d.id===i.delegateId);
-      return ['INV-'+i.num,i.refNum||'',i.date,cl?cl.name:'—',i.route||'—',dl?dl.name:'—',i.net,i.paid,i.remain,i.remain<=0?'مسدد':i.paid>0?'جزئي':'آجل'];
+      return ['INV-'+i.num,i.refNum||'',i.date,cl?cl.name:'—',i.route||'—',dl?dl.name:'—',i.net,i.paid,i.remain,i.remain<=0?'مسدد':i.paid>0?'جزئي':'آجل',
+              isoTime(i.createdAt),cell(i.id),cell(i.clientId),cell(i.delegateId),(i.items||[]).length,fmtItems(i.items),...extra.map(k=>cell(i[k]))];
     });
-    filename='rosetta_invoices_'+td()+'.csv';
+    filename='rikaz_invoices_'+td()+'.csv';
   } else if (type==='returns') {
     const rets = await idbAll('returns'); rets.sort((a,b)=>a.num-b.num);
-    headers=['رقم المرتجع','التاريخ','العميل','خط السير','المندوب','إجمالي المرتجع','السبب'];
+    const extra=extraKeys(rets,['id','num','date','clientId','delegateId','route','total','reason','items','createdAt']);
+    headers=['رقم المرتجع','التاريخ','العميل','خط السير','المندوب','إجمالي المرتجع','السبب','وقت الإدخال','المعرّف الداخلي','كود العميل','كود المندوب','عدد البنود','تفاصيل البنود',...extra];
     rows=rets.map(r=>{
       const cl=C.clients.find(c=>c.id===r.clientId); const dl=C.delegates.find(d=>d.id===r.delegateId);
-      return ['RET-'+r.num,r.date,cl?cl.name:'—',r.route||'—',dl?dl.name:'—',r.total,r.reason||''];
+      return ['RET-'+r.num,r.date,cl?cl.name:'—',r.route||'—',dl?dl.name:'—',r.total,r.reason||'',
+              isoTime(r.createdAt),cell(r.id),cell(r.clientId),cell(r.delegateId),(r.items||[]).length,fmtItems(r.items),...extra.map(k=>cell(r[k]))];
     });
-    filename='rosetta_returns_'+td()+'.csv';
+    filename='rikaz_returns_'+td()+'.csv';
   }
   const BOM='\uFEFF';
   const csv=BOM+[headers,...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
@@ -2456,19 +2819,22 @@ async function boot() {
     prog(35,'تحميل بيانات النظام...');
     const [cls,prs,dls,settings]=await Promise.all([idbAll('clients'),idbAll('products'),idbAll('delegates'),idbGetSettings()]);
     // استخدام علامة seeded بدلاً من فحص المندوبين — لضمان عدم حذف بيانات المستخدم
+    if (settings) Object.assign(C.settings,settings);   // أولاً: حتى لا تُكتب القيم الافتراضية فوق الإعدادات المخزّنة
     if (!settings || !settings.seeded) {
-      prog(50,'تهيئة الأصناف الافتراضية...');
+      prog(50,'تهيئة النسخة...');
       await seedDefault();
       const [c2,p2,d2]=await Promise.all([idbAll('clients'),idbAll('products'),idbAll('delegates')]);
       C.clients=c2; C.products=p2; C.delegates=d2;
     } else { C.clients=cls; C.products=prs; C.delegates=dls; }
-    if (settings) Object.assign(C.settings,settings);
+    applyCompanyName();
     if (!C.settings.nextRetNum) C.settings.nextRetNum=1;
     if (!C.settings.nextFinId) C.settings.nextFinId=1;
     prog(60,'تحميل بيانات الممولين (وحدة مستقلة)...');
     await finLoadAll();
+    await licInit();
     prog(65,'بناء ذاكرة الأرصدة (شامل المرتجعات)...');
     await rebuildAllBalances();
+    setTimeout(autoBackupKickoff,8000);   // نسخة تلقائية يومية (مرة واحدة فقط في اليوم) بعد اكتمال التحميل
     prog(85,'فحص سلامة البيانات...');
     loadHCLog();
     await runHealthCheck(true);
@@ -2483,30 +2849,16 @@ async function boot() {
 }
 
 async function seedDefault() {
-  // ✅ لا توجد بيانات تجريبية — فقط الأصناف الرسمية المعتمدة
-  // المستخدم يستورد بيانات المندوبين والعملاء الحقيقية من ملف النسخة الاحتياطية
-  const products = DEFAULT_PRODUCTS.map((p,i) => ({
-    id: i+1,
-    name: p.name,
-    itemType: p.itemType,  // نوع الصنف الرسمي
-    unit: 'لتر',
-    price: 0,
-    costPrice: 0,
-    stock: 0,
-    notes: ''
-  }));
-  C.settings.nextDlId  = 1;
-  C.settings.nextClId  = 1;
-  C.settings.nextPrId  = DEFAULT_PRODUCTS.length + 1;
-  C.settings.nextRetNum = 1;
-  C.settings.seeded    = true;   // علامة عدم تكرار التهيئة
-  await Promise.all([
-    idbBulk('products', products),
-    idbPutSettings(C.settings)
-  ]);
-  C.delegates = [];
-  C.clients   = [];
-  C.products  = products;
+  // ✅ النسخة تبدأ فارغة تماماً — لا أصناف ولا عملاء ولا مندوبين افتراضية.
+  // ⚠️ هذه الدالة لا تكتب ولا تمسح أي مخزن بيانات إطلاقاً (حفاظاً على أي نسخة قائمة عليها بيانات):
+  //    تضبط فقط العدادات الناقصة وعلامة التهيئة، وتحفظ الإعدادات.
+  const st = C.settings;
+  st.nextDlId   = st.nextDlId   || 1;
+  st.nextClId   = st.nextClId   || 1;
+  st.nextPrId   = st.nextPrId   || 1;
+  st.nextRetNum = st.nextRetNum || 1;
+  st.seeded     = true;   // علامة عدم تكرار التهيئة
+  await idbPutSettings(st);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2525,7 +2877,8 @@ function initApp() {
   playSalawat(); setInterval(playSalawat,5*60*1000);
   updateDbInfo();
   setTimeout(loadDraft,800);
-  setTimeout(checkOverdueAlert,3500);
+  setTimeout(()=>{ if(!licLocked()) checkOverdueAlert(); },3500);
+  licStartTicker(); licEnforce();
 }
 
 function updateClock() {
@@ -2557,6 +2910,7 @@ async function checkOverdueAlert() {
 //  NAVIGATION
 // ═══════════════════════════════════════════════════════════
 function go(name,btn) {
+  if(licLocked() && name!=='settings'){ try{ showToast('🔒 انتهت الفترة التجريبية — فعّل البرنامج من صفحة الإعدادات'); }catch(e){} name='settings'; btn=document.getElementById('sb-settings'); }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sidebar-btn').forEach(b=>b.classList.remove('active'));
   const pg=document.getElementById('page-'+name);
@@ -2582,6 +2936,7 @@ function go(name,btn) {
       fillSel('rRetDl',C.delegates,'id','name','-- الكل --');
       fillSel('rSplitDl',C.delegates,'id','name','-- الكل --');
       updateRouteSelect('rRtRoute','rRtDl'); updateRouteSelect('rLiRoute','rLiDl');
+      fillSel('rPerfDl',C.delegates,'id','name','-- كل المناديب --'); updateRouteSelect('rPerfRoute','rPerfDl');
     },
     settings:  ()=>{ loadSettingsUI(); updateDbInfo(); renderHCLog(); },
     calc:      initCalc
@@ -2614,6 +2969,8 @@ function refreshAllDDs() {
   fillSel('rLiDl',C.delegates,'id','name','-- الكل --');
   fillSel('rRetDl',C.delegates,'id','name','-- الكل --');
   fillSel('rSettleDl',C.delegates,'id','name','-- الكل --');
+  ['rDailyDl','rMonthDl','rClDl','rDlSel','rBsDl','rBalDl'].forEach(id=>fillSel(id,C.delegates,'id','name','-- الكل --'));
+  fillSel('rPerfDl',C.delegates,'id','name','-- كل المناديب --'); updateRouteSelect('rPerfRoute','rPerfDl');
 }
 function refreshInvDDs() { fillSel('invDl',C.delegates,'id','name','-- اختر مندوب --'); }
 
@@ -3205,7 +3562,7 @@ function printInvoice() {
   const co=C.settings; const prefix=co.invPrefix||'INV';
   openPrintWin(`
     <div style="text-align:center;margin-bottom:16px">
-      <div style="font-size:16pt;font-weight:900">${co.company||'روزيتا'}</div>
+      <div style="font-size:16pt;font-weight:900">${coName()}</div>
       ${co.address?`<div style="font-size:9pt;color:#555">${co.address}${co.phone?' — '+co.phone:''}</div>`:''}
       <div style="font-size:13pt;font-weight:700;margin-top:10px;border:2px solid #000;padding:4px 20px;display:inline-block">فاتورة بيع — ${prefix}-${inv.num}</div>
     </div>
@@ -3221,7 +3578,7 @@ function printInvoice() {
       <div style="text-align:center"><div style="font-size:9pt;color:#555">المدفوع</div><div style="font-size:13pt;font-weight:900;color:green">${fmt(inv.paid)}</div></div>
       <div style="text-align:center"><div style="font-size:9pt;color:#555">المتبقي</div><div style="font-size:13pt;font-weight:900;color:red">${fmt(inv.remain)}</div></div>
     </div>
-    <div style="margin-top:20px;text-align:center;font-size:9pt;color:#888">شكراً لتعاملكم معنا — روزيتا المتحدة للمبيدات الزراعية</div>`);
+    <div style="margin-top:20px;text-align:center;font-size:9pt;color:#888">شكراً لتعاملكم معنا — ${coName()}</div>`);
 }
 
 // ── قائمة الفواتير ────────────────────────────────────────
@@ -3534,7 +3891,7 @@ function printReturn() {
   const co=C.settings;
   openPrintWin(`
     <div style="text-align:center;margin-bottom:16px">
-      <div style="font-size:16pt;font-weight:900">${co.company||'روزيتا'}</div>
+      <div style="font-size:16pt;font-weight:900">${coName()}</div>
       ${co.address?`<div style="font-size:9pt;color:#555">${co.address}${co.phone?' — '+co.phone:''}</div>`:''}
       <div style="font-size:13pt;font-weight:700;margin-top:10px;border:2px solid #c00;color:#c00;padding:4px 20px;display:inline-block">إشعار مرتجع — RET-${ret.num}</div>
     </div>
@@ -3552,7 +3909,7 @@ function printReturn() {
     <div style="margin-top:12px;font-size:9pt;color:#888;text-align:center">
       رصيد العميل بعد المرتجع: <b>${fmt(clRemain(ret.clientId))} جنيه</b>
     </div>
-    <div style="margin-top:16px;text-align:center;font-size:9pt;color:#888">روزيتا المتحدة للمبيدات الزراعية — هذا الإشعار يُعدّ وثيقة محاسبية معتمدة</div>`);
+    <div style="margin-top:16px;text-align:center;font-size:9pt;color:#888">${coName()} — هذا الإشعار يُعدّ وثيقة محاسبية معتمدة</div>`);
 }
 
 // ── قائمة المرتجعات ───────────────────────────────────────
@@ -3598,18 +3955,21 @@ async function showStatement() {
   const clId=parseInt(document.getElementById('stmClId').value)||0;
   const from=document.getElementById('stmFrom').value;
   const to=document.getElementById('stmTo').value;
+  const stmDid=repDlId('stmDl');
   const co=C.settings;
   const prefix=co.invPrefix||'INV';
   const stmHead=`<div class="stm-head">
-    <div class="stm-co">${co.company||'روزيتا'}</div>
+    <div class="stm-co">${coName()}</div>
     ${co.address?`<div class="stm-sub">${co.address}${co.phone?' — '+co.phone:''}</div>`:''}
     <div class="stm-period">كشف الحساب${from&&to?` — من ${from} إلى ${to}`:''}</div>
+    ${repDlLabel(stmDid)}
   </div>`;
 
   // ── كشف جميع العملاء ──────────────────────────────────
   if(type==='all'){
     let rows='', totalSales=0, totalRet=0, totalPaid=0, totalAdj=0, frozenDebt=0;
     C.clients.forEach(cl=>{
+      if(stmDid&&cl.delegateId!==stmDid) return;
       const b=BAL.get(cl.id)||{sales:0,paid:0,returns:0,adjustments:0};
       const net=n2(b.sales-(b.returns||0));
       const rem=n2(net-b.paid-(b.adjustments||0));
@@ -3638,7 +3998,7 @@ async function showStatement() {
   const cl=C.clients.find(c=>c.id===clId);
   const dl=C.delegates.find(d=>d.id===cl?.delegateId);
   const clientInfo=`<div class="stm-info">
-    <span><b>العميل:</b> ${cl?.name||'—'}</span>
+    <span><b>العميل:</b> ${cl?.name?('م / '+cl.name):'—'}</span>
     <span><b>المندوب:</b> ${dl?.name||'—'}</span>
     <span><b>خط السير:</b> ${cl?.route||'—'}</span>
     <span><b>الهاتف:</b> ${cl?.phone||'—'}</span>
@@ -3919,7 +4279,7 @@ function renderClients(){
 }
 function printClients(){
   const rows=document.getElementById('clTbody')?.innerHTML||'';
-  openPrintWin(`<h2 style="text-align:center;margin-bottom:14px">قائمة العملاء — ${C.settings.company||'روزيتا'}</h2>
+  openPrintWin(`<h2 style="text-align:center;margin-bottom:14px">قائمة العملاء — ${coName()}</h2>
     <table><thead><tr><th>كود</th><th>الاسم</th><th>الهاتف</th><th>العنوان</th><th>خط السير</th><th>المندوب</th><th>المبيعات</th><th>المرتجعات</th><th>الرصيد</th></tr></thead><tbody>${rows}</tbody></table>`);
 }
 
@@ -4141,13 +4501,14 @@ async function genDaily(){
   const retsAll=await idbRetByDate(date,date);
   const adjsAllRaw=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
   // ✅ استبعاد عملاء القائمة السوداء بالكامل — ديون مجمّدة لا تدخل في أي رقم بالتقرير
-  const invs=invsAll.filter(i=>!C.clients.find(c=>c.id===i.clientId)?.blacklisted);
-  const rets=retsAll.filter(r=>!C.clients.find(c=>c.id===r.clientId)?.blacklisted);
-  const adjsAll=adjsAllRaw.filter(a=>!C.clients.find(c=>c.id===a.clientId)?.blacklisted);
+  const did=repDlId('rDailyDl');
+  const invs=invsAll.filter(i=>!C.clients.find(c=>c.id===i.clientId)?.blacklisted&&(!did||i.delegateId===did));
+  const rets=retsAll.filter(r=>!C.clients.find(c=>c.id===r.clientId)?.blacklisted&&(!did||r.delegateId===did));
+  const adjsAll=adjsAllRaw.filter(a=>!C.clients.find(c=>c.id===a.clientId)?.blacklisted&&(!did||a.delegateId===did));
   const adjs=adjsAll.filter(a=>a.date===date);
   const L=sumLedger(invs, rets, adjs);
   const totalSales=L.sales, totalCollect=L.paid, totalRet=L.returns, totalAdj=L.adjustments, netSales=L.netSales, outstanding=L.remain;
-  let html=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px;font-size:1rem">📅 تقرير يوم ${date} <span style="font-size:.7rem;color:var(--tm);font-weight:400">(بدون القائمة السوداء)</span></div>
+  let html=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px;font-size:1rem">📅 تقرير يوم ${date} <span style="font-size:.7rem;color:var(--tm);font-weight:400">(بدون القائمة السوداء)</span></div>${repDlLabel(did)}
     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px">
       <div style="background:var(--bgc2);border:1px solid var(--brd);border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:.72rem;color:var(--tm);margin-bottom:4px">إجمالي المبيعات</div>
@@ -4207,14 +4568,15 @@ async function genMonthly(){
   const retsAll=await idbRetByDate(from,to);
   const adjsAllRaw=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
   // ✅ استبعاد عملاء القائمة السوداء بالكامل — ديون مجمّدة لا تدخل في أي رقم بالتقرير
-  const invs=invsAll.filter(i=>!C.clients.find(c=>c.id===i.clientId)?.blacklisted);
-  const rets=retsAll.filter(r=>!C.clients.find(c=>c.id===r.clientId)?.blacklisted);
-  const adjsAll=adjsAllRaw.filter(a=>!C.clients.find(c=>c.id===a.clientId)?.blacklisted);
+  const did=repDlId('rMonthDl');
+  const invs=invsAll.filter(i=>!C.clients.find(c=>c.id===i.clientId)?.blacklisted&&(!did||i.delegateId===did));
+  const rets=retsAll.filter(r=>!C.clients.find(c=>c.id===r.clientId)?.blacklisted&&(!did||r.delegateId===did));
+  const adjsAll=adjsAllRaw.filter(a=>!C.clients.find(c=>c.id===a.clientId)?.blacklisted&&(!did||a.delegateId===did));
   const adjs=adjsAll.filter(a=>a.date>=from&&a.date<=to);
   const type=document.getElementById('rMonthType').value;
   const L=sumLedger(invs, rets, adjs);
   const totalSales=L.sales, totalCollect=L.paid, totalRet=L.returns, totalAdj=L.adjustments, netSales=L.netSales, outstanding=L.remain;
-  let html=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">📆 تقرير ${mFrom} إلى ${mTo} <span style="font-size:.7rem;color:var(--tm);font-weight:400">(بدون القائمة السوداء)</span></div>
+  let html=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">📆 تقرير ${mFrom} إلى ${mTo} <span style="font-size:.7rem;color:var(--tm);font-weight:400">(بدون القائمة السوداء)</span></div>${repDlLabel(did)}
     <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:14px">
       <div style="background:var(--bgc2);border:1px solid var(--brd);border-radius:8px;padding:12px;text-align:center">
         <div style="font-size:.72rem;color:var(--tm);margin-bottom:4px">إجمالي المبيعات</div>
@@ -4269,14 +4631,16 @@ async function genClRep(){
   const adjs=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
   const filtAdjs=adjs.filter(a=>(!from||!to)||(a.date>=from&&a.date<=to));
   const clMap=groupLedgerBy(invs, rets, filtAdjs, rec=>rec.clientId);
+  const did=repDlId('rClDl');
   let rows='', gSales=0, gRet=0, gPaid=0, gAdj=0;
   [...clMap.entries()].sort((a,b)=>b[1].remain-a[1].remain).forEach(([cid,m])=>{
     const cl=C.clients.find(c=>c.id===cid); const rem=m.remain;
+    if(did&&cl?.delegateId!==did) return;
     const bl=!!cl?.blacklisted;
     if(!bl){ gSales=n2(gSales+m.sales); gRet=n2(gRet+m.returns); gPaid=n2(gPaid+m.paid); gAdj=n2(gAdj+(m.adjustments||0)); }
     rows+=`<tr${bl?' style="opacity:.65;background:rgba(176,0,32,.06)"':''}><td>${bl?'🚫 ':''}${cl?.name||'—'}</td><td>${cl?.route||'—'}</td><td>${m.count}</td><td>${fmt(m.sales)}</td><td style="color:var(--org)">${fmt(m.returns)}</td><td style="color:var(--gb)">${fmt(m.paid)}</td><td style="color:#c9a227">${fmt(m.adjustments||0)}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td></tr>`;
   });
-  const html=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">👥 تقرير العملاء${from&&to?` (${from} — ${to})`:''}</div>
+  const html=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">👥 تقرير العملاء${from&&to?` (${from} — ${to})`:''}</div>${repDlLabel(did)}
     <table><thead><tr><th>العميل</th><th>خط السير</th><th>الفواتير</th><th>المبيعات</th><th>المرتجعات</th><th>التحصيلات</th><th>التسويات</th><th>الرصيد</th></tr></thead>
     <tbody>${rows||'<tr><td colspan="8" style="text-align:center;color:var(--td)">لا توجد بيانات</td></tr>'}</tbody>
     <tfoot><tr style="font-weight:700;background:rgba(26,122,80,.1)"><td colspan="3">الإجمالي (بدون القائمة السوداء)</td><td>${fmt(gSales)}</td><td style="color:var(--org)">${fmt(gRet)}</td><td style="color:var(--gb)">${fmt(gPaid)}</td><td style="color:#c9a227">${fmt(gAdj)}</td><td style="color:${n2(gSales-gPaid-gRet-gAdj)>0?'var(--red)':'var(--gb)'}">${fmt(n2(gSales-gPaid-gRet-gAdj))}</td></tr></tfoot></table>`;
@@ -4290,10 +4654,10 @@ async function genDlRep(){
   const from=document.getElementById('rDlFrom').value, to=document.getElementById('rDlTo').value;
   const invs=from&&to?await idbInvByDate(from,to):await idbAll('invoices');
   const rets=idb.objectStoreNames.contains('returns')?(from&&to?await idbRetByDate(from,to):await idbAll('returns')):[];
-  let html=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">🧑‍💼 تقرير المندوبين${from&&to?` (${from} — ${to})`:''}</div>
+  let html=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">🧑‍💼 تقرير المندوبين${from&&to?` (${from} — ${to})`:''}</div>${repDlLabel(repDlId('rDlSel'))}
     <table><thead><tr><th>المندوب</th><th>الفواتير</th><th>إجمالي المبيعات</th><th>المرتجعات</th><th>صافي المبيعات</th><th>التحصيلات الفعلية</th><th>نسبة العمولة</th><th>العمولة المستحقة</th></tr></thead><tbody>`;
   let gSales=0,gRet=0,gCollect=0,gComm=0;
-  C.delegates.forEach(dl=>{
+  C.delegates.filter(dl=>!repDlId('rDlSel')||dl.id===repDlId('rDlSel')).forEach(dl=>{
     const dInvs=invs.filter(i=>i.delegateId===dl.id);
     const dRets=rets.filter(r=>r.delegateId===dl.id);
     const sales=n2(dInvs.reduce((s,i)=>s+n2(i.net),0));
@@ -4342,7 +4706,7 @@ async function genRouteRep(){
     const rem=m.remain; gSales=n2(gSales+m.sales); gRet=n2(gRet+m.returns); gPaid=n2(gPaid+m.paid); gAdj=n2(gAdj+(m.adjustments||0));
     rows+=`<tr><td><b>${rt}</b></td><td>${m.count}</td><td>${fmt(m.sales)}</td><td style="color:var(--org)">${fmt(m.returns)}</td><td style="color:var(--gb)">${fmt(m.paid)}</td><td style="color:#c9a227">${fmt(m.adjustments||0)}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td></tr>`;
   });
-  document.getElementById('rRtOut').innerHTML=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">🗺️ تقرير خطوط السير</div>
+  document.getElementById('rRtOut').innerHTML=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">🗺️ تقرير خطوط السير</div>${repDlLabel(did)}
     <table><thead><tr><th>خط السير</th><th>الفواتير</th><th>المبيعات</th><th>المرتجعات</th><th>التحصيلات</th><th>التسويات</th><th>الرصيد</th></tr></thead>
     <tbody>${rows||'<tr><td colspan="7" style="text-align:center;color:var(--td)">لا توجد بيانات</td></tr>'}</tbody>
     <tfoot><tr style="font-weight:700"><td>الإجمالي</td><td></td><td>${fmt(gSales)}</td><td style="color:var(--org)">${fmt(gRet)}</td><td style="color:var(--gb)">${fmt(gPaid)}</td><td style="color:#c9a227">${fmt(gAdj)}</td><td style="color:${n2(gSales-gPaid-gRet-gAdj)>0?'var(--red)':'var(--gb)'}">${fmt(n2(gSales-gPaid-gRet-gAdj))}</td></tr></tfoot></table>`;
@@ -4372,7 +4736,7 @@ async function genLastInvRep(){
     const manualNum=inv?(inv.refNum&&inv.refNum.trim()?inv.refNum:'— (بدون رقم يدوي)'):'لا توجد فواتير';
     rows+=`<tr><td><b>${cl.name}</b></td><td>${cl.route||'—'}</td><td>${dl?.name||'—'}</td><td style="font-weight:700;color:var(--gb)">${manualNum}</td><td>${inv?.date||'—'}</td><td style="font-weight:700">${inv?fmt(inv.net):'—'}</td><td style="color:${days>90?'var(--red)':days>60?'var(--org)':'var(--gb)'}">${days!==null?days+' يوم':'—'}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td></tr>`;
   });
-  document.getElementById('rLiOut').innerHTML=`
+  document.getElementById('rLiOut').innerHTML=`${repDlLabel(did)}
     <div style="margin-bottom:10px;padding:8px 12px;background:rgba(74,158,221,.08);border:1px solid var(--blue);border-radius:8px;font-size:.78rem;color:var(--blue)">
       ℹ️ "رقم الفاتورة" المعروض هو الرقم اليدوي/المرجعي الذي أدخله المستخدم وقت إنشاء الفاتورة
     </div>
@@ -4381,21 +4745,173 @@ async function genLastInvRep(){
 function printLastInvRep(){ openPrintWin(document.getElementById('rLiOut').innerHTML); }
 
 // ── الأكثر مبيعاً ────────────────────────────────────────
+// ═══════════════════════════════════════════════════════════
+//  🔎 فحص أسماء الأصناف داخل الفواتير + تقرير الأصناف الأكثر مبيعاً — للقراءة فقط (لا يعدّل أي بيانات)
+//  ⚠️ سبب ظهور أصناف "غير موجودة" في الأصناف الأكثر مبيعاً: أسماء الأصناف تُحفظ داخل بنود الفواتير نفسها،
+//     فأي اسم يُكتب يدوياً في الفاتورة (بدون اختيار صنف مسجّل) يظهر في التقارير رغم أنه ليس في صفحة الأصناف.
+// ═══════════════════════════════════════════════════════════
+const normName = s => String(s==null?'':s).replace(/\s+/g,' ').trim();
+let _auditGroups=[], _auditCtx={from:'',to:''}, _bsNames=[];
+
+// تنظيف نسخة الطباعة: حذف الأزرار والأعمدة التفاعلية (class="np")
+function printClean(id){
+  const src=document.getElementById(id); if(!src) return;
+  const d=document.createElement('div'); d.innerHTML=src.innerHTML;
+  d.querySelectorAll('.np,button').forEach(el=>el.remove());
+  openPrintWin(d.innerHTML);
+}
+
 async function genBs(){
   const from=document.getElementById('rBsFrom').value, to=document.getElementById('rBsTo').value;
-  const invs=from&&to?await idbInvByDate(from,to):await idbAll('invoices');
+  const did=repDlId('rBsDl');
+  const invs=(from&&to?await idbInvByDate(from,to):await idbAll('invoices')).filter(i=>!did||i.delegateId===did);
+  const byId=new Map(C.products.map(p=>[p.id,p])), byName=new Map(C.products.map(p=>[normName(p.name),p]));
   const map=new Map();
   invs.forEach(inv=>(inv.items||[]).forEach(it=>{
-    if(!map.has(it.prodId))map.set(it.prodId,{name:it.prodName,qty:0,total:0,cnt:0});
-    const m=map.get(it.prodId); m.qty=n2(m.qty+it.qty); m.total=n2(m.total+it.total); m.cnt++;
+    const pid=it.prodId||0, nm=normName(it.prodName);
+    // البند يُنسب لصنف مسجّل لو كوده موجود، أو اسمه مطابق لاسم صنف مسجّل — فيُجمَّع مع هذا الصنف.
+    // أي بند غير ذلك (مكتوب يدوياً أو صنف محذوف) يُجمَّع باسمه هو فقط، حتى لا تختلط أصناف مختلفة في صف واحد باسم أول بند فيها
+    const prod=(pid>0&&byId.get(pid))||byName.get(nm)||null;
+    const key=prod?('id:'+prod.id):('nm:'+nm);
+    if(!map.has(key)) map.set(key,{name:prod?prod.name:(it.prodName||'(بدون اسم)'),registered:!!prod,qty:0,total:0,cnt:0});
+    const m=map.get(key); m.qty=n2(m.qty+it.qty); m.total=n2(m.total+it.total); m.cnt++;
   }));
   const sorted=[...map.values()].sort((a,b)=>b.total-a.total);
-  document.getElementById('rBsOut').innerHTML=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">⭐ الأصناف بحسب المبيعات</div>
-    <table><thead><tr><th>#</th><th>الصنف</th><th>الكمية المباعة</th><th>إجمالي المبيعات</th></tr></thead><tbody>
-    ${sorted.map((p,i)=>`<tr><td style="font-weight:700;color:${i<3?'var(--gold)':'var(--td)'}">${i+1}</td><td><b>${p.name}</b></td><td>${p.qty.toLocaleString('ar-EG')}</td><td style="font-weight:700">${fmt(p.total)}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--td)">لا توجد بيانات</td></tr>'}
-    </tbody></table>`;
+  _bsNames=[];
+  const rows=sorted.map((p,i)=>{
+    let flag='';
+    if(!p.registered){ _bsNames.push(p.name); flag=` <span style="font-size:.72rem;color:#ff6b6b;font-weight:700">⚠️ غير مسجّل في صفحة الأصناف</span> <button class="btn bo bsm np" onclick="auditJump(${_bsNames.length-1})">🔎 أين سُجّل؟</button>`; }
+    return `<tr><td style="font-weight:700;color:${i<3?'var(--gold)':'var(--td)'}">${i+1}</td><td><b>${p.name}</b>${flag}</td><td>${p.qty.toLocaleString('ar-EG')}</td><td style="font-weight:700">${fmt(p.total)}</td></tr>`;
+  }).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--td)">لا توجد بيانات</td></tr>';
+  document.getElementById('rBsOut').innerHTML=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">⭐ الأصناف بحسب المبيعات</div>${repDlLabel(did)}
+    ${_bsNames.length?`<div style="font-size:.78rem;color:var(--tm);margin-bottom:8px">يوجد ${_bsNames.length} صنف مكتوب داخل الفواتير وغير مسجّل في صفحة الأصناف — اضغط "أين سُجّل؟" لمعرفة الفواتير.</div>`:''}
+    <table><thead><tr><th>#</th><th>الصنف</th><th>الكمية المباعة</th><th>إجمالي المبيعات</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
-function printBsRep(){ openPrintWin(document.getElementById('rBsOut').innerHTML); }
+
+function auditRegistry(){ return { byId:new Map(C.products.map(p=>[p.id,p])), byName:new Map(C.products.map(p=>[normName(p.name),p])) }; }
+function auditStatus(g,reg){
+  if(reg.byName.has(g.key)) return {code:'ok',text:'✅ مسجّل في صفحة الأصناف بنفس الاسم'};
+  if(g.idLinked) return {code:'renamed',text:'ℹ️ مرتبط بصنف مسجّل باسم مختلف حالياً: '+reg.byId.get(g.idLinked).name};
+  if(g.orphanIds.size) return {code:'deleted',text:'⚠️ كان مرتبطاً بصنف (كود '+[...g.orphanIds].slice(0,3).join('، ')+') ثم حُذف من صفحة الأصناف'};
+  return {code:'manual',text:'⚠️ غير مسجّل — مكتوب يدوياً داخل الفاتورة (بدون كود صنف)'};
+}
+async function auditBuild(from,to,q){
+  const invs=(from&&to)?await idbInvByDate(from,to):await idbAll('invoices');
+  const reg=auditRegistry(), nq=normName(q).toLowerCase(), groups=new Map();
+  invs.forEach(inv=>(inv.items||[]).forEach(it=>{
+    const key=normName(it.prodName); if(nq&&!key.toLowerCase().includes(nq)) return;
+    let g=groups.get(key);
+    if(!g){ g={key,name:it.prodName||'(بدون اسم)',lines:0,qty:0,total:0,first:inv.date,last:inv.date,idLinked:0,orphanIds:new Set(),noId:0,invNums:[]}; groups.set(key,g); }
+    g.lines++; g.qty=n2(g.qty+n2(it.qty)); g.total=n2(g.total+n2(it.total));
+    if(inv.date<g.first) g.first=inv.date; if(inv.date>g.last) g.last=inv.date;
+    const pid=it.prodId||0;
+    if(pid>0&&reg.byId.has(pid)) g.idLinked=pid; else if(pid>0) g.orphanIds.add(pid); else g.noId++;
+    if(g.invNums.length<5&&!g.invNums.includes(inv.num)) g.invNums.push(inv.num);
+  }));
+  return {list:[...groups.values()].map(g=>({...g,st:auditStatus(g,reg)})),invCount:invs.length};
+}
+async function auditRun(onlyUnregistered){
+  const q=normName(document.getElementById('rAuditQ').value);
+  const from=document.getElementById('rAuditFrom').value, to=document.getElementById('rAuditTo').value;
+  const {list,invCount}=await auditBuild(from,to,q);
+  const bad=g=>g.st.code==='manual'||g.st.code==='deleted';
+  const rank={manual:0,deleted:0,renamed:1,ok:2};
+  const shown=(onlyUnregistered?list.filter(bad):list).sort((a,b)=>rank[a.st.code]-rank[b.st.code]||b.qty-a.qty);
+  _auditGroups=shown; _auditCtx={from,to};
+  document.getElementById('rAuditDetail').innerHTML='';
+  const LIM=300, color=c=>c==='ok'?'var(--gb)':(c==='renamed'?'var(--gol)':'#ff6b6b');
+  const prefix=C.settings.invPrefix||'INV';
+  const rows=shown.slice(0,LIM).map((g,i)=>`<tr>
+    <td><b>${g.name}</b></td><td>${g.lines}</td><td>${g.qty.toLocaleString('ar-EG')}</td><td>${fmt(g.total)}</td><td>${g.first}</td><td>${g.last}</td>
+    <td style="color:${color(g.st.code)};font-size:.8rem">${g.st.text}</td>
+    <td style="font-size:.74rem">${g.invNums.map(n=>prefix+'-'+n).join('، ')}${g.lines>g.invNums.length?' …':''}</td>
+    <td class="np"><button class="btn bb bsm" onclick="auditDetails(${i})">📋 كل الفواتير</button></td></tr>`).join('');
+  const title=onlyUnregistered?'⚠️ أصناف مكتوبة داخل الفواتير وغير مسجّلة في صفحة الأصناف':('🔎 نتيجة البحث'+(q?' عن «'+q+'»':' — كل الأسماء'));
+  document.getElementById('rAuditOut').innerHTML=`<div style="font-weight:700;color:var(--gb);margin-bottom:8px">${title}</div>
+    <div style="font-size:.78rem;color:var(--tm);margin-bottom:8px">تم فحص ${invCount.toLocaleString('ar-EG')} فاتورة${from&&to?' ('+from+' ← '+to+')':' (كل الفترات)'} — ${shown.length} اسم${shown.length>LIM?' (يُعرض أول '+LIM+')':''} — منها غير مسجّل: ${list.filter(bad).length}</div>
+    <table><thead><tr><th>اسم الصنف كما هو في الفواتير</th><th>عدد البنود</th><th>إجمالي الكمية</th><th>إجمالي القيمة</th><th>أول تاريخ</th><th>آخر تاريخ</th><th>الحالة</th><th>أمثلة فواتير</th><th class="np"></th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="9" style="text-align:center;color:var(--td)">لا توجد نتائج</td></tr>'}</tbody></table>`;
+}
+async function auditDetails(idx){
+  const g=_auditGroups[idx]; if(!g) return;
+  const {from,to}=_auditCtx; const invs=(from&&to)?await idbInvByDate(from,to):await idbAll('invoices');
+  const reg=auditRegistry(), cl=new Map(C.clients.map(c=>[c.id,c.name])), dl=new Map(C.delegates.map(d=>[d.id,d.name])), prefix=C.settings.invPrefix||'INV';
+  const lines=[];
+  invs.forEach(inv=>(inv.items||[]).forEach(it=>{ if(normName(it.prodName)===g.key) lines.push({inv,it}); }));
+  lines.sort((a,b)=>b.inv.date.localeCompare(a.inv.date)||(b.inv.createdAt||0)-(a.inv.createdAt||0));
+  const LIM=500;
+  const link=it=>{ const pid=it.prodId||0; return pid>0?(reg.byId.has(pid)?'مرتبط بـ: '+reg.byId.get(pid).name:'كود '+pid+' (محذوف)'):'بدون كود صنف'; };
+  const rows=lines.slice(0,LIM).map(({inv,it})=>`<tr><td><b>${prefix}-${inv.num}</b></td><td>${inv.refNum||'—'}</td><td>${inv.date}</td><td>${cl.get(inv.clientId)||'—'}</td><td>${dl.get(inv.delegateId)||'—'}</td>
+    <td>${it.qty}</td><td>${fmt(it.price)}</td><td>${fmt(it.total)}</td><td>${it.itemType||'—'}</td><td style="font-size:.76rem">${link(it)}</td>
+    <td style="font-size:.74rem">${inv.createdAt?new Date(inv.createdAt).toLocaleString('ar-EG'):'—'}</td>
+    <td class="np"><button class="btn bo bsm" onclick="auditOpenInvoice('${inv.id}')">✏️ فتح الفاتورة</button></td></tr>`).join('');
+  document.getElementById('rAuditDetail').innerHTML=`<div style="margin-top:16px;border-top:2px solid var(--gb);padding-top:12px">
+    <div style="font-weight:700;margin-bottom:6px">📋 كل بنود الفواتير التي فيها الصنف «${g.name}» (${lines.length} بند${lines.length>LIM?' — يُعرض أحدث '+LIM:''})</div>
+    <div style="font-size:.8rem;color:var(--tm);margin-bottom:8px">${g.st.text}</div>
+    <table><thead><tr><th>الفاتورة</th><th>المرجع</th><th>التاريخ</th><th>العميل</th><th>المندوب</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th>نوع الصنف</th><th>ربط الصنف</th><th>وقت الإدخال</th><th class="np"></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+  document.getElementById('rAuditDetail').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function auditOpenInvoice(id){ go('invoice',document.getElementById('sb-invoice')); setTimeout(()=>editInvoice(id),100); }
+function auditJump(i){
+  const name=_bsNames[i]; if(name===undefined) return;
+  showRep('itemaudit');
+  document.getElementById('rAuditQ').value=name;
+  document.getElementById('rAuditFrom').value=document.getElementById('rBsFrom').value;
+  document.getElementById('rAuditTo').value=document.getElementById('rBsTo').value;
+  auditRun(false);
+}
+
+// ═══════════════════════════════════════════════════════════
+//  📈 تقرير تقييم الأداء — للقراءة فقط: يجمع ويطرح من بيانات الفواتير الموجودة ولا يكتب أي شيء
+//  لكل مندوب وخط سير: إجمالي المبيعات = المدفوع + المتبقي (فقط)
+// ═══════════════════════════════════════════════════════════
+async function genPerfRep(){
+  const did=repDlId('rPerfDl'), route=document.getElementById('rPerfRoute').value||'';
+  const from=document.getElementById('rPerfFrom').value, to=document.getElementById('rPerfTo').value;
+  const invs=(from&&to)?await idbInvByDate(from,to):await idbAll('invoices');
+  const clientById=new Map(C.clients.map(c=>[c.id,c])), known=new Set(C.delegates.map(d=>d.id));
+  const acc=new Map();                                  // مندوب ← (خط سير ← {sales,paid})
+  invs.forEach(inv=>{
+    const cl=clientById.get(inv.clientId); if(cl&&cl.blacklisted) return;          // نفس قاعدة باقي التقارير: بدون القائمة السوداء
+    const dk=known.has(inv.delegateId)?inv.delegateId:0; if(did&&dk!==did) return;
+    const rt=(cl&&cl.route)||'غير محدد'; if(route&&rt!==route) return;
+    if(!acc.has(dk)) acc.set(dk,new Map()); const rm=acc.get(dk);
+    if(!rm.has(rt)) rm.set(rt,{sales:0,paid:0}); const r=rm.get(rt);
+    r.sales=n2(r.sales+n2(inv.net)); r.paid=n2(r.paid+n2(inv.paid));
+  });
+  const mkBlock=(name,key)=>{
+    const rm=acc.get(key)||new Map();
+    const rows=[...rm.entries()].map(([rt,v])=>({rt,sales:v.sales,paid:v.paid,remain:n2(v.sales-v.paid)})).sort((a,b)=>b.sales-a.sales);
+    const sales=n2(rows.reduce((s,r)=>s+r.sales,0)), paid=n2(rows.reduce((s,r)=>s+r.paid,0));
+    return {name,rows,sales,paid,remain:n2(sales-paid)};
+  };
+  const dls=did?C.delegates.filter(d=>d.id===did):[...C.delegates].sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+  const all=dls.map(d=>mkBlock(d.name,d.id));
+  if(!did&&acc.has(0)) all.push(mkBlock('مندوب غير محدد',0));
+  const blocks=did?all:all.filter(b=>b.rows.length), idle=did?[]:all.filter(b=>!b.rows.length).map(b=>b.name);
+  const rowHtml=r=>`<tr><td><b>${r.rt}</b></td><td>${fmt(r.sales)}</td><td style="color:var(--gb)">${fmt(r.paid)}</td><td style="color:${r.remain>0?'var(--red)':'var(--gb)'}">${fmt(r.remain)}</td></tr>`;
+  const head='<thead><tr><th>خط السير</th><th>إجمالي المبيعات</th><th>المدفوع</th><th>المتبقي</th></tr></thead>';
+  const dName=did?(C.delegates.find(d=>d.id===did)?.name||'—'):'جميع المناديب';
+  const period=(from&&to)?(from+' ← '+to):'كل الفترات';
+  const body=blocks.map(b=>`<div style="margin:16px 0 6px;font-weight:800">🧑‍💼 المندوب: ${b.name} <span style="font-weight:400;font-size:.8rem;color:var(--tm)">— الفترة: ${period} — خط السير: ${route||'جميع الخطوط'}</span></div>
+    <table>${head}<tbody>${b.rows.map(rowHtml).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--td)">لا توجد مبيعات في هذه الفترة</td></tr>'}</tbody>
+    <tfoot><tr style="font-weight:700;background:rgba(26,122,80,.1)"><td>إجمالي ${b.name}</td><td>${fmt(b.sales)}</td><td>${fmt(b.paid)}</td><td>${fmt(b.remain)}</td></tr></tfoot></table>`).join('');
+  const withData=blocks.filter(b=>b.rows.length);
+  const gS=n2(withData.reduce((s,b)=>s+b.sales,0)), gP=n2(withData.reduce((s,b)=>s+b.paid,0));
+  const grand=(!did&&withData.length>1)?`<div style="margin:18px 0 6px;font-weight:800">📊 الإجمالي العام لكل المناديب</div>
+    <table><thead><tr><th>إجمالي المبيعات</th><th>المدفوع</th><th>المتبقي</th></tr></thead><tbody><tr style="font-weight:700"><td>${fmt(gS)}</td><td>${fmt(gP)}</td><td>${fmt(n2(gS-gP))}</td></tr></tbody></table>`:'';
+  document.getElementById('rPerfOut').innerHTML=`<div style="font-weight:800;color:var(--gb);font-size:1.05rem;margin-bottom:6px">📈 تقرير تقييم الأداء</div>
+    <div style="font-size:.85rem;margin-bottom:4px"><b>المندوب:</b> ${dName} &nbsp;|&nbsp; <b>الفترة:</b> ${period} &nbsp;|&nbsp; <b>خط السير:</b> ${route||'جميع الخطوط'} <span style="font-size:.72rem;color:var(--tm)">(بدون عملاء القائمة السوداء)</span></div>
+    ${body||'<div style="text-align:center;color:var(--td);padding:16px">لا توجد مبيعات تطابق هذه الاختيارات</div>'}${grand}
+    ${idle.length?`<div style="margin-top:12px;font-size:.78rem;color:var(--tm)">مناديب بدون مبيعات في هذه الفترة: ${idle.join('، ')}</div>`:''}`;
+}
+
+function printBsRep(){ printClean('rBsOut'); }
+function printPerfRep(){ printClean('rPerfOut'); }
+function printAudit(){
+  const d=document.createElement('div'); d.innerHTML=document.getElementById('rAuditOut').innerHTML+document.getElementById('rAuditDetail').innerHTML;
+  d.querySelectorAll('.np,button').forEach(e=>e.remove()); openPrintWin(d.innerHTML);
+}
 
 // ── الفواتير المتأخرة ────────────────────────────────────
 // ✅ إعادة تصميم: صف واحد فقط لكل عميل (بيانات آخر فاتورة له)، ويشمل أيضاً العملاء
@@ -4445,7 +4961,7 @@ async function genOverdue(){
     const ageColor=daysSince===null?'var(--red)':(daysSince>180?'var(--red)':daysSince>90?'var(--org)':'var(--gol)');
     return`<tr><td>${invLabel}</td><td>${dateLabel}</td><td><b>${cl.name}</b></td><td>${cl.route||'—'}</td><td>${dl?.name||'—'}</td><td style="color:${rem>0?'var(--red)':'var(--gb)'};font-weight:700">${fmt(rem)}</td><td style="color:${ageColor};font-weight:700">${ageLabel}</td></tr>`;
   }).join('');
-  document.getElementById('rOverdueOut').innerHTML=`<div style="font-weight:700;color:var(--red);margin-bottom:12px">⚠️ عملاء بدون نشاط أكثر من ${days} يوم (أو لم يتعامل معهم إطلاقاً) — إجمالي أرصدتهم القائمة: ${fmt(total)} جنيه</div>
+  document.getElementById('rOverdueOut').innerHTML=`<div style="font-weight:700;color:var(--red);margin-bottom:12px">⚠️ عملاء بدون نشاط أكثر من ${days} يوم (أو لم يتعامل معهم إطلاقاً) — إجمالي أرصدتهم القائمة: ${fmt(total)} جنيه</div>${repDlLabel(did)}
     <div style="font-size:.78rem;color:var(--tm);margin-bottom:10px">صف واحد فقط لكل عميل (بيانات آخر فاتورة له) — والرصيد المعروض هو رصيده التراكمي الكامل الحالي</div>
     <table><thead><tr><th>آخر فاتورة</th><th>تاريخها</th><th>العميل</th><th>خط السير</th><th>المندوب</th><th>الرصيد الحالي</th><th>مدة عدم النشاط</th></tr></thead>
     <tbody>${rows||'<tr><td colspan="7" style="text-align:center;color:var(--td)">لا يوجد عملاء متأخرين 🎉</td></tr>'}</tbody></table>`;
@@ -4476,7 +4992,7 @@ function genClientSettleRep(){
   });
   const rangeLabel = fromM===toM ? monthName[fromM] : `${monthName[fromM]} → ${monthName[toM]}`;
   document.getElementById('rSettleOut').innerHTML=`
-    <div style="font-weight:700;color:var(--gb);margin-bottom:12px">📅 عملاء مستحق تصفيتهم خلال: ${rangeLabel} (${list.length} عميل) — إجمالي أرصدتهم: ${fmt(totalRem)} جنيه</div>
+    <div style="font-weight:700;color:var(--gb);margin-bottom:12px">📅 عملاء مستحق تصفيتهم خلال: ${rangeLabel} (${list.length} عميل) — إجمالي أرصدتهم: ${fmt(totalRem)} جنيه</div>${repDlLabel(did)}
     <table><thead><tr><th>العميل</th><th>خط السير</th><th>المندوب</th><th>الهاتف</th><th>شهور التصفية</th><th>الرصيد الحالي</th></tr></thead>
     <tbody>${rows||'<tr><td colspan="6" style="text-align:center;color:var(--td);padding:16px">لا يوجد عملاء لديهم شهر تصفية ضمن هذا المدى</td></tr>'}</tbody></table>
   `;
@@ -4491,16 +5007,18 @@ async function genBalance(){
   const adjs=idb.objectStoreNames.contains('adjustments')?await idbAll('adjustments'):[];
   const filtAdjs=adjs.filter(a=>(!from||!to)||(a.date>=from&&a.date<=to));
   const clMap=groupLedgerBy(invs, rets, filtAdjs, rec=>rec.clientId);
+  const did=repDlId('rBalDl');
   let rows='', gS=0, gR=0, gP=0, gA=0, frozen=0;
   [...clMap.entries()].sort((a,b)=>b[1].remain-a[1].remain).forEach(([cid,m])=>{
     const cl=C.clients.find(c=>c.id===cid), dl=C.delegates.find(d=>d.id===cl?.delegateId);
+    if(did&&cl?.delegateId!==did) return;
     const rem=m.remain; if(rem===0&&m.sales===0&&!(m.adjustments>0))return;
     const bl=!!cl?.blacklisted;
     if(bl){ if(rem>0) frozen=n2(frozen+rem); } else { gS=n2(gS+m.sales); gR=n2(gR+m.returns); gP=n2(gP+m.paid); gA=n2(gA+(m.adjustments||0)); }
     rows+=`<tr${bl?' style="opacity:.65;background:rgba(176,0,32,.06)"':''}><td>${bl?'🚫 ':''}${cl?.name||'—'}</td><td>${cl?.route||'—'}</td><td>${dl?.name||'—'}</td><td>${fmt(m.sales)}</td><td style="color:var(--org)">${fmt(m.returns)}</td><td style="color:var(--gb)">${fmt(m.paid)}</td><td style="color:#c9a227">${fmt(m.adjustments||0)}</td><td style="font-weight:700;color:${rem>0?'var(--red)':'var(--gb)'}">${fmt(rem)}</td></tr>`;
   });
   if(frozen>0) rows+=`<tr style="opacity:.7"><td colspan="7" style="text-align:left;font-size:.78rem;color:var(--tm)">🚫 ديون مجمّدة (قائمة سوداء، غير محسوبة بالإجمالي)</td><td style="font-weight:700;color:var(--tm)">${fmt(frozen)}</td></tr>`;
-  document.getElementById('rBalOut').innerHTML=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">💰 تقرير الأرصدة التفصيلي (الرصيد = مبيعات − مرتجعات − تحصيلات − تسويات)</div>
+  document.getElementById('rBalOut').innerHTML=`<div style="font-weight:700;color:var(--gb);margin-bottom:12px">💰 تقرير الأرصدة التفصيلي (الرصيد = مبيعات − مرتجعات − تحصيلات − تسويات)</div>${repDlLabel(did)}
     <table><thead><tr><th>العميل</th><th>خط السير</th><th>المندوب</th><th>المبيعات</th><th>المرتجعات</th><th>التحصيلات</th><th>التسويات</th><th>الرصيد</th></tr></thead>
     <tbody>${rows||'<tr><td colspan="8" style="text-align:center;color:var(--td)">لا توجد بيانات</td></tr>'}</tbody>
     <tfoot><tr style="font-weight:700;background:rgba(26,122,80,.1)"><td colspan="3">الإجمالي (بدون القائمة السوداء)</td><td>${fmt(gS)}</td><td style="color:var(--org)">${fmt(gR)}</td><td style="color:var(--gb)">${fmt(gP)}</td><td style="color:#c9a227">${fmt(gA)}</td><td style="color:${n2(gS-gP-gR-gA)>0?'var(--red)':'var(--gb)'};font-size:13pt">${fmt(n2(gS-gP-gR-gA))}</td></tr></tfoot></table>`;
@@ -4519,7 +5037,7 @@ async function genReturnsRep(){
     const cl=C.clients.find(c=>c.id===r.clientId), dl=C.delegates.find(d=>d.id===r.delegateId);
     return`<tr><td style="color:var(--org);font-weight:700">RET-${r.num}</td><td>${r.date}</td><td>${cl?.name||'—'}</td><td>${cl?.route||'—'}</td><td>${dl?.name||'—'}</td><td style="color:var(--red);font-weight:700">${fmt(r.total)}</td><td style="font-size:.78rem;color:var(--tm)">${r.reason||'—'}</td><td style="font-size:.72rem;color:var(--td)">${(r.items||[]).map(it=>it.prodName).join('، ')}</td></tr>`;
   }).join('');
-  document.getElementById('rRetOut').innerHTML=`<div style="font-weight:700;color:var(--org);margin-bottom:8px">↩️ تقرير المرتجعات${from&&to?` (${from} — ${to})`:''} — الإجمالي: ${fmt(total)} جنيه</div>
+  document.getElementById('rRetOut').innerHTML=`<div style="font-weight:700;color:var(--org);margin-bottom:8px">↩️ تقرير المرتجعات${from&&to?` (${from} — ${to})`:''} — الإجمالي: ${fmt(total)} جنيه</div>${repDlLabel(did)}
     <table><thead><tr><th>رقم</th><th>التاريخ</th><th>العميل</th><th>خط السير</th><th>المندوب</th><th>الإجمالي</th><th>السبب</th><th>الأصناف</th></tr></thead>
     <tbody>${rows||'<tr><td colspan="8" style="text-align:center;color:var(--td)">لا توجد مرتجعات</td></tr>'}</tbody>
     <tfoot><tr style="font-weight:700"><td colspan="5">الإجمالي (${filt.length} مرتجع)</td><td style="color:var(--red);font-size:13pt">${fmt(total)}</td><td colspan="2"></td></tr></tfoot></table>`;
@@ -4626,11 +5144,11 @@ async function genSplitRep() {
   const co=C.settings;
   const html=`<div id="splitRepPrint">
     <div style="text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:3px solid #1a7a50">
-      <div style="font-size:1.1rem;font-weight:900;color:#0a3d2e">${co.company||'روزيتا المتحدة للمبيدات الزراعية'}</div>
+      <div style="font-size:1.1rem;font-weight:900;color:#0a3d2e">${coName()}</div>
       ${co.address?`<div style="font-size:.8rem;color:#555">${co.address}</div>`:''}
       <div style="font-size:1rem;font-weight:700;margin-top:6px">📊 كشف حساب بالأصناف</div>
       <div style="font-size:.82rem;color:var(--tm);margin-top:4px">
-        <b>العميل:</b> ${cl?.name||'—'} |
+        <b>العميل:</b> ${cl?.name?('م / '+cl.name):'—'} |
         <b>المندوب:</b> ${dl?.name||'—'} |
         <b>الفترة:</b> ${from||'—'} إلى ${to||'—'}
         ${discPct>0?`| <b>نسبة الخصم على المغذي:</b> ${discPct}%`:''}
@@ -4825,6 +5343,7 @@ function loadSettingsUI(){
   const lb=document.getElementById('lastBackup');
   if(lb)lb.textContent=C.settings.lastBackup?new Date(C.settings.lastBackup).toLocaleString('ar-EG'):'لا توجد';
   renderLogoPreview();
+  abRenderStatus();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -4882,70 +5401,229 @@ async function saveSettings(){
   const u=document.getElementById('setUser').value.trim(); if(u)C.settings.adminUser=u;
   const p=document.getElementById('setPass').value; if(p)C.settings.adminPass=p;
   await idbPutSettings(C.settings);
+  applyCompanyName();
   showToast('✅ تم حفظ الإعدادات');
 }
 
 // ═══════════════════════════════════════════════════════════
 //  EXPORT / IMPORT
 // ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+//  💾 النسخ الاحتياطي (يدوي + تلقائي) — مصدر واحد لقائمة كل مخازن البيانات
+//  ⚠️ أي مخزن بيانات جديد يُضاف للبرنامج لازم يُضاف هنا مرة واحدة فقط،
+//     فيدخل تلقائياً في التصدير اليدوي والتلقائي والاستيراد.
+//  شبكة أمان: أي مخزن غير معروف في قاعدة البيانات يُصدَّر تلقائياً ضمن extraStores ويُستعاد.
+// ═══════════════════════════════════════════════════════════
+const BACKUP_STORES = ['clients','products','delegates','invoices','returns','adjustments','financiers','finTransactions','finSettlements'];
+const BACKUP_LOCAL_KEYS = ['rosettaHCLog_v3','rosettaDraft']; // مفاتيح التخزين المحلي (سجل الفحص + مسودة الفاتورة) — أسماؤها ثابتة عمداً
+const BACKUP_LABELS = {clients:'عميل',products:'صنف',delegates:'مندوب',invoices:'فاتورة',returns:'مرتجع',adjustments:'تسوية عميل',financiers:'ممول',finTransactions:'حركة ممول',finSettlements:'تصفية ممول'};
+const BACKUP_SYSTEM_STORES = ['settings','license']; // الإعدادات تُحفظ داخل النسخة بشكل خاص، والترخيص خاص بالجهاز ولا يُنسخ أبداً
+const AUTO_BACKUP_KEEP = 15;
+const localDateStr = (d=new Date()) => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+
+// يجمع كل بيانات البرنامج في كائن واحد — يستخدمه التصدير اليدوي والتلقائي (نفس المحتوى تماماً)
+async function buildBackupData(){
+  const data={ app:'Rikaz Pro', version:9, exportDate:new Date().toISOString(), settings:C.settings };
+  const counts={};
+  for(const st of BACKUP_STORES){ data[st]=await idbAll(st); counts[st]=data[st].length; }
+  data.extraStores={};
+  try{
+    const all=await invoke('kv_list_stores');
+    for(const st of (all||[])){
+      if(BACKUP_STORES.includes(st)||BACKUP_SYSTEM_STORES.includes(st)) continue;
+      data.extraStores[st]=await idbAll(st); counts['extra:'+st]=data.extraStores[st].length;
+    }
+  }catch(e){ /* نسخة backend أقدم بدون هذا الأمر: نكمل بالمخازن المعروفة */ }
+  data.localState={};
+  BACKUP_LOCAL_KEYS.forEach(k=>{ try{ const v=localStorage.getItem(k); if(v!==null) data.localState[k]=v; }catch(e){} });
+  data.counts=counts;
+  return {data,counts};
+}
+
 async function exportData(){
-  const [invs,rets,cls,prs,dls,adjs,fins,finTxs,finSetts]=await Promise.all([
-    idbAll('invoices'),idbAll('returns'),idbAll('clients'),idbAll('products'),idbAll('delegates'),
-    idb.objectStoreNames.contains('adjustments')?idbAll('adjustments'):Promise.resolve([]),
-    idbAll('financiers'),idbAll('finTransactions'),idbAll('finSettlements')
-  ]);
-  const data={version:7,exportDate:new Date().toISOString(),settings:C.settings,clients:cls,products:prs,delegates:dls,invoices:invs,returns:rets,adjustments:adjs,
-    financiers:fins, finTransactions:finTxs, finSettlements:finSetts};
-  const filename='rosetta_backup_'+td()+'.json';
-  const content=JSON.stringify(data,null,2);
-  try {
+  try{
+    const {data,counts}=await buildBackupData();
+    const filename='rikaz_backup_'+localDateStr()+'.json';
+    const content=JSON.stringify(data,null,2);
     const savedPath = await invoke('save_file_dialog', { filename, content });
     if (savedPath) {
       C.settings.lastBackup=new Date().toISOString();
       await idbPutSettings(C.settings);
       loadSettingsUI();
-      showToast('✅ تم حفظ النسخة الاحتياطية في: '+savedPath);
+      showToast('✅ تم حفظ النسخة الكاملة ('+BACKUP_STORES.map(st=>counts[st]+' '+BACKUP_LABELS[st]).join(' | ')+') في: '+savedPath);
     }
   } catch(e){ showToast('❌ خطأ في الحفظ: '+e); }
 }
+
 async function importData(event){
   const file=event.target.files[0]; if(!file)return;
   try {
-    const text=await file.text(); const data=JSON.parse(text);
-    if(!data.clients&&!data.invoices) throw new Error('ملف غير صالح');
-    if(data.settings){ Object.assign(C.settings,data.settings); if(!C.settings.nextRetNum)C.settings.nextRetNum=1; if(!C.settings.nextAdjId)C.settings.nextAdjId=1; if(!C.settings.nextFinId)C.settings.nextFinId=1; }
+    const data=JSON.parse(await file.text());
+    if(!data || typeof data!=='object' || !BACKUP_STORES.some(st=>Array.isArray(data[st]))) throw new Error('ملف غير صالح');
+    const lbl=st=>BACKUP_LABELS[st]||st;
+    const check=(st,arr)=>{
+      if(!Array.isArray(arr)) throw new Error('بيانات "'+lbl(st)+'" في الملف غير صالحة');
+      if(arr.some(r=>!r||typeof r!=='object'||r.id===undefined||r.id===null)) throw new Error('يوجد سجل بدون معرّف في بيانات "'+lbl(st)+'" — الملف تالف');
+    };
+    // فحص الملف بالكامل قبل لمس أي بيانات حالية
+    for(const st of BACKUP_STORES){ if(data[st]!==undefined) check(st,data[st]); }
+    const extra={};
+    if(data.extraStores && typeof data.extraStores==='object'){
+      for(const st of Object.keys(data.extraStores)){
+        if(BACKUP_STORES.includes(st)||BACKUP_SYSTEM_STORES.includes(st)) continue;
+        check(st,data.extraStores[st]); extra[st]=data.extraStores[st];
+      }
+    }
+    const plan=[...BACKUP_STORES.filter(st=>Array.isArray(data[st])).map(st=>[st,data[st]]), ...Object.entries(extra)];
+    const absent=BACKUP_STORES.filter(st=>!Array.isArray(data[st]));
+    // مقارنة الحالي بالملف قبل أي تغيير: كم سجل سيُحذف (موجود الآن وغير موجود بالملف)
+    const cur={}; let toDelete=0; const summary=[];
+    for(const [st,arr] of plan){
+      cur[st]=await idbAll(st);
+      const keep=new Set(arr.map(r=>String(r.id)));
+      const del=cur[st].filter(r=>!keep.has(String(r.id))).length; toDelete+=del;
+      summary.push('• '+lbl(st)+': الحالي '+cur[st].length+' ← الملف '+arr.length+(del?'   ⚠️ سيُحذف '+del+' سجل غير موجود بالملف':''));
+    }
+    const numWarn=(data.settings&&Number(data.settings.nextInvNum)<Number(C.settings.nextInvNum))
+      ?'\n\n⚠️ سيعود ترقيم الفواتير إلى '+data.settings.nextInvNum+' (الحالي '+C.settings.nextInvNum+') — قد تتكرر أرقام فواتير صدرت بعد تاريخ هذه النسخة.':'';
+    if(!confirm('⚠️ الاستيراد سيستبدل بيانات البرنامج الحالية بمحتوى الملف:\n\n'+summary.join('\n')
+      +(absent.length?'\n\n(غير موجود بالملف ويبقى كما هو: '+absent.map(lbl).join('، ')+')':'')+numWarn
+      +'\n\nكما ستُستعاد الإعدادات (بما فيها اسم المستخدم وكلمة المرور المحفوظان بالنسخة).\n\nهل تريد المتابعة؟')){ return; }
+    // حماية: لو الاستيراد سيحذف سجلات حالية، نعرض حفظ نسخة من البيانات الحالية أولاً
+    if(toDelete>0){
+      if(confirm('🛡️ سيُحذف '+toDelete+' سجل من بياناتك الحالية نهائياً.\n\nهل تريد حفظ نسخة من بياناتك الحالية أولاً؟ (موصى به بشدة)\n\nموافق = احفظ نسخة ثم تابع    |    إلغاء = تابع بدون نسخة')){
+        const {data:curData}=await buildBackupData();
+        const sp=await invoke('save_file_dialog',{filename:'rikaz_before_import_'+localDateStr()+'.json',content:JSON.stringify(curData,null,2)});
+        if(!sp){ showToast('ℹ️ تم إلغاء الاستيراد — لم تُحفظ النسخة ولم يتغيّر شيء'); return; }
+        showToast('✅ تم حفظ نسخة من بياناتك الحالية في: '+sp);
+      } else if(prompt('لن تُحفظ نسخة من بياناتك الحالية وسيُحذف '+toDelete+' سجل نهائياً.\nللمتابعة اكتب كلمة: استيراد')!=='استيراد'){
+        showToast('ℹ️ تم إلغاء الاستيراد — لم يتغيّر شيء'); return;
+      }
+    }
+    // كل العمليات تُنفَّذ كمعاملة واحدة: لو فشل أي جزء يتراجع الكل وتبقى البيانات الحالية كما هي
     const ops=[];
-    if(data.clients) { await idbBulk('clients',data.clients); C.clients=data.clients; }
-    if(data.products){ await idbBulk('products',data.products); C.products=data.products; }
-    if(data.delegates){ await idbBulk('delegates',data.delegates); C.delegates=data.delegates; }
-    if(data.invoices) await idbBulk('invoices',data.invoices);
-    if(data.returns&&data.returns.length) await idbBulk('returns',data.returns);
-    if(data.adjustments&&data.adjustments.length) await idbBulk('adjustments',data.adjustments);
-    // ✅ وحدة الممولين — مستقلة تماماً، تُستعاد كاملة بدون أي تأثير على بقية بيانات الاستيراد
-    if(data.financiers&&data.financiers.length){ await idbBulk('financiers',data.financiers); FIN.financiers=data.financiers; }
-    if(data.finTransactions&&data.finTransactions.length){ await idbBulk('finTransactions',data.finTransactions); FIN.transactions=data.finTransactions; }
-    if(data.finSettlements&&data.finSettlements.length){ await idbBulk('finSettlements',data.finSettlements); FIN.settlements=data.finSettlements; }
-    await idbPutSettings(C.settings);
+    for(const [st,arr] of plan){
+      const keep=new Set(arr.map(r=>String(r.id)));
+      cur[st].forEach(r=>{ if(!keep.has(String(r.id))) ops.push({op:'delete',store:st,key:r.id}); });
+      arr.forEach(r=>ops.push({op:'put',store:st,data:r}));
+    }
+    const newSettings=Object.assign({},C.settings,data.settings||{});
+    // إعدادات النسخ التلقائي خاصة بهذا الجهاز (مجلد/آخر تنفيذ) — لا تُستبدل بما في الملف
+    if(C.settings.autoBackup) newSettings.autoBackup=C.settings.autoBackup; else delete newSettings.autoBackup;
+    ['nextRetNum','nextAdjId','nextFinId'].forEach(k=>{ if(!newSettings[k])newSettings[k]=1; });
+    ops.push({op:'put',store:'settings',key:'main',data:newSettings});
+    showToast('⏳ جارٍ استيراد البيانات...');
+    await idbAtomic(ops);
+    // تحديث الذاكرة من قاعدة البيانات نفسها (المصدر الحقيقي)
+    Object.assign(C.settings,newSettings);
+    C.clients=await idbAll('clients'); C.products=await idbAll('products'); C.delegates=await idbAll('delegates');
+    await finLoadAll();
+    if(data.localState && typeof data.localState==='object') BACKUP_LOCAL_KEYS.forEach(k=>{ if(typeof data.localState[k]==='string'){ try{ localStorage.setItem(k,data.localState[k]); }catch(e){} } });
     await rebuildAllBalances();
-    refreshAllDDs(); loadSettingsUI(); updateDbInfo();
-    showToast('✅ تم استيراد البيانات بنجاح ('+data.invoices?.length+' فاتورة, '+(data.returns?.length||0)+' مرتجع, '+(data.adjustments?.length||0)+' تسوية, '+(data.financiers?.length||0)+' ممول)');
-  } catch(e){ showToast('❌ خطأ في الاستيراد: '+e.message); }
-  event.target.value='';
+    // تحقق نهائي: عدد السجلات في قاعدة البيانات = عددها في الملف
+    const problems=[];
+    for(const [st,arr] of plan){ const n=await idbCount(st); if(n!==arr.length) problems.push(lbl(st)+' (المتوقع '+arr.length+' / الموجود '+n+')'); }
+    refreshAllDDs(); loadSettingsUI(); updateDbInfo(); applyCompanyName();
+    if(problems.length) showToast('⚠️ تم الاستيراد لكن يوجد اختلاف في: '+problems.join('، '));
+    else showToast('✅ تم استيراد البيانات والتحقق منها بنجاح ('+plan.map(([st,arr])=>arr.length+' '+lbl(st)).join(' | ')+')'+(toDelete?' — حُذف '+toDelete+' سجل غير موجود بالملف':''));
+  } catch(e){ showToast('❌ خطأ في الاستيراد (لم يتغيّر شيء): '+e.message); }
+  finally { event.target.value=''; }
 }
+
+// ═══════════════════════════════════════════════════════════
+//  🔄 التصدير التلقائي — مرة واحدة كل يوم عند فتح البرنامج، كل البيانات في ملف واحد
+//  • اسم الملف: rikaz_auto_backup_YYYY-MM-DD.json  • يحتفظ بآخر 15 نسخة تلقائية ويحذف الأقدم فقط
+//  • الكتابة والقراءة والحذف داخل المجلد تتم عبر أوامر Rust لا تقبل إلا هذا الاسم بالضبط:
+//    أي ملف آخر في المجلد (نسخ يدوية أو غيرها) لا يُلمس إطلاقاً.
+// ═══════════════════════════════════════════════════════════
+function abCfg(){
+  if(!C.settings.autoBackup||typeof C.settings.autoBackup!=='object') C.settings.autoBackup={enabled:true,dir:'',lastDate:'',lastAt:0,lastFile:'',lastError:'',lastCount:0};
+  return C.settings.autoBackup;
+}
+let _abRunning=false;
+async function autoBackupRun(force){
+  if(_abRunning) return {status:'busy'};
+  _abRunning=true;
+  const ab=abCfg();
+  try{
+    if(!force && !ab.enabled) return {status:'disabled'};
+    const today=localDateStr();
+    if(!force && ab.lastDate===today) return {status:'done-today'};
+    let dir=(ab.dir||'').trim();
+    if(!dir){
+      try{ dir=(await invoke('backup_default_dir'))||''; }
+      catch(e){ throw new Error('ميزة التصدير التلقائي تحتاج تحديث ملف src-tauri/src/main.rs أيضاً'); }
+    }
+    if(!dir) throw new Error('لم يتم تحديد مجلد للنسخ التلقائي — اختر مجلداً من الإعدادات');
+    const {data,counts}=await buildBackupData();
+    if(BACKUP_STORES.reduce((s,st)=>s+counts[st],0)===0) return {status:'empty'};   // لا شيء يستحق الحفظ، ولا نزيح نسخاً سليمة قديمة بنسخة فارغة
+    const text=JSON.stringify(data);
+    const bytes=new TextEncoder().encode(text).length;
+    const filename='rikaz_auto_backup_'+today+'.json';
+    const written=await invoke('backup_write',{dir,filename,content:text});
+    if(Number(written)!==bytes) throw new Error('حجم الملف المكتوب لا يطابق المتوقع — لم تُحذف أي نسخة قديمة');
+    ab.dir=dir; ab.lastDate=today; ab.lastAt=Date.now(); ab.lastFile=filename; ab.lastError='';
+    // حذف الأقدم فقط، وبعد نجاح الحفظ والتحقق من حجمه
+    let removed=0;
+    try{
+      const names=(await invoke('backup_list',{dir}))||[];        // مرتبة تصاعدياً بالتاريخ، وتشمل النسخ التلقائية فقط
+      const excess=names.length-AUTO_BACKUP_KEEP;
+      for(let i=0;i<excess;i++){ if(names[i]===filename) continue; await invoke('backup_delete',{dir,filename:names[i]}); removed++; }
+      ab.lastCount=names.length-removed;
+    }catch(e){ ab.lastError='تم الحفظ لكن تعذّر حذف النسخ القديمة: '+(e&&e.message||e); }
+    await idbPutSettings(C.settings);
+    return {status:'ok',filename,removed,dir};
+  }catch(e){
+    ab.lastError=String(e&&e.message||e);
+    try{ await idbPutSettings(C.settings); }catch(_){}
+    return {status:'error',error:ab.lastError};
+  }finally{ _abRunning=false; abRenderStatus(); }
+}
+async function autoBackupKickoff(){
+  const r=await autoBackupRun(false);
+  if(r.status==='ok') showToast('💾 تم حفظ نسخة احتياطية تلقائية ('+r.filename+')'+(r.removed?' — حُذفت '+r.removed+' نسخة قديمة':''));
+  else if(r.status==='error') showToast('⚠️ تعذّر النسخ التلقائي: '+r.error);
+}
+const abEsc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+function abRenderStatus(){
+  const ab=abCfg();
+  const en=document.getElementById('abEnabled'); if(en) en.checked=!!ab.enabled;
+  const dir=document.getElementById('abDir'); if(dir) dir.value=ab.dir||'';
+  const st=document.getElementById('abStatus'); if(!st) return;
+  const p=[];
+  if(ab.lastAt) p.push('<div class="ab-ok">✅ آخر نسخة تلقائية: '+new Date(ab.lastAt).toLocaleString('ar-EG')+' — '+abEsc(ab.lastFile)+(ab.lastCount?' (المحفوظ حالياً '+ab.lastCount+' نسخة)':'')+'</div>');
+  else p.push('<div>لم تُنفَّذ أي نسخة تلقائية بعد — أول نسخة تُحفظ تلقائياً عند فتح البرنامج.</div>');
+  if(ab.lastError) p.push('<div class="ab-bad">⚠️ '+abEsc(ab.lastError)+'</div>');
+  if(!ab.enabled) p.push('<div class="ab-bad">التصدير التلقائي متوقف حالياً.</div>');
+  st.innerHTML=p.join('');
+}
+async function abToggle(){ const ab=abCfg(); ab.enabled=!!document.getElementById('abEnabled').checked; await idbPutSettings(C.settings); abRenderStatus(); }
+async function abPickFolder(){
+  const ab=abCfg();
+  try{
+    const p=await invoke('backup_pick_folder');
+    if(p){ ab.dir=p; ab.lastError=''; await idbPutSettings(C.settings); showToast('✅ تم تحديد مجلد النسخ التلقائي'); }
+  }catch(e){ ab.lastError='ميزة اختيار المجلد تحتاج تحديث ملف src-tauri/src/main.rs أيضاً'; }
+  abRenderStatus();
+}
+async function abResetFolder(){ const ab=abCfg(); ab.dir=''; ab.lastError=''; await idbPutSettings(C.settings); abRenderStatus(); showToast('↩️ سيُستخدم المجلد الافتراضي (المستندات ▸ Rikaz Pro Backups)'); }
+async function abRunNow(){
+  showToast('⏳ جارٍ تنفيذ نسخة تلقائية...');
+  const r=await autoBackupRun(true);
+  if(r.status==='ok') showToast('✅ تم حفظ '+r.filename+(r.removed?' — حُذفت '+r.removed+' نسخة قديمة':'')+' في: '+r.dir);
+  else if(r.status==='empty') showToast('ℹ️ لا توجد بيانات لحفظها بعد');
+  else if(r.status==='error') showToast('❌ '+r.error);
+}
+
 async function confirmClear(){
   if(!confirm('⚠️ هل تريد مسح جميع البيانات نهائياً؟ لا يمكن التراجع!'))return;
   if(!confirm('تأكيد أخير: سيتم حذف كل الفواتير والمرتجعات والعملاء وكل البيانات. هل أنت متأكد؟'))return;
   await Promise.all([idbBulk('invoices',[]), idbBulk('clients',[]), idbBulk('products',[]), idbBulk('delegates',[]), idbBulk('returns',[]), idbBulk('adjustments',[])]);
   C.clients=[]; C.products=[]; C.delegates=[]; BAL.clear();
   C.settings.nextInvNum=1001; C.settings.nextRetNum=1; C.settings.nextClId=1; C.settings.nextPrId=1; C.settings.nextDlId=1; C.settings.nextAdjId=1;
-  // ✅ إعادة ضبط اسم الشركة والعنوان لتفادي بقاء أي قيمة قديمة تالفة الترميز
-  C.settings.company='روزيتا المتحدة للمبيدات الزراعية';
-  C.settings.address='';
-  // ✅ إعادة تلقيم الأصناف الـ49 الرسمية تلقائياً وفوراً بعد المسح (بدل تركها فارغة)
-  C.settings.seeded=false;
-  await seedDefault();
+  await seedDefault();   // لا تكتب في أي مخزن — فقط تحفظ الإعدادات والعدادات
   loadSettingsUI();
-  showToast('⚠️ تم مسح جميع البيانات وإعادة تحميل الأصناف الرسمية تلقائياً'); refreshAllDDs(); refreshDash();
+  showToast('⚠️ تم مسح جميع البيانات — البرنامج الآن فارغ تماماً'); refreshAllDDs(); refreshDash();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -4962,6 +5640,7 @@ function closeGlobalDrop(){ setTimeout(()=>document.getElementById('globalDrop')
 
 // ✅ الانتقال التلقائي إلى آخر فاتورة للعميل المختار من البحث السريع
 async function goToClientLastInvoice(clientId){
+  if(licLocked()) return;
   document.getElementById('globalSearch').value='';
   document.getElementById('globalDrop').classList.remove('open');
   go('lastinv',document.getElementById('sb-lastinv'));
@@ -4977,6 +5656,7 @@ async function goToClientLastInvoice(clientId){
 }
 
 async function doGlobalSearch(){
+  if(licLocked()){ const d=document.getElementById('globalDrop'); if(d) d.classList.remove('open'); return; }
   const q=(document.getElementById('globalSearch').value||'').trim().toLowerCase();
   const drop=document.getElementById('globalDrop'); if(!drop)return;
   if(!q){ drop.innerHTML=''; return; }
